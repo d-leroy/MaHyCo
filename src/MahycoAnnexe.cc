@@ -167,7 +167,7 @@ initEnvForAcc() {
   Span<Real> out_adiabatic_cst_env(m_adiabatic_cst_env.to1DSpan());
   ENUMERATE_ENV(ienv,mm){
     IMeshEnvironment* env = *ienv;
-    Real adiabatic_cst = options()->environment[env->id()].eosModel()->getAdiabaticCst(env);
+    Real adiabatic_cst = options()->environment[env->id()].eosModel()->getAdiabaticCst();
     out_adiabatic_cst_env[env->id()] = adiabatic_cst;
   }
 

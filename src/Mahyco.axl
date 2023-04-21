@@ -218,7 +218,7 @@
     <description>Nom du materiau</description>
    </simple>
 
-   <service-instance name="eos-model" type="IEquationOfState">
+   <service-instance name="eos-model" type="::Eos::IEquationOfState">
     <description>Service d'equation d'état</description>
    </service-instance>
 

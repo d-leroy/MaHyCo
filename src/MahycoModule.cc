@@ -1836,7 +1836,7 @@ updateEnergyAndPressureforGP()
   } else {
     ENUMERATE_ENV(ienv,mm){
       IMeshEnvironment* env = *ienv;
-      Real adiabatic_cst = options()->environment[env->id()].eosModel()->getAdiabaticCst(env);
+      Real adiabatic_cst = options()->environment[env->id()].eosModel()->getAdiabaticCst();
       ENUMERATE_ENVCELL(ienvcell,env){
         EnvCell ev = *ienvcell;
         Cell cell = ev.globalCell();

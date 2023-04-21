@@ -2,7 +2,7 @@
 #define TYPESMAHYCO_H
 
 #include <arcane/ItemGroup.h>
-#include "eos/IEquationOfState.h"
+#include "eos/__IEquationOfState.h"
 #include "casTest/IInitialisations.h"
 #include "Remap/IRemap.h"
 
@@ -10,9 +10,9 @@ struct TypesMahyco
 {
   enum eBoundaryCondition
   {
-    VelocityX, //!< Vitesse X fixée
-    VelocityY, //!< Vitesse Y fixée
-    VelocityZ, //!< Vitesse Z fixée
+    VelocityX, //!< Vitesse X fixï¿½e
+    VelocityY, //!< Vitesse Y fixï¿½e
+    VelocityZ, //!< Vitesse Z fixï¿½e
     Unknown //!< Type inconnu
   }; 
 };

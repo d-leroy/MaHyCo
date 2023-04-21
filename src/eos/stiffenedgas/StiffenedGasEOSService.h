@@ -20,7 +20,7 @@
 #include "arcane/materials/MeshMaterialVariableDependInfo.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableSynchronizerList.h"
-#include "eos/IEquationOfState.h"
+#include "eos/__IEquationOfState.h"
 #include "stiffenedgas/StiffenedGasEOS_axl.h"
 
 using namespace Arcane;
