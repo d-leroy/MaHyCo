@@ -34,6 +34,19 @@
 # Build directory
 build/
 
+# Modane generator
+bin/ModaneHeadless
+bin/generate.sh
+
+# Python
+python/__pycache__
+
+# Simulation output
+output/
+
+# vscode
+.vscode
+
 # clangd directory
 .clangd
 

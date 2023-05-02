@@ -4,21 +4,21 @@ service caseoption PerfectGas implements eos.EquationOfState {
     /*!
      * Définition de la tension limite
      */
-    [0..1] real LimitTension = "0.0";
+    opt Real LimitTension = "0.0";
     
     override eos.EquationOfState.initEOS
-        in mahyco.pressure, mahyco.density
-        out mahyco.internal_energy, mahyco.sound_speed;
+        in mahyco.pressure, in mahyco.density,
+        out mahyco.internal_energy, out mahyco.sound_speed;
 
     override eos.EquationOfState.applyEOS
-        in mahyco.density, mahyco.internal_energy
-        out mahyco.pressure, mahyco.sound_speed, mahyco.dpde
+        in mahyco.density, in mahyco.internal_energy,
+        out mahyco.pressure, out mahyco.sound_speed, out mahyco.dpde
         // call compute_pressure_sndspd_PG
         ;
 
     override eos.EquationOfState.applyOneCellEOS
-        in mahyco.density, mahyco.internal_energy
-        out mahyco.pressure, mahyco.sound_speed, mahyco.dpde
+        in mahyco.density, in mahyco.internal_energy,
+        out mahyco.pressure, out mahyco.sound_speed, out mahyco.dpde
         // call compute_pressure_sndspd_PG
         ;
 

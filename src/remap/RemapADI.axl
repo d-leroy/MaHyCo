@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?><service name="RemapADI" version="1.0" namespace-name="Remap" type="caseoption">
+  <interface name="::Remap::IRemap"/>
+  <variables>
+    <variable field-name="sens_projection" name="SensProjection" data-type="integer" item-kind="none" dim="0" dump="true" need-sync="false" restore="false" execution-depend="false"/>
+    <variable field-name="u_lagrange" name="ULagrange" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="u_dual_lagrange" name="UDualLagrange" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="phi_lagrange" name="PhiLagrange" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="phi_dual_lagrange" name="PhiDualLagrange" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="dual_grad_phi" name="DualGradPhi" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="grad_phi" name="GradPhi" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="phi_face" name="PhiFace" data-type="real" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="grad_phi_face" name="GradPhiFace" data-type="real" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="delta_phi_face_ar" name="DeltaPhiFaceAr" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="delta_phi_face_av" name="DeltaPhiFaceAv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="dual_phi_flux" name="DualPhiFlux" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="front_flux_mass_env" name="FrontFluxMassEnv" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="back_flux_mass_env" name="BackFluxMassEnv" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="back_flux_contrib_env" name="BackFluxContribEnv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="front_flux_contrib_env" name="FrontFluxContribEnv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="est_mixte" name="EstMixte" data-type="integer" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="est_pure" name="EstPure" data-type="integer" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="euler_volume" name="EulerVolume" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="velocity" name="Velocity" data-type="real3" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="node_mass" name="NodeMass" data-type="real" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="cell_volume" name="CellVolume" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
+    <variable field-name="cell_status" name="CellStatus" data-type="integer" item-kind="cell" dim="0" dump="false" need-sync="false" restore="false" execution-depend="false"/>
+    <variable field-name="cell_mass" name="CellMass" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
+    <variable field-name="fracvol" name="FracVol" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
+    <variable field-name="mass_fraction" name="MassFraction" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
+    <variable field-name="pseudo_viscosity" name="PseudoViscosity" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
+    <variable field-name="density" name="Density" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
+    <variable field-name="internal_energy" name="InternalEnergy" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
+    <variable field-name="face_normal" name="FaceNormal" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="cell_coord" name="CellCoord" data-type="real3" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="face_coord" name="FaceCoord" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="is_dir_face" name="IsDirFace" data-type="bool" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="deltax_lagrange" name="DeltaxLagrange" data-type="real" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="h_cell_lagrange" name="HCellLagrange" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="outer_face_normal" name="OuterFaceNormal" data-type="real3" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="face_normal_velocity" name="FaceNormalVelocity" data-type="real" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="face_length_lagrange" name="FaceLengthLagrange" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="node_coord" name="NodeCoord" data-type="real3" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="back_flux_mass" name="BackFluxMass" data-type="real" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="front_flux_mass" name="FrontFluxMass" data-type="real" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+  </variables>
+  <options>
+    <simple name="threshold" type="real" default="1.e-10"/>
+    <simple name="is-euler-scheme" type="bool" default="true"/>
+    <simple name="ordre-projection" type="integer" default="2"/>
+    <simple name="conservation-energie-totale" type="bool" default="false"/>
+    <simple name="projection-pente-borne-mixte" type="bool" default="false"/>
+    <simple name="projection-limiteur-id" type="integer" default="0"/>
+    <simple name="projection-limiteur-pure-id" type="integer" default="0"/>
+    <simple name="projection-pente-borne" type="bool" default="false"/>
+    <simple name="projection-pente-borne-debar-fix" type="integer" default="0"/>
+    <simple name="calcul-flux-masse" type="integer" default="0"/>
+  </options>
+</service>

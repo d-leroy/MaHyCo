@@ -16,6 +16,17 @@ if (Arcane_VERSION VERSION_LESS "3.6")
     " Version 3.6+ is required")
 endif()
 
+# Python embedding
+configure_file(scihookdefs.h.in ${CMAKE_BINARY_DIR}/src/scihook/scihookdefs.h)
+if (SCIHOOK_ENABLED)
+    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+    set(pybind11_DIR "${Python_SITELIB}/pybind11/share/cmake/pybind11")
+    find_package(pybind11 REQUIRED)
+
+    add_library(scihook SHARED IMPORTED)
+    set_property(TARGET scihook PROPERTY IMPORTED_LOCATION ${Python_SITELIB}/scihook/libscihook.so)
+endif()
+
 if (WANT_CUDA AND NOT ARCANE_HAS_CUDA)
     MESSAGE(FATAL_ERROR "WANT_CUDA enabled but Arcane was compiled without CUDA support.")
 endif()
@@ -38,6 +49,10 @@ add_executable(Mahyco
 arcane_add_arcane_libraries_to_target(Mahyco)
 arcane_target_add_axl(Mahyco Mahyco)
 target_include_directories(Mahyco PRIVATE . ${CMAKE_CURRENT_BINARY_DIR})
+if (SCIHOOK_ENABLED)
+  target_include_directories(Mahyco PUBLIC ${Python_SITELIB}/scihook/include ${pybind11_INCLUDE_DIRS})
+endif()
+
 
 install(TARGETS Mahyco EXPORT ${MAHYCO_EXPORT_TARGET})
 configure_file(Mahyco.config ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
@@ -69,6 +84,9 @@ arcane_accelerator_add_source_files(PrepareRemap.cc)
 arcane_accelerator_add_to_target(Mahyco)
 
 target_link_libraries(Mahyco PRIVATE mahyco_config casTest Remap cartesian eos accenv msgpass)
+if (SCIHOOK_ENABLED)
+  target_link_libraries(Mahyco PRIVATE scihook pybind11::embed)
+endif()
 
 # Configuration
 set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")

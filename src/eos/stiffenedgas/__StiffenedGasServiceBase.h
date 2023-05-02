@@ -18,7 +18,11 @@
 #include "arcane/materials/IMeshMaterialMng.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/stiffenedgas/__StiffenedGasServiceVars.h"
+#include "scihook/scihookdefs.h"
 #include "eos/stiffenedgas/StiffenedGas_axl.h"
+#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED)
+#include "eos/stiffenedgas/__StiffenedGasServiceContexts.h"
+#endif
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -38,11 +42,28 @@ template<class T>
 class StiffenedGasServiceBase
 : public ArcaneStiffenedGasObject
 {
+ #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED)
+ private:
+  size_t INITEOS_BEFORE;
+  size_t INITEOS_AFTER;
+  size_t APPLYEOS_BEFORE;
+  size_t APPLYEOS_AFTER;
+  size_t APPLYONECELLEOS_BEFORE;
+  size_t APPLYONECELLEOS_AFTER;
+ #endif
  public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
   explicit StiffenedGasServiceBase(const ServiceBuildInfo& bi)
   : ArcaneStiffenedGasObject(bi)
   , m_mesh_material_mng(IMeshMaterialMng::getReference(bi.mesh()))
   {
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED)
+    INITEOS_BEFORE = SciHook::register_base_event("StiffenedGasServiceBase.InitEOS.Before");
+    INITEOS_AFTER = SciHook::register_base_event("StiffenedGasServiceBase.InitEOS.After");
+    APPLYEOS_BEFORE = SciHook::register_base_event("StiffenedGasServiceBase.ApplyEOS.Before");
+    APPLYEOS_AFTER = SciHook::register_base_event("StiffenedGasServiceBase.ApplyEOS.After");
+    APPLYONECELLEOS_BEFORE = SciHook::register_base_event("StiffenedGasServiceBase.ApplyOneCellEOS.Before");
+    APPLYONECELLEOS_AFTER = SciHook::register_base_event("StiffenedGasServiceBase.ApplyOneCellEOS.After");
+    #endif
   }
 
   virtual ~StiffenedGasServiceBase()
@@ -83,7 +104,19 @@ class StiffenedGasServiceBase
         , m_density
         , m_internal_energy
         , m_sound_speed);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_INITEOS_DISABLED)
+    std::shared_ptr<StiffenedGasInitEOSExecutionContext> ctx(
+        new StiffenedGasInitEOSExecutionContext("InitEOSExecutionContext"
+            , &vars
+            , env));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_INITEOS_DISABLED)
+    SciHook::trigger(INITEOS_BEFORE, ctx);
     this->initEOS(vars, env);
+    SciHook::trigger(INITEOS_AFTER, ctx);
+    #else
+    this->initEOS(vars, env);
+    #endif
   }
 
   /*!
@@ -113,7 +146,19 @@ class StiffenedGasServiceBase
         , m_pressure
         , m_sound_speed
         , m_dpde);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_APPLYEOS_DISABLED)
+    std::shared_ptr<StiffenedGasApplyEOSExecutionContext> ctx(
+        new StiffenedGasApplyEOSExecutionContext("ApplyEOSExecutionContext"
+            , &vars
+            , env));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_APPLYEOS_DISABLED)
+    SciHook::trigger(APPLYEOS_BEFORE, ctx);
     this->applyEOS(vars, env);
+    SciHook::trigger(APPLYEOS_AFTER, ctx);
+    #else
+    this->applyEOS(vars, env);
+    #endif
   }
 
   /*!
@@ -143,7 +188,20 @@ class StiffenedGasServiceBase
         , m_pressure
         , m_sound_speed
         , m_dpde);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_APPLYONECELLEOS_DISABLED)
+    std::shared_ptr<StiffenedGasApplyOneCellEOSExecutionContext> ctx(
+        new StiffenedGasApplyOneCellEOSExecutionContext("ApplyOneCellEOSExecutionContext"
+            , &vars
+            , env
+            , ev));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_APPLYONECELLEOS_DISABLED)
+    SciHook::trigger(APPLYONECELLEOS_BEFORE, ctx);
     this->applyOneCellEOS(vars, env, ev);
+    SciHook::trigger(APPLYONECELLEOS_AFTER, ctx);
+    #else
+    this->applyOneCellEOS(vars, env, ev);
+    #endif
   }
 
 

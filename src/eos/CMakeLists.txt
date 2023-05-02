@@ -1,21 +1,31 @@
 add_library(PerfectGas
 perfectgas/PerfectGasService.cc
 perfectgas/PerfectGasService.h
+perfectgas/__PerfectGasServiceBindings.cc
 __IEquationOfState.h)
 
-target_include_directories(PerfectGas PRIVATE ..)
+target_include_directories(PerfectGas PRIVATE .. ${CMAKE_BINARY_DIR}/src)
 target_link_libraries(PerfectGas PUBLIC Arcane::arcane_core)
 target_link_libraries(PerfectGas PRIVATE mahyco_config)
+if (SCIHOOK_ENABLED)
+  target_include_directories(PerfectGas PUBLIC ${Python_SITELIB}/scihook/include ${pybind11_INCLUDE_DIRS})
+  target_link_libraries(PerfectGas PRIVATE scihook)
+endif()
 install(TARGETS PerfectGas EXPORT ${MAHYCO_EXPORT_TARGET})
 
 add_library(StiffenedGas
   stiffenedgas/StiffenedGasService.cc
   stiffenedgas/StiffenedGasService.h
+  stiffenedgas/__StiffenedGasServiceBindings.cc
   __IEquationOfState.h)
 
-target_include_directories(StiffenedGas PRIVATE ..)
+target_include_directories(StiffenedGas PRIVATE .. ${CMAKE_BINARY_DIR}/src)
 target_link_libraries(StiffenedGas PUBLIC Arcane::arcane_core)
 target_link_libraries(StiffenedGas PRIVATE mahyco_config)
+if (SCIHOOK_ENABLED)
+  target_include_directories(StiffenedGas PUBLIC ${Python_SITELIB}/scihook/include ${pybind11_INCLUDE_DIRS})
+  target_link_libraries(StiffenedGas PRIVATE scihook)
+endif()
 install(TARGETS StiffenedGas EXPORT ${MAHYCO_EXPORT_TARGET})
 
 arcane_accelerator_enable()

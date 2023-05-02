@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><service name="Rider" version="1.0" namespace-name="Cas_testRIDER" type="caseoption">
+  <interface name="::Cas_test::IInitialisations"/>
+  <variables/>
+  <options>
+    <simple name="cas-test" type="integer"/>
+    <simple name="reverse-option" type="bool" default="false"/>
+    <simple name="parametre" type="real" default="0."/>
+  </options>
+</service>

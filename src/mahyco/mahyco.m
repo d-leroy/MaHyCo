@@ -1,184 +1,188 @@
 package mahyco ;
 
 /*! Pas de temps Old */
-var real old_deltat { } @axlname("OldDeltat") @dump;
+var Real old_deltat { } @axlname("OldDeltat") @dump;
 /*! sens de la projection */
-var int sens_projection { } @axlname("SensProjection") @dump;
+var Int sens_projection { } @axlname("SensProjection") @dump;
 /*! Materiau */
-var real materiau { cell } @axlname("Materiau") @dump @sync;
+var Real materiau { Cell } @axlname("Materiau") @dump @sync;
 /*! DENSITY OLD N */
-var real density_n { matCell } @axlname("DentityN") @dump @sync;
+var Real density_n { MatCell } @axlname("DentityN") @dump @sync;
 /*! DENSITY */
-var real density { matCell } @axlname("Density") @dump @sync;
+var Real density { MatCell } @axlname("Density") @dump @sync;
 /*! PRESSURE OLD N */
-var real pressure_n { matCell } @axlname("PressureN") @dump @sync;
+var Real pressure_n { MatCell } @axlname("PressureN") @dump @sync;
 /*! PRESSURE */
-var real pressure { matCell } @axlname("Pressure") @dump @sync;
+var Real pressure { MatCell } @axlname("Pressure") @dump @sync;
 /*! PSEUDO OLD N-1 */
-var real pseudo_viscosity_nmoins1 { matCell } @axlname("PseudoViscosityNmoins1") @dump @sync;
+var Real pseudo_viscosity_nmoins1 { MatCell } @axlname("PseudoViscosityNmoins1") @dump @sync;
 /*! PSEUDO OLD N */
-var real pseudo_viscosity_n { matCell } @axlname("PseudoViscosityN") @dump @sync;
+var Real pseudo_viscosity_n { MatCell } @axlname("PseudoViscosityN") @dump @sync;
 /*! PSEUDO */
-var real pseudo_viscosity { matCell } @axlname("PseudoViscosity") @dump @sync;
+var Real pseudo_viscosity { MatCell } @axlname("PseudoViscosity") @dump @sync;
 /*! MASS FRACTION */
-var real mass_fraction { matCell } @axlname("MassFraction") @dump @sync;
+var Real mass_fraction { MatCell } @axlname("MassFraction") @dump @sync;
 /*! CELL MASS */
-var real cell_mass { matCell } @axlname("CellMass") @dump @sync;
+var Real cell_mass { MatCell } @axlname("CellMass") @dump @sync;
 /*! INTERNAL ENERGY OLD N */
-var real internal_energy_n { matCell } @axlname("InternalEnergyN") @dump @sync;
+var Real internal_energy_n { MatCell } @axlname("InternalEnergyN") @dump @sync;
 /*! INTERNAL ENERGY */
-var real internal_energy { matCell } @axlname("InternalEnergy") @dump @sync;
+var Real internal_energy { MatCell } @axlname("InternalEnergy") @dump @sync;
 /*! DPDE */
-var real dpde { matCell } @axlname("DpDe") @dump @sync;
+var Real dpde { MatCell } @axlname("DpDe") @dump @sync;
 /*! FRACVOL */
-var real fracvol { matCell } @axlname("FracVol") @dump @sync;
+var Real fracvol { MatCell } @axlname("FracVol") @dump @sync;
 /*! CELL VOLUME OLD N */
-var real cell_volume_n { matCell } @axlname("CellVolumeN") @dump @sync;
+var Real cell_volume_n { MatCell } @axlname("CellVolumeN") @dump @sync;
 /*! CELL VOLUME */
-var real cell_volume { matCell } @axlname("CellVolume") @dump @sync;
+var Real cell_volume { MatCell } @axlname("CellVolume") @dump @sync;
 /*! CELL VOLUME EULER */
-var real euler_volume { cell } @axlname("EulerVolume") @dump @sync;
+var Real euler_volume { Cell } @axlname("EulerVolume") @dump @sync;
 /*! DIV U */
-var real div_u { cell } @axlname("DivU") @sync;
+var Real div_u { Cell } @axlname("DivU") @sync;
 /*! TAUX DENSITY */
-var real tau_density { matCell } @axlname("TauDensity") @sync;
+var Real tau_density { MatCell } @axlname("TauDensity") @sync;
 /*! FORCE */
-var real[3] force { node } @axlname("Force");
+var Real[3] force { Node } @axlname("Force");
 /*! VELOCITY OLD N */
-var real[3] velocity_n { node } @axlname("VelocityN") @dump @sync;
+var Real[3] velocity_n { Node } @axlname("VelocityN") @dump @sync;
 /*! VELOCITY */
-var real[3] velocity { node } @axlname("Velocity") @dump @sync;
+var Real[3] velocity { Node } @axlname("Velocity") @dump @sync;
 /*! NODE MASS */
-var real node_mass { node } @axlname("NodeMass") @dump @sync;
+var Real node_mass { Node } @axlname("NodeMass") @dump @sync;
 /*! CARACTERISTIC LENGTH */
-var real caracteristic_length { cell } @axlname("CaracteristicLength") @sync;
+var Real caracteristic_length { Cell } @axlname("CaracteristicLength") @sync;
 /*! SOUND SPEED */
-var real sound_speed { matCell } @axlname("SoundSpeed") @dump @sync;
+var Real sound_speed { MatCell } @axlname("SoundSpeed") @dump @sync;
 /*! NODE COORD */
-var real[3] node_coord { node } @axlname("NodeCoord") @dump @sync;
+var Real[3] node_coord { Node } @axlname("NodeCoord") @dump @sync;
 /*! NODE COORD_0 */
-var real[3] node_coord_0 { node } @axlname("NodeCoord0") @dump @sync;
+var Real[3] node_coord_0 { Node } @axlname("NodeCoord0") @dump @sync;
 /*! CELL COORD */
-var real[3] cell_coord { cell } @axlname("CellCoord") @dump @sync;
+var Real[3] cell_coord { Cell } @axlname("CellCoord") @dump @sync;
 /*! CELL CQS */
-var real[*,3] cell_cqs_n { cell } @axlname("CellCQSN") @dump @sync;
+var Real[*,3] cell_cqs_n { Cell } @axlname("CellCQSN") @dump @sync;
 /*! CELL OLD CQS */
-var real[*,3] cell_cqs { cell } @axlname("CellCQS") @dump @sync;
+var Real[*,3] cell_cqs { Cell } @axlname("CellCQS") @dump @sync;
 /*! FACE COORD */
-var real[3] face_coord { face } @axlname("FaceCoord") @dump @sync;
+var Real[3] face_coord { Face } @axlname("FaceCoord") @dump @sync;
 /*! FACE NORMAL */
-var real[3] face_normal { face } @axlname("FaceNormal") @dump @sync;
+var Real[3] face_normal { Face } @axlname("FaceNormal") @dump @sync;
 /*! FACE NORMAL VELOCITY */
-var real face_normal_velocity { face } @axlname("FaceNormalVelocity") @dump @sync;
+var Real face_normal_velocity { Face } @axlname("FaceNormalVelocity") @dump @sync;
 /*! FACE LENGHT */
-var real[3] face_length_lagrange { face } @axlname("FaceLengthLagrange") @dump @sync;
+var Real[3] face_length_lagrange { Face } @axlname("FaceLengthLagrange") @dump @sync;
 /*! U LAGRANGE */
-var real[*] u_lagrange { cell } @axlname("ULagrange") @dump @sync;
+var Real[*] u_lagrange { Cell } @axlname("ULagrange") @dump @sync;
 /*! U DUAL LAGRANGE */
-var real[*] u_dual_lagrange { node } @axlname("UDualLagrange") @dump @sync;
+var Real[*] u_dual_lagrange { Node } @axlname("UDualLagrange") @dump @sync;
 /*! PHI LAGRANGE */
-var real[*] phi_lagrange { cell } @axlname("PhiLagrange") @dump @sync;
+var Real[*] phi_lagrange { Cell } @axlname("PhiLagrange") @dump @sync;
 /*! PHI DUAL LAGRANGE */
-var real[*] phi_dual_lagrange { node } @axlname("PhiDualLagrange") @dump @sync;
+var Real[*] phi_dual_lagrange { Node } @axlname("PhiDualLagrange") @dump @sync;
 /*! GRAD PHI DUAL LAGRANGE pour les vitesses */
-var real[*] dual_grad_phi { node } @axlname("DualGradPhi") @dump @sync;
+var Real[*] dual_grad_phi { Node } @axlname("DualGradPhi") @dump @sync;
 /*! MIXTE */
-var int est_mixte { cell } @axlname("EstMixte") @dump @sync;
+var Int est_mixte { Cell } @axlname("EstMixte") @dump @sync;
 /*! PURE */
-var int est_pure { cell } @axlname("EstPure") @dump @sync;
+var Int est_pure { Cell } @axlname("EstPure") @dump @sync;
 /*! isDirFace */
-var bool[*] is_dir_face { face } @axlname("IsDirFace") @dump @sync;
+var Bool[*] is_dir_face { Face } @axlname("IsDirFace") @dump @sync;
 /*! U REMAP2 */
-var real[*,3] outer_face_normal { cell } @axlname("OuterFaceNormal") @dump @sync;
+var Real[*,3] outer_face_normal { Cell } @axlname("OuterFaceNormal") @dump @sync;
 
 /*! Descripteur du module Mahyco */
 module Mahyco {
     /*! Materiaux */
-    [1..*] types_mahyco.Material material;
+    types_mahyco.Material[*] material;
     /*! Milieu */
-    [1..*] types_mahyco.Environment environment;
+    types_mahyco.Environment[*] environment;
     /*! Service d'initialisation du cas test */
-    [1..1] cas_test.Initialisations CasModel;
+    cas_test.Initialisations CasModel;
     /*! Service de projection */
-    [1..1] remap.Remap remap;
+    remap.Remap remap;
     /*! Impose le tri cartésien des faces (valable que si le maillage est lui-même cartésien) */
-    [1..1] bool CartesianSortFaces = "true";
+    Bool CartesianSortFaces = "true";
     /*! Schema CSTS */
-    [1..1] bool SchemaCsts;
+    Bool SchemaCsts;
     /*! Option pseudo-centrée */
-    [1..1] bool PseudoCentree;
+    Bool PseudoCentree;
     /*! Type de longueur caracteristique */
-    [1..1] string LongueurCaracteristique;
+    String LongueurCaracteristique;
     /*!
      * Valeur minimale que peut prendre le <em>deltat</em>
      * entre deux itérations.
      */
-    [1..1] real DeltatMin;
+    Real DeltatMin;
 
     /*!
      * Valeur maximale que peut prendre le <em>deltat</em>
      * entre deux itérations. Si le deltat calculé est supérieur
      * à cette valeur, il est ramené à cette valeur.
      */
-    [1..1] real DeltatMax;
+    Real DeltatMax;
     /*! Valeur du <em>deltat</em> au moment du démarrage. */
-    [1..1] real DeltatInit;
+    Real DeltatInit;
     /*!
      * Temps auquel on stoppe la simulation. Le code s'arrête dès que
      * le temps courant est <strong>strictement</strong> supérieur à ce temps.
      */
-    [1..1] real FinalTime namefr "temps-final";
+    Real FinalTime namefr "temps-final";
     /*! Définition de la CFL */
-    [1..1] real Cfl = "0.3";
+    Real Cfl = "0.3";
     /*! Définition de la valeur limite des petites fractions et autres */
-    [1..1] real Threshold = "1.e-10";
+    Real Threshold = "1.e-10";
     /*! Calcule sans le schema Lagrange */
-    [1..1] bool SansLagrange = "false";
+    Bool SansLagrange = "false";
     /*! Calcul de l'energie avec newton */
-    [1..1] bool WithNewton = "false";
+    Bool WithNewton = "false";
     /*! Calcul avec projection ADI */
-    [1..1] bool WithProjection = "true";
+    Bool WithProjection = "true";
     /*! Condition aux limites */
-    [0..*] types_mahyco.BoundaryCondition BoundaryCondition;
+    opt types_mahyco.BoundaryCondition[*] BoundaryCondition;
 
     // TypesMahyco.BoundaryCondition[*] @opt;
 
-    [1..1] types_mahyco.IGeometryMng geometry;
+    types_mahyco.IGeometryMng geometry;
     def void initGeometricValues()
-        in cell_coord, node_coord
-        out node_coord_0, outer_face_normal
-        inout face_coord, face_normal;
+        in cell_coord, in node_coord,
+        out node_coord_0, out outer_face_normal,
+        inout face_coord, inout face_normal;
 
     def void computeGeometricValuesAux()
-        in fracvol, velocity
-        out cell_cqs
-        inout node_coord, cell_volume;
+        in fracvol, in velocity,
+        out cell_cqs,
+        inout node_coord, inout cell_volume;
 
     def void updateVelocityWithoutLagrange()
-        in velocity_n
+        in velocity_n,
         out velocity;
 
     def void updateForceAndVelocity()
-        in pressure, pseudo_viscosity, cell_cqs, node_mass
-        out force
+        in pressure, in pseudo_viscosity, in cell_cqs, in node_mass,
+        out force,
         inout velocity;
 
     def void updateEnergyAndPressurebyNewton()
-        in pseudo_viscosity, pseudo_viscosity_n, pseudo_viscosity_nmoins1, density, density_n, internal_energy_n, pressure_n, dpde, mass_fraction, velocity, velocity_n, cell_cqs, cell_cqs_n, cell_mass
-        out internal_energy
-        inout pressure, sound_speed;
+        in pseudo_viscosity, in pseudo_viscosity_n, in pseudo_viscosity_nmoins1, in density, in density_n,
+        in internal_energy_n, in pressure_n, in dpde, in mass_fraction, in velocity, in velocity_n,
+        in cell_cqs, in cell_cqs_n, in cell_mass,
+        out internal_energy,
+        inout pressure, inout sound_speed;
 
     def void updateEnergyAndPressureforGP()
-        in pseudo_viscosity, pseudo_viscosity_n, pseudo_viscosity_nmoins1, density, density_n, internal_energy_n, pressure_n, mass_fraction, velocity, velocity_n, cell_cqs, cell_cqs_n, cell_mass
-        out internal_energy
+        in pseudo_viscosity, in pseudo_viscosity_n, in pseudo_viscosity_nmoins1, in density, in density_n,
+        in internal_energy_n, in pressure_n, in mass_fraction, in velocity, in velocity_n, in cell_cqs,
+        in cell_cqs_n, in cell_mass,
+        out internal_energy,
         inout pressure;
 
     def void computeAveragePressure()
-        in fracvol
-        inout pressure, sound_speed;
+        in fracvol,
+        inout pressure, inout sound_speed;
 
-    def real computeHydroDeltaT()
-        in caracteristic_length, sound_speed, velocity;
+    def Real computeHydroDeltaT()
+        in caracteristic_length, in sound_speed, in velocity;
 
     // <entry-point method-name="accBuild" name="AccBuild" where="build" property="none" />
     // @Build
@@ -193,13 +197,13 @@ module Mahyco {
     // @Init
     // InitCartesianMesh;
     @StartInit allocCqs
-        out cell_cqs, cell_cqs_n;
+        out cell_cqs, out cell_cqs_n;
     @StartInit initDtIni
     /* out ArcaneBuiltins.GlobalDeltaT */;
     @StartInit initHydroVar
-        in cell_cqs, mass_fraction, node_coord
-        out euler_volume
-        inout cell_volume, internal_energy, sound_speed
+        in cell_cqs, in mass_fraction, in node_coord,
+        out euler_volume,
+        inout cell_volume, inout internal_energy, inout sound_speed
         call initGeometricValues;
 
 
@@ -227,10 +231,10 @@ module Mahyco {
     // @StartInit
     // SetSyncVarVers;
     @StartInit computeCellMass
-        in density, cell_volume, mass_fraction
+        in density, in cell_volume, in mass_fraction,
         inout cell_mass;
     @StartInit computeNodeMass
-        in cell_mass
+        in cell_mass,
         out node_mass;
 
     // <entry-point method-name="continueForMultiMat" name="ContinueForMultiMat" where="continue-init" property="none" />
@@ -241,9 +245,11 @@ module Mahyco {
     /* out ArcaneBuiltins.GlobalOldDeltaT
     inout ArcaneBuiltins.GlobalIteration */;
     @ComputeLoop saveValuesAtN
-        in old_deltat, pseudo_viscosity, pressure, cell_volume, density, internal_energy, cell_cqs, velocity, node_coord_0
-        out /* ArcaneBuiltins.GlobalOldDeltaT, */
-    pseudo_viscosity_nmoins1, pressure_n, cell_volume_n, density_n, internal_energy_n, cell_cqs_n, velocity_n, node_coord
+        in old_deltat, in pseudo_viscosity, in pressure, in cell_volume, in density,
+        in internal_energy, in cell_cqs, in velocity, in node_coord_0,
+        /* out ArcaneBuiltins.GlobalOldDeltaT, */
+        out pseudo_viscosity_nmoins1, out pressure_n, out cell_volume_n, out density_n,
+        out internal_energy_n, out cell_cqs_n, out velocity_n, out node_coord,
         inout pseudo_viscosity_n;
     @ComputeLoop updateVelocity
         call updateForceAndVelocity, updateVelocityWithoutLagrange;
@@ -252,17 +258,17 @@ module Mahyco {
     // @ComputeLoop
     // ApplyBoundaryCondition;
     @ComputeLoop updatePosition
-        in velocity
-        out cell_coord
+        in velocity,
+        out cell_coord,
         inout node_coord;
     @ComputeLoop computeGeometricValues
         call computeGeometricValuesAux;
     @ComputeLoop updateDensity
-        in cell_mass, cell_volume, density_n/* , ArcaneBuiltins.GlobalDeltaT */
-        out div_u
-        inout density, tau_density;
+        in cell_mass, in cell_volume, in density_n/* , ArcaneBuiltins.GlobalDeltaT */,
+        out div_u,
+        inout density, inout tau_density;
     @ComputeLoop computeArtificialViscosity
-        in div_u, caracteristic_length, sound_speed, tau_density, fracvol//, AdiabaticCstEnv (not in AXL)
+        in div_u, in caracteristic_length, in sound_speed, in tau_density, in fracvol,// AdiabaticCstEnv, (not in AXL)
         inout pseudo_viscosity;
     @ComputeLoop updateEnergyAndPressure
         call updateEnergyAndPressurebyNewton, updateEnergyAndPressureforGP, computeAveragePressure;
