@@ -29,5 +29,3 @@ enum BoundaryConditionType {
 
 legacy IGeometryMng file "" namespace "Arcane::Numerics";
 legacy IMeshEnvironment file "" namespace "Arcane::Materials";
-
-

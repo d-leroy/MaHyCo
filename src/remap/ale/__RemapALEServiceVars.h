@@ -1,5 +1,5 @@
-#ifndef TYPES_MAHYCO___IMATERIAL_H
-#define TYPES_MAHYCO___IMATERIAL_H
+#ifndef REMAP_ALE___REMAPALESERVICEVARS_H
+#define REMAP_ALE___REMAPALESERVICEVARS_H
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -16,56 +16,18 @@
 /*---------------------------------------------------------------------------*/
 
 using namespace Arcane;
-namespace Types_mahyco {
+namespace RemapAle {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/*!
- * \brief Interface représentant la structure Material
- * 
- */
-class IMaterial
-{
- public:
-  IMaterial() {}
-  virtual ~IMaterial() {}
-
- public:
-  /*!  Nom du materiau  */
-  virtual String getName() = 0;
-};
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-/*!
- * Classe représentant la structure Material
- * 
- */
-class Material
-: public IMaterial
-{
- public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
-  Material()
-  : m_name(String())
-  {}
-  virtual ~Material() {}
-
- public:  // ***** ACCESSEURS
-  String getName() override { return m_name; }
-  void setName(String value) { m_name = value; }
-
- protected:  // ***** ATTRIBUTS
-  String m_name;
-};
+}  // namespace RemapAle
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-}  // namespace Types_mahyco
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-#endif  // TYPES_MAHYCO___IMATERIAL_H
+#endif  // REMAP_ALE___REMAPALESERVICEVARS_H

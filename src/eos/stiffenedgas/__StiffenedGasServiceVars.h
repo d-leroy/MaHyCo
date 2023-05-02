@@ -42,18 +42,22 @@ struct StiffenedGasInitEOSVars final
 
   /*!
   [in] pressure
+   PRESSURE 
   */
   const MaterialVariableCellReal& m_pressure;
   /*!
   [in] density
+   DENSITY 
   */
   const MaterialVariableCellReal& m_density;
   /*!
   [out] internal_energy
+   INTERNAL ENERGY 
   */
   MaterialVariableCellReal& m_internal_energy;
   /*!
   [out] sound_speed
+   SOUND SPEED 
   */
   MaterialVariableCellReal& m_sound_speed;
 };
@@ -75,22 +79,27 @@ struct StiffenedGasApplyEOSVars final
 
   /*!
   [in] internal_energy
+   INTERNAL ENERGY 
   */
   const MaterialVariableCellReal& m_internal_energy;
   /*!
   [in] density
+   DENSITY 
   */
   const MaterialVariableCellReal& m_density;
   /*!
   [out] pressure
+   PRESSURE 
   */
   MaterialVariableCellReal& m_pressure;
   /*!
   [out] sound_speed
+   SOUND SPEED 
   */
   MaterialVariableCellReal& m_sound_speed;
   /*!
   [out] dpde
+   DPDE 
   */
   MaterialVariableCellReal& m_dpde;
 };
@@ -112,22 +121,27 @@ struct StiffenedGasApplyOneCellEOSVars final
 
   /*!
   [in] internal_energy
+   INTERNAL ENERGY 
   */
   const MaterialVariableCellReal& m_internal_energy;
   /*!
   [in] density
+   DENSITY 
   */
   const MaterialVariableCellReal& m_density;
   /*!
   [out] pressure
+   PRESSURE 
   */
   MaterialVariableCellReal& m_pressure;
   /*!
   [out] sound_speed
+   SOUND SPEED 
   */
   MaterialVariableCellReal& m_sound_speed;
   /*!
   [out] dpde
+   DPDE 
   */
   MaterialVariableCellReal& m_dpde;
 };

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><service name="RemapALE" version="1.0" namespace-name="RemapAle" type="caseoption">
+  <interface name="::Remap::IRemap"/>
+  <variables/>
+  <options>
+    <simple name="threshold" type="real" default="1.e-10">
+      <description> Définition de la valeur limite des petites fractions et autres </description>
+    </simple>
+    <simple name="volum-criteria" type="real" default="1.">
+      <description> Critere de remaillage d'un noeud sur le rapport du volume min et max des elements entourant ce noeud </description>
+    </simple>
+    <simple name="angle-criteria" type="real" default="-1.">
+      <description> Critere de remaillage d'un noeud sur le sinus des angles de l'élément </description>
+    </simple>
+    <simple name="nb-iteration-winslow" type="integer" default="3">
+      <description> Nombre d'itération de lissage du maillage </description>
+    </simple>
+    <simple name="is-euler-scheme" type="bool" default="false">
+      <description>  projection type Euler (retour sur maillage initial) </description>
+    </simple>
+    <simple name="ordre-projection" type="integer" default="2">
+      <description> Définition de la valeur limite des petites fractions et autres </description>
+    </simple>
+    <simple name="conservation-energie-totale" type="bool" default="false">
+      <description> Conservation de l energie totale lors de la projection </description>
+    </simple>
+    <simple name="projection-pente-borne-mixte" type="bool" default="false">
+      <description>  projection pente borne en volume dans les mailles mixtes et en masse dans les mailles pures </description>
+    </simple>
+    <simple name="projection-limiteur-id" type="integer" default="0">
+      <description>  identifiant du limiteur pour les mailles mixtes </description>
+    </simple>
+    <simple name="projection-limiteur-pure-id" type="integer" default="0">
+      <description>  identifiant du limiteur pour les mailles pures </description>
+    </simple>
+    <simple name="projection-pente-borne" type="bool" default="false">
+      <description>  projection avec l'algorithme pente-borne </description>
+    </simple>
+    <simple name="projection-pente-borne-debar-fix" type="integer" default="0">
+      <description>  projection avec l'algorithme pente-borne en evitant l'artefact de debar avec la valeur moyenne (1) ou valeur aux mailles (2) </description>
+    </simple>
+    <simple name="projection-dual" type="integer" default="0">
+      <description>  identifiant de la methode de projection duale </description>
+    </simple>
+  </options>
+</service>

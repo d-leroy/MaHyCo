@@ -39,7 +39,7 @@ class IEquationOfState
 
  public:  // ***** ACCESSEURS ABSTRAITS
   virtual const String getImplName() const = 0;
-  /*!  */
+  /*!  Définition de la constante adiabatique  */
   virtual Real getAdiabaticCst() = 0;
 
  public:  // ***** METHODES ABSTRAITES

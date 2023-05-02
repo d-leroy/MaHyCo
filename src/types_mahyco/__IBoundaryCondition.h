@@ -33,11 +33,11 @@ class IBoundaryCondition
   virtual ~IBoundaryCondition() {}
 
  public:
-  /*!  */
+  /*!  Type de condition aux limites  */
   virtual BoundaryConditionType getType() = 0;
-  /*!  */
+  /*!  Surface sur laquelle s'applique la condition aux limites  */
   virtual String getSurface() = 0;
-  /*!  */
+  /*!  Valeur de la composante à fixer  */
   virtual Real getValue() = 0;
 };
 

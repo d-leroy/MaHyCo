@@ -33,11 +33,11 @@ class IEnvironment
   virtual ~IEnvironment() {}
 
  public:
-  /*!  */
+  /*!  Nom du milieu  */
   virtual String getName() = 0;
-  /*!  */
+  /*!  Nom du materiau  */
   virtual ArrayString getMaterial() = 0;
-  /*!  */
+  /*!  Service d'equation d'état  */
   virtual ::Eos::IEquationOfState* getEosModel() = 0;
 };
 

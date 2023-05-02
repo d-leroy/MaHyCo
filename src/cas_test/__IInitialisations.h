@@ -33,11 +33,11 @@ class IInitialisations
 
  public:  // ***** ACCESSEURS ABSTRAITS
   virtual const String getImplName() const = 0;
-  /*!  */
+  /*!  Numéro du cas test  */
   virtual Integer getCasTest() = 0;
-  /*!  */
+  /*!  Option de retour arriere  */
   virtual bool getReverseOption() = 0;
-  /*!  */
+  /*!  Parametre du cas test  */
   virtual Real getParametre() = 0;
 
  public:  // ***** METHODES ABSTRAITES

@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?><service name="PerfectGas" version="1.0" namespace-name="EosPerfectgas" type="caseoption">
   <interface name="::Eos::IEquationOfState"/>
   <variables>
-    <variable field-name="pressure" name="Pressure" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
-    <variable field-name="density" name="Density" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
-    <variable field-name="internal_energy" name="InternalEnergy" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
-    <variable field-name="sound_speed" name="SoundSpeed" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
-    <variable field-name="dpde" name="DpDe" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true"/>
+    <variable field-name="pressure" name="Pressure" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> PRESSURE </description>
+    </variable>
+    <variable field-name="density" name="Density" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> DENSITY </description>
+    </variable>
+    <variable field-name="internal_energy" name="InternalEnergy" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> INTERNAL ENERGY </description>
+    </variable>
+    <variable field-name="sound_speed" name="SoundSpeed" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> SOUND SPEED </description>
+    </variable>
+    <variable field-name="dpde" name="DpDe" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> DPDE </description>
+    </variable>
   </variables>
   <options>
-    <simple name="adiabatic-cst" type="real" default="1.4"/>
+    <simple name="adiabatic-cst" type="real" default="1.4">
+      <description> Définition de la constante adiabatique </description>
+    </simple>
     <simple name="limit-tension" type="real" default="0.0" optional="true">
       <description>Définition de la tension limite</description>
     </simple>

@@ -38,10 +38,12 @@ struct MahycoAllocCqsVars final
 
   /*!
   [out] cell_cqs
+   CELL OLD CQS 
   */
   VariableCellArrayReal3& m_cell_cqs;
   /*!
   [out] cell_cqs_n
+   CELL CQS 
   */
   VariableCellArrayReal3& m_cell_cqs_n;
 };
@@ -74,30 +76,37 @@ struct MahycoInitHydroVarVars final
 
   /*!
   [in] cell_cqs
+   CELL OLD CQS 
   */
   const VariableCellArrayReal3& m_cell_cqs;
   /*!
   [in] mass_fraction
+   MASS FRACTION 
   */
   const MaterialVariableCellReal& m_mass_fraction;
   /*!
   [in] node_coord
+   NODE COORD 
   */
   const VariableNodeReal3& m_node_coord;
   /*!
   [out] euler_volume
+   CELL VOLUME EULER 
   */
   VariableCellReal& m_euler_volume;
   /*!
   [inout] cell_volume
+   CELL VOLUME 
   */
   MaterialVariableCellReal& m_cell_volume;
   /*!
   [inout] internal_energy
+   INTERNAL ENERGY 
   */
   MaterialVariableCellReal& m_internal_energy;
   /*!
   [inout] sound_speed
+   SOUND SPEED 
   */
   MaterialVariableCellReal& m_sound_speed;
 };
@@ -118,6 +127,7 @@ struct MahycoPrepareFaceGroupForBcVars final
 
   /*!
   [in] node_coord
+   NODE COORD 
   */
   const VariableNodeReal3& m_node_coord;
 };
@@ -137,18 +147,22 @@ struct MahycoComputeCellMassVars final
 
   /*!
   [in] density
+   DENSITY 
   */
   const MaterialVariableCellReal& m_density;
   /*!
   [in] cell_volume
+   CELL VOLUME 
   */
   const MaterialVariableCellReal& m_cell_volume;
   /*!
   [in] mass_fraction
+   MASS FRACTION 
   */
   const MaterialVariableCellReal& m_mass_fraction;
   /*!
   [inout] cell_mass
+   CELL MASS 
   */
   MaterialVariableCellReal& m_cell_mass;
 };
@@ -164,10 +178,12 @@ struct MahycoComputeNodeMassVars final
 
   /*!
   [in] cell_mass
+   CELL MASS 
   */
   const MaterialVariableCellReal& m_cell_mass;
   /*!
   [out] node_mass
+   NODE MASS 
   */
   VariableNodeReal& m_node_mass;
 };
@@ -181,6 +197,7 @@ struct MahycoContinueForIterationDtVars final
 
   /*!
   [in] old_deltat
+   Pas de temps Old 
   */
   const VariableScalarReal& m_old_deltat;
 };
@@ -228,74 +245,92 @@ struct MahycoSaveValuesAtNVars final
 
   /*!
   [in] old_deltat
+   Pas de temps Old 
   */
   const VariableScalarReal& m_old_deltat;
   /*!
   [in] pseudo_viscosity
+   PSEUDO 
   */
   const MaterialVariableCellReal& m_pseudo_viscosity;
   /*!
   [in] pressure
+   PRESSURE 
   */
   const MaterialVariableCellReal& m_pressure;
   /*!
   [in] cell_volume
+   CELL VOLUME 
   */
   const MaterialVariableCellReal& m_cell_volume;
   /*!
   [in] density
+   DENSITY 
   */
   const MaterialVariableCellReal& m_density;
   /*!
   [in] internal_energy
+   INTERNAL ENERGY 
   */
   const MaterialVariableCellReal& m_internal_energy;
   /*!
   [in] cell_cqs
+   CELL OLD CQS 
   */
   const VariableCellArrayReal3& m_cell_cqs;
   /*!
   [in] velocity
+   VELOCITY 
   */
   const VariableNodeReal3& m_velocity;
   /*!
   [in] node_coord_0
+   NODE COORD_0 
   */
   const VariableNodeReal3& m_node_coord_0;
   /*!
   [out] pseudo_viscosity_nmoins1
+   PSEUDO OLD N-1 
   */
   MaterialVariableCellReal& m_pseudo_viscosity_nmoins1;
   /*!
   [out] pressure_n
+   PRESSURE OLD N 
   */
   MaterialVariableCellReal& m_pressure_n;
   /*!
   [out] cell_volume_n
+   CELL VOLUME OLD N 
   */
   MaterialVariableCellReal& m_cell_volume_n;
   /*!
   [out] density_n
+   DENSITY OLD N 
   */
   MaterialVariableCellReal& m_density_n;
   /*!
   [out] internal_energy_n
+   INTERNAL ENERGY OLD N 
   */
   MaterialVariableCellReal& m_internal_energy_n;
   /*!
   [out] cell_cqs_n
+   CELL CQS 
   */
   VariableCellArrayReal3& m_cell_cqs_n;
   /*!
   [out] velocity_n
+   VELOCITY OLD N 
   */
   VariableNodeReal3& m_velocity_n;
   /*!
   [out] node_coord
+   NODE COORD 
   */
   VariableNodeReal3& m_node_coord;
   /*!
   [inout] pseudo_viscosity_n
+   PSEUDO OLD N 
   */
   MaterialVariableCellReal& m_pseudo_viscosity_n;
 };
@@ -320,14 +355,17 @@ struct MahycoUpdatePositionVars final
 
   /*!
   [in] velocity
+   VELOCITY 
   */
   const VariableNodeReal3& m_velocity;
   /*!
   [out] cell_coord
+   CELL COORD 
   */
   VariableCellReal3& m_cell_coord;
   /*!
   [inout] node_coord
+   NODE COORD 
   */
   VariableNodeReal3& m_node_coord;
 };
@@ -358,26 +396,32 @@ struct MahycoUpdateDensityVars final
 
   /*!
   [in] cell_mass
+   CELL MASS 
   */
   const MaterialVariableCellReal& m_cell_mass;
   /*!
   [in] cell_volume
+   CELL VOLUME 
   */
   const MaterialVariableCellReal& m_cell_volume;
   /*!
   [in] density_n
+   DENSITY OLD N 
   */
   const MaterialVariableCellReal& m_density_n;
   /*!
   [out] div_u
+   DIV U 
   */
   VariableCellReal& m_div_u;
   /*!
   [inout] density
+   DENSITY 
   */
   MaterialVariableCellReal& m_density;
   /*!
   [inout] tau_density
+   TAUX DENSITY 
   */
   MaterialVariableCellReal& m_tau_density;
 };
@@ -401,26 +445,32 @@ struct MahycoComputeArtificialViscosityVars final
 
   /*!
   [in] div_u
+   DIV U 
   */
   const VariableCellReal& m_div_u;
   /*!
   [in] caracteristic_length
+   CARACTERISTIC LENGTH 
   */
   const VariableCellReal& m_caracteristic_length;
   /*!
   [in] sound_speed
+   SOUND SPEED 
   */
   const MaterialVariableCellReal& m_sound_speed;
   /*!
   [in] tau_density
+   TAUX DENSITY 
   */
   const MaterialVariableCellReal& m_tau_density;
   /*!
   [in] fracvol
+   FRACVOL 
   */
   const MaterialVariableCellReal& m_fracvol;
   /*!
   [inout] pseudo_viscosity
+   PSEUDO 
   */
   MaterialVariableCellReal& m_pseudo_viscosity;
 };
@@ -441,6 +491,7 @@ struct MahycoComputeDeltaTVars final
 
   /*!
   [out] old_deltat
+   Pas de temps Old 
   */
   VariableScalarReal& m_old_deltat;
 };
@@ -464,26 +515,32 @@ struct MahycoInitGeometricValuesVars final
 
   /*!
   [in] cell_coord
+   CELL COORD 
   */
   const VariableCellReal3& m_cell_coord;
   /*!
   [in] node_coord
+   NODE COORD 
   */
   const VariableNodeReal3& m_node_coord;
   /*!
   [out] node_coord_0
+   NODE COORD_0 
   */
   VariableNodeReal3& m_node_coord_0;
   /*!
   [out] outer_face_normal
+   U REMAP2 
   */
   VariableCellArrayReal3& m_outer_face_normal;
   /*!
   [inout] face_coord
+   FACE COORD 
   */
   VariableFaceReal3& m_face_coord;
   /*!
   [inout] face_normal
+   FACE NORMAL 
   */
   VariableFaceReal3& m_face_normal;
 };
@@ -505,22 +562,27 @@ struct MahycoComputeGeometricValuesAuxVars final
 
   /*!
   [in] fracvol
+   FRACVOL 
   */
   const MaterialVariableCellReal& m_fracvol;
   /*!
   [in] velocity
+   VELOCITY 
   */
   const VariableNodeReal3& m_velocity;
   /*!
   [out] cell_cqs
+   CELL OLD CQS 
   */
   VariableCellArrayReal3& m_cell_cqs;
   /*!
   [inout] node_coord
+   NODE COORD 
   */
   VariableNodeReal3& m_node_coord;
   /*!
   [inout] cell_volume
+   CELL VOLUME 
   */
   MaterialVariableCellReal& m_cell_volume;
 };
@@ -536,10 +598,12 @@ struct MahycoUpdateVelocityWithoutLagrangeVars final
 
   /*!
   [in] velocity_n
+   VELOCITY OLD N 
   */
   const VariableNodeReal3& m_velocity_n;
   /*!
   [out] velocity
+   VELOCITY 
   */
   VariableNodeReal3& m_velocity;
 };
@@ -563,26 +627,32 @@ struct MahycoUpdateForceAndVelocityVars final
 
   /*!
   [in] pressure
+   PRESSURE 
   */
   const MaterialVariableCellReal& m_pressure;
   /*!
   [in] pseudo_viscosity
+   PSEUDO 
   */
   const MaterialVariableCellReal& m_pseudo_viscosity;
   /*!
   [in] cell_cqs
+   CELL OLD CQS 
   */
   const VariableCellArrayReal3& m_cell_cqs;
   /*!
   [in] node_mass
+   NODE MASS 
   */
   const VariableNodeReal& m_node_mass;
   /*!
   [out] force
+   FORCE 
   */
   VariableNodeReal3& m_force;
   /*!
   [inout] velocity
+   VELOCITY 
   */
   VariableNodeReal3& m_velocity;
 };
@@ -628,70 +698,87 @@ struct MahycoUpdateEnergyAndPressurebyNewtonVars final
 
   /*!
   [in] pseudo_viscosity
+   PSEUDO 
   */
   const MaterialVariableCellReal& m_pseudo_viscosity;
   /*!
   [in] pseudo_viscosity_n
+   PSEUDO OLD N 
   */
   const MaterialVariableCellReal& m_pseudo_viscosity_n;
   /*!
   [in] pseudo_viscosity_nmoins1
+   PSEUDO OLD N-1 
   */
   const MaterialVariableCellReal& m_pseudo_viscosity_nmoins1;
   /*!
   [in] density
+   DENSITY 
   */
   const MaterialVariableCellReal& m_density;
   /*!
   [in] density_n
+   DENSITY OLD N 
   */
   const MaterialVariableCellReal& m_density_n;
   /*!
   [in] internal_energy_n
+   INTERNAL ENERGY OLD N 
   */
   const MaterialVariableCellReal& m_internal_energy_n;
   /*!
   [in] pressure_n
+   PRESSURE OLD N 
   */
   const MaterialVariableCellReal& m_pressure_n;
   /*!
   [in] dpde
+   DPDE 
   */
   const MaterialVariableCellReal& m_dpde;
   /*!
   [in] mass_fraction
+   MASS FRACTION 
   */
   const MaterialVariableCellReal& m_mass_fraction;
   /*!
   [in] velocity
+   VELOCITY 
   */
   const VariableNodeReal3& m_velocity;
   /*!
   [in] velocity_n
+   VELOCITY OLD N 
   */
   const VariableNodeReal3& m_velocity_n;
   /*!
   [in] cell_cqs
+   CELL OLD CQS 
   */
   const VariableCellArrayReal3& m_cell_cqs;
   /*!
   [in] cell_cqs_n
+   CELL CQS 
   */
   const VariableCellArrayReal3& m_cell_cqs_n;
   /*!
   [in] cell_mass
+   CELL MASS 
   */
   const MaterialVariableCellReal& m_cell_mass;
   /*!
   [out] internal_energy
+   INTERNAL ENERGY 
   */
   MaterialVariableCellReal& m_internal_energy;
   /*!
   [inout] pressure
+   PRESSURE 
   */
   MaterialVariableCellReal& m_pressure;
   /*!
   [inout] sound_speed
+   SOUND SPEED 
   */
   MaterialVariableCellReal& m_sound_speed;
 };
@@ -733,62 +820,77 @@ struct MahycoUpdateEnergyAndPressureforGPVars final
 
   /*!
   [in] pseudo_viscosity
+   PSEUDO 
   */
   const MaterialVariableCellReal& m_pseudo_viscosity;
   /*!
   [in] pseudo_viscosity_n
+   PSEUDO OLD N 
   */
   const MaterialVariableCellReal& m_pseudo_viscosity_n;
   /*!
   [in] pseudo_viscosity_nmoins1
+   PSEUDO OLD N-1 
   */
   const MaterialVariableCellReal& m_pseudo_viscosity_nmoins1;
   /*!
   [in] density
+   DENSITY 
   */
   const MaterialVariableCellReal& m_density;
   /*!
   [in] density_n
+   DENSITY OLD N 
   */
   const MaterialVariableCellReal& m_density_n;
   /*!
   [in] internal_energy_n
+   INTERNAL ENERGY OLD N 
   */
   const MaterialVariableCellReal& m_internal_energy_n;
   /*!
   [in] pressure_n
+   PRESSURE OLD N 
   */
   const MaterialVariableCellReal& m_pressure_n;
   /*!
   [in] mass_fraction
+   MASS FRACTION 
   */
   const MaterialVariableCellReal& m_mass_fraction;
   /*!
   [in] velocity
+   VELOCITY 
   */
   const VariableNodeReal3& m_velocity;
   /*!
   [in] velocity_n
+   VELOCITY OLD N 
   */
   const VariableNodeReal3& m_velocity_n;
   /*!
   [in] cell_cqs
+   CELL OLD CQS 
   */
   const VariableCellArrayReal3& m_cell_cqs;
   /*!
   [in] cell_cqs_n
+   CELL CQS 
   */
   const VariableCellArrayReal3& m_cell_cqs_n;
   /*!
   [in] cell_mass
+   CELL MASS 
   */
   const MaterialVariableCellReal& m_cell_mass;
   /*!
   [out] internal_energy
+   INTERNAL ENERGY 
   */
   MaterialVariableCellReal& m_internal_energy;
   /*!
   [inout] pressure
+   PRESSURE 
   */
   MaterialVariableCellReal& m_pressure;
 };
@@ -806,14 +908,17 @@ struct MahycoComputeAveragePressureVars final
 
   /*!
   [in] fracvol
+   FRACVOL 
   */
   const MaterialVariableCellReal& m_fracvol;
   /*!
   [inout] pressure
+   PRESSURE 
   */
   MaterialVariableCellReal& m_pressure;
   /*!
   [inout] sound_speed
+   SOUND SPEED 
   */
   MaterialVariableCellReal& m_sound_speed;
 };
@@ -831,14 +936,17 @@ struct MahycoComputeHydroDeltaTVars final
 
   /*!
   [in] caracteristic_length
+   CARACTERISTIC LENGTH 
   */
   const VariableCellReal& m_caracteristic_length;
   /*!
   [in] sound_speed
+   SOUND SPEED 
   */
   const MaterialVariableCellReal& m_sound_speed;
   /*!
   [in] velocity
+   VELOCITY 
   */
   const VariableNodeReal3& m_velocity;
 };

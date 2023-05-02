@@ -40,7 +40,7 @@ namespace Mahyco {
 
 /*!
  * \brief Module Mahyco : classe de base. 
- * 
+ *  Descripteur du module Mahyco 
  */
 template<class T>
 class MahycoModuleBase
