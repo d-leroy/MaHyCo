@@ -19,12 +19,11 @@ endif()
 # Python embedding
 configure_file(scihookdefs.h.in ${CMAKE_BINARY_DIR}/src/scihook/scihookdefs.h)
 if (SCIHOOK_ENABLED)
-    find_package(Python COMPONENTS Interpreter Development REQUIRED)
+    list(APPEND CMAKE_PREFIX_PATH "${SCIHOOK_INSTALL_PREFIX}")
     set(pybind11_DIR "${Python_SITELIB}/pybind11/share/cmake/pybind11")
     find_package(pybind11 REQUIRED)
 
-    add_library(scihook SHARED IMPORTED)
-    set_property(TARGET scihook PROPERTY IMPORTED_LOCATION ${Python_SITELIB}/scihook/libscihook.so)
+    find_library(SCIHOOK_LIB scihook)
 endif()
 
 if (WANT_CUDA AND NOT ARCANE_HAS_CUDA)
@@ -50,7 +49,7 @@ arcane_add_arcane_libraries_to_target(Mahyco)
 arcane_target_add_axl(Mahyco Mahyco)
 target_include_directories(Mahyco PRIVATE . ${CMAKE_CURRENT_BINARY_DIR})
 if (SCIHOOK_ENABLED)
-  target_include_directories(Mahyco PUBLIC ${Python_SITELIB}/scihook/include ${pybind11_INCLUDE_DIRS})
+  target_include_directories(Mahyco PUBLIC ${SCIHOOK_INSTALL_PREFIX}/include ${pybind11_INCLUDE_DIRS})
 endif()
 
 
@@ -85,7 +84,7 @@ arcane_accelerator_add_to_target(Mahyco)
 
 target_link_libraries(Mahyco PRIVATE mahyco_config casTest Remap cartesian eos accenv msgpass)
 if (SCIHOOK_ENABLED)
-  target_link_libraries(Mahyco PRIVATE scihook pybind11::embed)
+  target_link_libraries(Mahyco PRIVATE ${SCIHOOK_LIB} pybind11::embed)
 endif()
 
 # Configuration

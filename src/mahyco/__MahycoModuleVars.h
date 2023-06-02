@@ -121,8 +121,10 @@ struct MahycoComputeGeometricValuesIniVars final
 //! Classe de variable pour prepareFaceGroupForBc
 struct MahycoPrepareFaceGroupForBcVars final
 {
-  explicit MahycoPrepareFaceGroupForBcVars(const VariableNodeReal3& node_coord)
+  MahycoPrepareFaceGroupForBcVars(const VariableNodeReal3& node_coord,
+      VariableFaceArrayByte& is_dir_face)
   : m_node_coord(node_coord)
+  , m_is_dir_face(is_dir_face)
   {}
 
   /*!
@@ -130,6 +132,11 @@ struct MahycoPrepareFaceGroupForBcVars final
    NODE COORD 
   */
   const VariableNodeReal3& m_node_coord;
+  /*!
+  [out] is_dir_face
+   isDirFace 
+  */
+  VariableFaceArrayByte& m_is_dir_face;
 };
 
 //! Classe de variable pour computeCellMass
@@ -340,6 +347,20 @@ struct MahycoUpdateVelocityVars final
 {
   MahycoUpdateVelocityVars()
   {}
+};
+
+//! Classe de variable pour applyBoundaryCondition
+struct MahycoApplyBoundaryConditionVars final
+{
+  explicit MahycoApplyBoundaryConditionVars(VariableNodeReal3& velocity)
+  : m_velocity(velocity)
+  {}
+
+  /*!
+  [inout] velocity
+   VELOCITY 
+  */
+  VariableNodeReal3& m_velocity;
 };
 
 //! Classe de variable pour updatePosition
@@ -608,38 +629,95 @@ struct MahycoUpdateVelocityWithoutLagrangeVars final
   VariableNodeReal3& m_velocity;
 };
 
-//! Classe de variable pour updateForceAndVelocity
-struct MahycoUpdateForceAndVelocityVars final
+//! Classe de variable pour updateVelocityBackward
+struct MahycoUpdateVelocityBackwardVars final
 {
-  MahycoUpdateForceAndVelocityVars(const MaterialVariableCellReal& pressure,
-      const MaterialVariableCellReal& pseudo_viscosity,
-      const VariableCellArrayReal3& cell_cqs,
-      const VariableNodeReal& node_mass,
-      VariableNodeReal3& force,
-      VariableNodeReal3& velocity)
-  : m_pressure(pressure)
-  , m_pseudo_viscosity(pseudo_viscosity)
-  , m_cell_cqs(cell_cqs)
-  , m_node_mass(node_mass)
-  , m_force(force)
-  , m_velocity(velocity)
+  MahycoUpdateVelocityBackwardVars(const MaterialVariableCellReal& pressure_n,
+      const MaterialVariableCellReal& pseudo_viscosity_n,
+      const VariableCellArrayReal3& cell_cqs_n,
+      VariableNodeReal3& velocity_n)
+  : m_pressure_n(pressure_n)
+  , m_pseudo_viscosity_n(pseudo_viscosity_n)
+  , m_cell_cqs_n(cell_cqs_n)
+  , m_velocity_n(velocity_n)
   {}
 
   /*!
-  [in] pressure
-   PRESSURE 
+  [in] pressure_n
+   PRESSURE OLD N 
   */
-  const MaterialVariableCellReal& m_pressure;
+  const MaterialVariableCellReal& m_pressure_n;
   /*!
-  [in] pseudo_viscosity
-   PSEUDO 
+  [in] pseudo_viscosity_n
+   PSEUDO OLD N 
   */
-  const MaterialVariableCellReal& m_pseudo_viscosity;
+  const MaterialVariableCellReal& m_pseudo_viscosity_n;
   /*!
-  [in] cell_cqs
-   CELL OLD CQS 
+  [in] cell_cqs_n
+   CELL CQS 
   */
-  const VariableCellArrayReal3& m_cell_cqs;
+  const VariableCellArrayReal3& m_cell_cqs_n;
+  /*!
+  [inout] velocity_n
+   VELOCITY OLD N 
+  */
+  VariableNodeReal3& m_velocity_n;
+};
+
+//! Classe de variable pour updateVelocityForward
+struct MahycoUpdateVelocityForwardVars final
+{
+  MahycoUpdateVelocityForwardVars(const MaterialVariableCellReal& pressure_n,
+      const MaterialVariableCellReal& pseudo_viscosity_n,
+      const VariableCellArrayReal3& cell_cqs_n,
+      VariableNodeReal3& velocity_n)
+  : m_pressure_n(pressure_n)
+  , m_pseudo_viscosity_n(pseudo_viscosity_n)
+  , m_cell_cqs_n(cell_cqs_n)
+  , m_velocity_n(velocity_n)
+  {}
+
+  /*!
+  [in] pressure_n
+   PRESSURE OLD N 
+  */
+  const MaterialVariableCellReal& m_pressure_n;
+  /*!
+  [in] pseudo_viscosity_n
+   PSEUDO OLD N 
+  */
+  const MaterialVariableCellReal& m_pseudo_viscosity_n;
+  /*!
+  [in] cell_cqs_n
+   CELL CQS 
+  */
+  const VariableCellArrayReal3& m_cell_cqs_n;
+  /*!
+  [inout] velocity_n
+   VELOCITY OLD N 
+  */
+  VariableNodeReal3& m_velocity_n;
+};
+
+//! Classe de variable pour updateForceAndVelocity
+struct MahycoUpdateForceAndVelocityVars final
+{
+  MahycoUpdateForceAndVelocityVars(const VariableNodeReal& node_mass,
+      VariableNodeReal3& force,
+      const VariableCellReal& pressure,
+      const VariableCellReal& pseudo_viscosity,
+      const VariableCellReal3& cell_cqs,
+      const VariableNodeReal3& velocity_in,
+      VariableNodeReal3& velocity_out)
+  : m_node_mass(node_mass)
+  , m_force(force)
+  , m_pressure(pressure)
+  , m_pseudo_viscosity(pseudo_viscosity)
+  , m_cell_cqs(cell_cqs)
+  , m_velocity_in(velocity_in)
+  , m_velocity_out(velocity_out)
+  {}
+
   /*!
   [in] node_mass
    NODE MASS 
@@ -651,10 +729,25 @@ struct MahycoUpdateForceAndVelocityVars final
   */
   VariableNodeReal3& m_force;
   /*!
-  [inout] velocity
-   VELOCITY 
+  [in] pressure
   */
-  VariableNodeReal3& m_velocity;
+  const VariableCellReal& m_pressure;
+  /*!
+  [in] pseudo_viscosity
+  */
+  const VariableCellReal& m_pseudo_viscosity;
+  /*!
+  [in] cell_cqs
+  */
+  const VariableCellReal3& m_cell_cqs;
+  /*!
+  [in] velocity_in
+  */
+  const VariableNodeReal3& m_velocity_in;
+  /*!
+  [out] velocity_out
+  */
+  VariableNodeReal3& m_velocity_out;
 };
 
 //! Classe de variable pour updateEnergyAndPressurebyNewton

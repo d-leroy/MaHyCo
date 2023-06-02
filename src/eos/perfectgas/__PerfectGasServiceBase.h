@@ -16,6 +16,7 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
+#include "arcane/materials/IMeshEnvironment.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/perfectgas/__PerfectGasServiceVars.h"
 #include "scihook/scihookdefs.h"

@@ -25,13 +25,13 @@ service caseoption RemapADI implements remap.Remap {
     override remap.Remap.appliRemap
         in remap.sens_projection
         call remap.Remap.synchronizeUremap,
-        synchronizeDualUremap,
-        computeGradPhiFace,
-        computeGradPhiCell,
-        computeUpwindFaceQuantitiesForProjection,
-        computeUremap,
-        computeDualUremap,
-        remap.Remap.remapVariables;
+        call synchronizeDualUremap,
+        call computeGradPhiFace,
+        call computeGradPhiCell,
+        call computeUpwindFaceQuantitiesForProjection,
+        call computeUremap,
+        call computeDualUremap,
+        call remap.Remap.remapVariables;
     
     override remap.Remap.resizeRemapVariables
         out mahyco.u_lagrange, out mahyco.u_dual_lagrange, out mahyco.phi_lagrange,

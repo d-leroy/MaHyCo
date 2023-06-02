@@ -65,6 +65,7 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
     });
   pybind11::class_<Mahyco::MahycoPrepareFaceGroupForBcExecutionContext, std::shared_ptr<Mahyco::MahycoPrepareFaceGroupForBcExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoPrepareFaceGroupForBcExecutionContext")
     .def_property_readonly("node_coord", &Mahyco::MahycoPrepareFaceGroupForBcExecutionContext::get_m_node_coord)
+    .def_property_readonly("is_dir_face", &Mahyco::MahycoPrepareFaceGroupForBcExecutionContext::get_m_is_dir_face)
     .def("__str__", [](Mahyco::MahycoPrepareFaceGroupForBcExecutionContext &self)
     {
       std::ostringstream oss;
@@ -149,6 +150,20 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       return oss.str();
     })
     .def("__repr__", [](Mahyco::MahycoSaveValuesAtNExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<Mahyco::MahycoApplyBoundaryConditionExecutionContext, std::shared_ptr<Mahyco::MahycoApplyBoundaryConditionExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoApplyBoundaryConditionExecutionContext")
+    .def_property_readonly("velocity", &Mahyco::MahycoApplyBoundaryConditionExecutionContext::get_m_velocity)
+    .def("__str__", [](Mahyco::MahycoApplyBoundaryConditionExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](Mahyco::MahycoApplyBoundaryConditionExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";
@@ -274,13 +289,49 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
+  pybind11::class_<Mahyco::MahycoUpdateVelocityBackwardExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityBackwardExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateVelocityBackwardExecutionContext")
+    .def_property_readonly("pressure_n", &Mahyco::MahycoUpdateVelocityBackwardExecutionContext::get_m_pressure_n)
+    .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoUpdateVelocityBackwardExecutionContext::get_m_pseudo_viscosity_n)
+    .def_property_readonly("cell_cqs_n", &Mahyco::MahycoUpdateVelocityBackwardExecutionContext::get_m_cell_cqs_n)
+    .def_property_readonly("velocity_n", &Mahyco::MahycoUpdateVelocityBackwardExecutionContext::get_m_velocity_n)
+    .def("__str__", [](Mahyco::MahycoUpdateVelocityBackwardExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](Mahyco::MahycoUpdateVelocityBackwardExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<Mahyco::MahycoUpdateVelocityForwardExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityForwardExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateVelocityForwardExecutionContext")
+    .def_property_readonly("pressure_n", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_pressure_n)
+    .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_pseudo_viscosity_n)
+    .def_property_readonly("cell_cqs_n", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_cell_cqs_n)
+    .def_property_readonly("velocity_n", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_velocity_n)
+    .def("__str__", [](Mahyco::MahycoUpdateVelocityForwardExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](Mahyco::MahycoUpdateVelocityForwardExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
   pybind11::class_<Mahyco::MahycoUpdateForceAndVelocityExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateForceAndVelocityExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateForceAndVelocityExecutionContext")
+    .def_property_readonly("dt", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_dt)
+    .def_property_readonly("node_mass", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_node_mass)
+    .def_property_readonly("force", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_force)
     .def_property_readonly("pressure", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_pressure)
     .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_pseudo_viscosity)
     .def_property_readonly("cell_cqs", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_cell_cqs)
-    .def_property_readonly("node_mass", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_node_mass)
-    .def_property_readonly("force", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_force)
-    .def_property_readonly("velocity", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_velocity)
+    .def_property_readonly("velocity_in", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_velocity_in)
+    .def_property_readonly("velocity_out", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_velocity_out)
     .def("__str__", [](Mahyco::MahycoUpdateForceAndVelocityExecutionContext &self)
     {
       std::ostringstream oss;

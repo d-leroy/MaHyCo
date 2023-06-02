@@ -16,7 +16,7 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
-#include "scihook/SciHook.h"
+#include <SciHook.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

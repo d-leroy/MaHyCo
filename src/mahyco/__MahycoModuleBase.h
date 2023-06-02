@@ -16,6 +16,7 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
+#include "arcane/geometry/IGeometryMng.h"
 #include "mahyco/__MahycoModuleVars.h"
 #include "scihook/scihookdefs.h"
 #include "types_mahyco/__IMaterial.h"
@@ -68,6 +69,8 @@ class MahycoModuleBase
   size_t SAVEVALUESATN_AFTER;
   size_t UPDATEVELOCITY_BEFORE;
   size_t UPDATEVELOCITY_AFTER;
+  size_t APPLYBOUNDARYCONDITION_BEFORE;
+  size_t APPLYBOUNDARYCONDITION_AFTER;
   size_t UPDATEPOSITION_BEFORE;
   size_t UPDATEPOSITION_AFTER;
   size_t COMPUTEGEOMETRICVALUES_BEFORE;
@@ -86,6 +89,10 @@ class MahycoModuleBase
   size_t COMPUTEGEOMETRICVALUESAUX_AFTER;
   size_t UPDATEVELOCITYWITHOUTLAGRANGE_BEFORE;
   size_t UPDATEVELOCITYWITHOUTLAGRANGE_AFTER;
+  size_t UPDATEVELOCITYBACKWARD_BEFORE;
+  size_t UPDATEVELOCITYBACKWARD_AFTER;
+  size_t UPDATEVELOCITYFORWARD_BEFORE;
+  size_t UPDATEVELOCITYFORWARD_AFTER;
   size_t UPDATEFORCEANDVELOCITY_BEFORE;
   size_t UPDATEFORCEANDVELOCITY_AFTER;
   size_t UPDATEENERGYANDPRESSUREBYNEWTON_BEFORE;
@@ -123,6 +130,8 @@ class MahycoModuleBase
     SAVEVALUESATN_AFTER = SciHook::register_base_event("MahycoModuleBase.SaveValuesAtN.After");
     UPDATEVELOCITY_BEFORE = SciHook::register_base_event("MahycoModuleBase.UpdateVelocity.Before");
     UPDATEVELOCITY_AFTER = SciHook::register_base_event("MahycoModuleBase.UpdateVelocity.After");
+    APPLYBOUNDARYCONDITION_BEFORE = SciHook::register_base_event("MahycoModuleBase.ApplyBoundaryCondition.Before");
+    APPLYBOUNDARYCONDITION_AFTER = SciHook::register_base_event("MahycoModuleBase.ApplyBoundaryCondition.After");
     UPDATEPOSITION_BEFORE = SciHook::register_base_event("MahycoModuleBase.UpdatePosition.Before");
     UPDATEPOSITION_AFTER = SciHook::register_base_event("MahycoModuleBase.UpdatePosition.After");
     COMPUTEGEOMETRICVALUES_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeGeometricValues.Before");
@@ -141,6 +150,10 @@ class MahycoModuleBase
     COMPUTEGEOMETRICVALUESAUX_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeGeometricValuesAux.After");
     UPDATEVELOCITYWITHOUTLAGRANGE_BEFORE = SciHook::register_base_event("MahycoModuleBase.UpdateVelocityWithoutLagrange.Before");
     UPDATEVELOCITYWITHOUTLAGRANGE_AFTER = SciHook::register_base_event("MahycoModuleBase.UpdateVelocityWithoutLagrange.After");
+    UPDATEVELOCITYBACKWARD_BEFORE = SciHook::register_base_event("MahycoModuleBase.UpdateVelocityBackward.Before");
+    UPDATEVELOCITYBACKWARD_AFTER = SciHook::register_base_event("MahycoModuleBase.UpdateVelocityBackward.After");
+    UPDATEVELOCITYFORWARD_BEFORE = SciHook::register_base_event("MahycoModuleBase.UpdateVelocityForward.Before");
+    UPDATEVELOCITYFORWARD_AFTER = SciHook::register_base_event("MahycoModuleBase.UpdateVelocityForward.After");
     UPDATEFORCEANDVELOCITY_BEFORE = SciHook::register_base_event("MahycoModuleBase.UpdateForceAndVelocity.Before");
     UPDATEFORCEANDVELOCITY_AFTER = SciHook::register_base_event("MahycoModuleBase.UpdateForceAndVelocity.After");
     UPDATEENERGYANDPRESSUREBYNEWTON_BEFORE = SciHook::register_base_event("MahycoModuleBase.UpdateEnergyAndPressurebyNewton.Before");
@@ -338,6 +351,8 @@ class MahycoModuleBase
          prepareFaceGroupForBc [style="rounded, filled", fillcolor="gray"];
          inVars [shape="record", label="node_coord"];
          inVars -> prepareFaceGroupForBc;
+         outVars [shape="record", label="is_dir_face"];
+         prepareFaceGroupForBc -> outVars;
        }
    
      }
@@ -346,7 +361,8 @@ class MahycoModuleBase
   */
   void prepareFaceGroupForBc()
   {
-    MahycoPrepareFaceGroupForBcVars vars(m_node_coord);
+    MahycoPrepareFaceGroupForBcVars vars(m_node_coord
+        , m_is_dir_face);
     #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_PREPAREFACEGROUPFORBC_DISABLED)
     std::shared_ptr<MahycoPrepareFaceGroupForBcExecutionContext> ctx(
         new MahycoPrepareFaceGroupForBcExecutionContext("PrepareFaceGroupForBcExecutionContext"
@@ -545,6 +561,7 @@ class MahycoModuleBase
          center="true";
          color="navy";
          MahycoModuleBase_updateForceAndVelocity [label="updateForceAndVelocity", color="navy", fontcolor="navy", style="rounded", URL="\ref Mahyco::MahycoModuleBase::updateForceAndVelocity"];
+         MahycoModuleBase_updateVelocityBackward [label="updateVelocityBackward", color="navy", fontcolor="navy", style="rounded", URL="\ref Mahyco::MahycoModuleBase::updateVelocityBackward"];
          MahycoModuleBase_updateVelocityWithoutLagrange [label="updateVelocityWithoutLagrange", color="navy", fontcolor="navy", style="rounded", URL="\ref Mahyco::MahycoModuleBase::updateVelocityWithoutLagrange"];
        }
        updateVelocity -> MahycoModuleBase_updateVelocityWithoutLagrange [lhead="clusterCalledFuncs", style="dashed", label=" call"];
@@ -565,6 +582,43 @@ class MahycoModuleBase
     SciHook::trigger(UPDATEVELOCITY_AFTER, ctx);
     #else
     this->updateVelocity(vars);
+    #endif
+  }
+
+  /*!
+   \dot
+     digraph applyBoundaryConditionGraph
+     {
+       compound="true";
+       edge [arrowsize="0.5", fontsize="8"];
+       node [shape="box", fontname="Arial", fontsize="10"];
+       {
+         rank=same;
+         applyBoundaryCondition [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="velocity"];
+         inVars -> applyBoundaryCondition;
+         outVars [shape="record", label="velocity"];
+         applyBoundaryCondition -> outVars;
+       }
+   
+     }
+   \enddot
+   Cette méthode construit les variables et appelle MahycoModule::applyBoundaryCondition.
+  */
+  void applyBoundaryCondition()
+  {
+    MahycoApplyBoundaryConditionVars vars(m_velocity);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_APPLYBOUNDARYCONDITION_DISABLED)
+    std::shared_ptr<MahycoApplyBoundaryConditionExecutionContext> ctx(
+        new MahycoApplyBoundaryConditionExecutionContext("ApplyBoundaryConditionExecutionContext"
+            , &vars));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_APPLYBOUNDARYCONDITION_DISABLED)
+    SciHook::trigger(APPLYBOUNDARYCONDITION_BEFORE, ctx);
+    this->applyBoundaryCondition(vars);
+    SciHook::trigger(APPLYBOUNDARYCONDITION_AFTER, ctx);
+    #else
+    this->applyBoundaryCondition(vars);
     #endif
   }
 
@@ -936,6 +990,100 @@ class MahycoModuleBase
 
   /*!
    \dot
+     digraph updateVelocityBackwardGraph
+     {
+       compound="true";
+       edge [arrowsize="0.5", fontsize="8"];
+       node [shape="box", fontname="Arial", fontsize="10"];
+       {
+         rank=same;
+         updateVelocityBackward [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="pressure_n | pseudo_viscosity_n | cell_cqs_n | velocity_n"];
+         inVars -> updateVelocityBackward;
+         outVars [shape="record", label="velocity_n"];
+         updateVelocityBackward -> outVars;
+       }
+   
+       subgraph clusterCalledFuncs
+       {
+         center="true";
+         color="navy";
+         MahycoModuleBase_updateForceAndVelocity [label="updateForceAndVelocity", color="navy", fontcolor="navy", style="rounded", URL="\ref Mahyco::MahycoModuleBase::updateForceAndVelocity"];
+       }
+       updateVelocityBackward -> MahycoModuleBase_updateForceAndVelocity [lhead="clusterCalledFuncs", style="dashed", label=" call"];
+     }
+   \enddot
+   Cette méthode construit les variables et appelle MahycoModule::updateVelocityBackward.
+  */
+  void updateVelocityBackward()
+  {
+    MahycoUpdateVelocityBackwardVars vars(m_pressure_n
+        , m_pseudo_viscosity_n
+        , m_cell_cqs_n
+        , m_velocity_n);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEVELOCITYBACKWARD_DISABLED)
+    std::shared_ptr<MahycoUpdateVelocityBackwardExecutionContext> ctx(
+        new MahycoUpdateVelocityBackwardExecutionContext("UpdateVelocityBackwardExecutionContext"
+            , &vars));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEVELOCITYBACKWARD_DISABLED)
+    SciHook::trigger(UPDATEVELOCITYBACKWARD_BEFORE, ctx);
+    this->updateVelocityBackward(vars);
+    SciHook::trigger(UPDATEVELOCITYBACKWARD_AFTER, ctx);
+    #else
+    this->updateVelocityBackward(vars);
+    #endif
+  }
+
+  /*!
+   \dot
+     digraph updateVelocityForwardGraph
+     {
+       compound="true";
+       edge [arrowsize="0.5", fontsize="8"];
+       node [shape="box", fontname="Arial", fontsize="10"];
+       {
+         rank=same;
+         updateVelocityForward [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="pressure_n | pseudo_viscosity_n | cell_cqs_n | velocity_n"];
+         inVars -> updateVelocityForward;
+         outVars [shape="record", label="velocity_n"];
+         updateVelocityForward -> outVars;
+       }
+   
+       subgraph clusterCalledFuncs
+       {
+         center="true";
+         color="navy";
+         MahycoModuleBase_updateForceAndVelocity [label="updateForceAndVelocity", color="navy", fontcolor="navy", style="rounded", URL="\ref Mahyco::MahycoModuleBase::updateForceAndVelocity"];
+       }
+       updateVelocityForward -> MahycoModuleBase_updateForceAndVelocity [lhead="clusterCalledFuncs", style="dashed", label=" call"];
+     }
+   \enddot
+   Cette méthode construit les variables et appelle MahycoModule::updateVelocityForward.
+  */
+  void updateVelocityForward()
+  {
+    MahycoUpdateVelocityForwardVars vars(m_pressure_n
+        , m_pseudo_viscosity_n
+        , m_cell_cqs_n
+        , m_velocity_n);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEVELOCITYFORWARD_DISABLED)
+    std::shared_ptr<MahycoUpdateVelocityForwardExecutionContext> ctx(
+        new MahycoUpdateVelocityForwardExecutionContext("UpdateVelocityForwardExecutionContext"
+            , &vars));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEVELOCITYFORWARD_DISABLED)
+    SciHook::trigger(UPDATEVELOCITYFORWARD_BEFORE, ctx);
+    this->updateVelocityForward(vars);
+    SciHook::trigger(UPDATEVELOCITYFORWARD_AFTER, ctx);
+    #else
+    this->updateVelocityForward(vars);
+    #endif
+  }
+
+  /*!
+   \dot
      digraph updateForceAndVelocityGraph
      {
        compound="true";
@@ -944,9 +1092,9 @@ class MahycoModuleBase
        {
          rank=same;
          updateForceAndVelocity [style="rounded, filled", fillcolor="gray"];
-         inVars [shape="record", label="pressure | pseudo_viscosity | cell_cqs | node_mass | velocity"];
+         inVars [shape="record", label="node_mass | pressure | pseudo_viscosity | cell_cqs | velocity_in"];
          inVars -> updateForceAndVelocity;
-         outVars [shape="record", label="force | velocity"];
+         outVars [shape="record", label="force | velocity_out"];
          updateForceAndVelocity -> outVars;
        }
    
@@ -954,25 +1102,27 @@ class MahycoModuleBase
    \enddot
    Cette méthode construit les variables et appelle MahycoModule::updateForceAndVelocity.
   */
-  void updateForceAndVelocity()
+  void updateForceAndVelocity(const Real dt, const VariableCellReal& pressure, const VariableCellReal& pseudo_viscosity, const VariableCellReal3& cell_cqs, const VariableNodeReal3& velocity_in, VariableNodeReal3& velocity_out)
   {
-    MahycoUpdateForceAndVelocityVars vars(m_pressure
-        , m_pseudo_viscosity
-        , m_cell_cqs
-        , m_node_mass
+    MahycoUpdateForceAndVelocityVars vars(m_node_mass
         , m_force
-        , m_velocity);
+        , pressure
+        , pseudo_viscosity
+        , cell_cqs
+        , velocity_in
+        , velocity_out);
     #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEFORCEANDVELOCITY_DISABLED)
     std::shared_ptr<MahycoUpdateForceAndVelocityExecutionContext> ctx(
         new MahycoUpdateForceAndVelocityExecutionContext("UpdateForceAndVelocityExecutionContext"
-            , &vars));
+            , &vars
+            , dt));
     #endif
     #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEFORCEANDVELOCITY_DISABLED)
     SciHook::trigger(UPDATEFORCEANDVELOCITY_BEFORE, ctx);
-    this->updateForceAndVelocity(vars);
+    this->updateForceAndVelocity(vars, dt);
     SciHook::trigger(UPDATEFORCEANDVELOCITY_AFTER, ctx);
     #else
-    this->updateForceAndVelocity(vars);
+    this->updateForceAndVelocity(vars, dt);
     #endif
   }
 
@@ -1168,6 +1318,7 @@ class MahycoModuleBase
   virtual void continueForIterationDt(MahycoContinueForIterationDtVars& vars) = 0;
   virtual void saveValuesAtN(MahycoSaveValuesAtNVars& vars) = 0;
   virtual void updateVelocity(MahycoUpdateVelocityVars& vars) = 0;
+  virtual void applyBoundaryCondition(MahycoApplyBoundaryConditionVars& vars) = 0;
   virtual void updatePosition(MahycoUpdatePositionVars& vars) = 0;
   virtual void computeGeometricValues(MahycoComputeGeometricValuesVars& vars) = 0;
   virtual void updateDensity(MahycoUpdateDensityVars& vars) = 0;
@@ -1177,7 +1328,9 @@ class MahycoModuleBase
   virtual void initGeometricValues(MahycoInitGeometricValuesVars& vars) = 0;
   virtual void computeGeometricValuesAux(MahycoComputeGeometricValuesAuxVars& vars) = 0;
   virtual void updateVelocityWithoutLagrange(MahycoUpdateVelocityWithoutLagrangeVars& vars) = 0;
-  virtual void updateForceAndVelocity(MahycoUpdateForceAndVelocityVars& vars) = 0;
+  virtual void updateVelocityBackward(MahycoUpdateVelocityBackwardVars& vars) = 0;
+  virtual void updateVelocityForward(MahycoUpdateVelocityForwardVars& vars) = 0;
+  virtual void updateForceAndVelocity(MahycoUpdateForceAndVelocityVars& vars, const Real dt) = 0;
   virtual void updateEnergyAndPressurebyNewton(MahycoUpdateEnergyAndPressurebyNewtonVars& vars) = 0;
   virtual void updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars) = 0;
   virtual void computeAveragePressure(MahycoComputeAveragePressureVars& vars) = 0;

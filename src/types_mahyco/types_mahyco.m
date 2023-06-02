@@ -27,5 +27,5 @@ enum BoundaryConditionType {
     Vx; Vy; Vz;
 }
 
-legacy IGeometryMng file "" namespace "Arcane::Numerics";
-legacy IMeshEnvironment file "" namespace "Arcane::Materials";
+legacy IGeometryMng file "arcane/geometry/IGeometryMng.h" namespace "Arcane::Numerics";
+legacy IMeshEnvironment file "arcane/materials/IMeshEnvironment.h" namespace "Arcane::Materials";

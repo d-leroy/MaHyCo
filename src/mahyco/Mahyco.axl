@@ -25,6 +25,9 @@
     <variable field-name="sound_speed" name="SoundSpeed" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
       <description> SOUND SPEED </description>
     </variable>
+    <variable field-name="is_dir_face" name="IsDirFace" data-type="bool" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> isDirFace </description>
+    </variable>
     <variable field-name="density" name="Density" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
       <description> DENSITY </description>
     </variable>
@@ -112,6 +115,7 @@
     <entry-point method-name="continueForIterationDt" name="ContinueForIterationDt" where="continue-init" property="none"/>
     <entry-point method-name="saveValuesAtN" name="SaveValuesAtN" where="compute-loop" property="none"/>
     <entry-point method-name="updateVelocity" name="UpdateVelocity" where="compute-loop" property="none"/>
+    <entry-point method-name="applyBoundaryCondition" name="ApplyBoundaryCondition" where="compute-loop" property="none"/>
     <entry-point method-name="updatePosition" name="UpdatePosition" where="compute-loop" property="none"/>
     <entry-point method-name="computeGeometricValues" name="ComputeGeometricValues" where="compute-loop" property="none"/>
     <entry-point method-name="updateDensity" name="UpdateDensity" where="compute-loop" property="none"/>

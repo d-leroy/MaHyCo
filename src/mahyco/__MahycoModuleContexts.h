@@ -102,6 +102,10 @@ struct MahycoPrepareFaceGroupForBcExecutionContext final : SciHook::SciHookExecu
   const pybind11::object get_m_node_coord() const {
     return pybind11::cast(vars->m_node_coord);
   }
+
+  const pybind11::object get_m_is_dir_face() const {
+    return pybind11::cast(vars->m_is_dir_face);
+  }
 };
 
 //! Classe de contexte d'exécution pour computeCellMass
@@ -249,6 +253,22 @@ struct MahycoSaveValuesAtNExecutionContext final : SciHook::SciHookExecutionCont
 
   const pybind11::object get_m_pseudo_viscosity_n() const {
     return pybind11::cast(vars->m_pseudo_viscosity_n);
+  }
+};
+
+//! Classe de contexte d'exécution pour applyBoundaryCondition
+struct MahycoApplyBoundaryConditionExecutionContext final : SciHook::SciHookExecutionContext
+{
+  MahycoApplyBoundaryConditionExecutionContext(std::string execution_context_name,
+      MahycoApplyBoundaryConditionVars *vars)
+  : SciHookExecutionContext(execution_context_name)
+  , vars(vars)
+  {}
+  
+  const MahycoApplyBoundaryConditionVars *vars;
+
+  const pybind11::object get_m_velocity() const {
+    return pybind11::cast(vars->m_velocity);
   }
 };
 
@@ -452,16 +472,87 @@ struct MahycoUpdateVelocityWithoutLagrangeExecutionContext final : SciHook::SciH
   }
 };
 
-//! Classe de contexte d'exécution pour updateForceAndVelocity
-struct MahycoUpdateForceAndVelocityExecutionContext final : SciHook::SciHookExecutionContext
+//! Classe de contexte d'exécution pour updateVelocityBackward
+struct MahycoUpdateVelocityBackwardExecutionContext final : SciHook::SciHookExecutionContext
 {
-  MahycoUpdateForceAndVelocityExecutionContext(std::string execution_context_name,
-      MahycoUpdateForceAndVelocityVars *vars)
+  MahycoUpdateVelocityBackwardExecutionContext(std::string execution_context_name,
+      MahycoUpdateVelocityBackwardVars *vars)
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
   
+  const MahycoUpdateVelocityBackwardVars *vars;
+
+  const pybind11::object get_m_pressure_n() const {
+    return pybind11::cast(vars->m_pressure_n);
+  }
+
+  const pybind11::object get_m_pseudo_viscosity_n() const {
+    return pybind11::cast(vars->m_pseudo_viscosity_n);
+  }
+
+  const pybind11::object get_m_cell_cqs_n() const {
+    return pybind11::cast(vars->m_cell_cqs_n);
+  }
+
+  const pybind11::object get_m_velocity_n() const {
+    return pybind11::cast(vars->m_velocity_n);
+  }
+};
+
+//! Classe de contexte d'exécution pour updateVelocityForward
+struct MahycoUpdateVelocityForwardExecutionContext final : SciHook::SciHookExecutionContext
+{
+  MahycoUpdateVelocityForwardExecutionContext(std::string execution_context_name,
+      MahycoUpdateVelocityForwardVars *vars)
+  : SciHookExecutionContext(execution_context_name)
+  , vars(vars)
+  {}
+  
+  const MahycoUpdateVelocityForwardVars *vars;
+
+  const pybind11::object get_m_pressure_n() const {
+    return pybind11::cast(vars->m_pressure_n);
+  }
+
+  const pybind11::object get_m_pseudo_viscosity_n() const {
+    return pybind11::cast(vars->m_pseudo_viscosity_n);
+  }
+
+  const pybind11::object get_m_cell_cqs_n() const {
+    return pybind11::cast(vars->m_cell_cqs_n);
+  }
+
+  const pybind11::object get_m_velocity_n() const {
+    return pybind11::cast(vars->m_velocity_n);
+  }
+};
+
+//! Classe de contexte d'exécution pour updateForceAndVelocity
+struct MahycoUpdateForceAndVelocityExecutionContext final : SciHook::SciHookExecutionContext
+{
+  MahycoUpdateForceAndVelocityExecutionContext(std::string execution_context_name,
+      MahycoUpdateForceAndVelocityVars *vars,
+      const Real dt)
+  : SciHookExecutionContext(execution_context_name)
+  , dt(dt)
+  , vars(vars)
+  {}
+  
+  const Real dt;
   const MahycoUpdateForceAndVelocityVars *vars;
+
+  const pybind11::object get_dt() const {
+    return pybind11::cast(dt);
+  }
+
+  const pybind11::object get_m_node_mass() const {
+    return pybind11::cast(vars->m_node_mass);
+  }
+
+  const pybind11::object get_m_force() const {
+    return pybind11::cast(vars->m_force);
+  }
 
   const pybind11::object get_m_pressure() const {
     return pybind11::cast(vars->m_pressure);
@@ -475,16 +566,12 @@ struct MahycoUpdateForceAndVelocityExecutionContext final : SciHook::SciHookExec
     return pybind11::cast(vars->m_cell_cqs);
   }
 
-  const pybind11::object get_m_node_mass() const {
-    return pybind11::cast(vars->m_node_mass);
+  const pybind11::object get_m_velocity_in() const {
+    return pybind11::cast(vars->m_velocity_in);
   }
 
-  const pybind11::object get_m_force() const {
-    return pybind11::cast(vars->m_force);
-  }
-
-  const pybind11::object get_m_velocity() const {
-    return pybind11::cast(vars->m_velocity);
+  const pybind11::object get_m_velocity_out() const {
+    return pybind11::cast(vars->m_velocity_out);
   }
 };
 
