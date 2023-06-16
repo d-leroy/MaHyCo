@@ -70,7 +70,8 @@ class OtherServiceBase
  public:  // ***** ACCESSEURS
   Integer getCasTest() { return options()->getCasTest(); }
   bool getReverseOption() { return options()->getReverseOption(); }
-  Real getParametre() { return options()->getParametre(); }
+  bool hasReverseOption() const { return options()->hasReverseOption(); }
+  Real getParameter() { return options()->getParameter(); }
   const String getImplName() const { return "OtherService"; }
 
  public:  // ***** METHODES CONCRETES

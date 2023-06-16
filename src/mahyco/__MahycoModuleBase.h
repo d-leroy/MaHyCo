@@ -24,6 +24,7 @@
 #include "cas_test/__IInitialisations.h"
 #include "remap/__IRemap.h"
 #include "types_mahyco/__IBoundaryCondition.h"
+#include "cartesian/interface/ICartesianMesh.h"
 #include "mahyco/Mahyco_axl.h"
 #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED)
 #include "mahyco/__MahycoModuleContexts.h"
@@ -49,20 +50,36 @@ class MahycoModuleBase
 {
  #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED)
  private:
+  size_t ACCBUILD_BEFORE;
+  size_t ACCBUILD_AFTER;
+  size_t CHECKOPTIONS_BEFORE;
+  size_t CHECKOPTIONS_AFTER;
+  size_t INITCARTESIANMESH_BEFORE;
+  size_t INITCARTESIANMESH_AFTER;
   size_t ALLOCCQS_BEFORE;
   size_t ALLOCCQS_AFTER;
   size_t INITDTINI_BEFORE;
   size_t INITDTINI_AFTER;
   size_t INITHYDROVAR_BEFORE;
   size_t INITHYDROVAR_AFTER;
+  size_t HYDROSTARTINITENVANDMAT_BEFORE;
+  size_t HYDROSTARTINITENVANDMAT_AFTER;
+  size_t INITENVFORACC_BEFORE;
+  size_t INITENVFORACC_AFTER;
   size_t COMPUTEGEOMETRICVALUESINI_BEFORE;
   size_t COMPUTEGEOMETRICVALUESINI_AFTER;
   size_t PREPAREFACEGROUPFORBC_BEFORE;
   size_t PREPAREFACEGROUPFORBC_AFTER;
+  size_t INITBOUNDARYCONDITIONSFORACC_BEFORE;
+  size_t INITBOUNDARYCONDITIONSFORACC_AFTER;
+  size_t SETSYNCVARVERS_BEFORE;
+  size_t SETSYNCVARVERS_AFTER;
   size_t COMPUTECELLMASS_BEFORE;
   size_t COMPUTECELLMASS_AFTER;
   size_t COMPUTENODEMASS_BEFORE;
   size_t COMPUTENODEMASS_AFTER;
+  size_t CONTINUEFORMULTIMAT_BEFORE;
+  size_t CONTINUEFORMULTIMAT_AFTER;
   size_t CONTINUEFORITERATIONDT_BEFORE;
   size_t CONTINUEFORITERATIONDT_AFTER;
   size_t SAVEVALUESATN_BEFORE;
@@ -81,6 +98,8 @@ class MahycoModuleBase
   size_t COMPUTEARTIFICIALVISCOSITY_AFTER;
   size_t UPDATEENERGYANDPRESSURE_BEFORE;
   size_t UPDATEENERGYANDPRESSURE_AFTER;
+  size_t REMAP_BEFORE;
+  size_t REMAP_AFTER;
   size_t COMPUTEDELTAT_BEFORE;
   size_t COMPUTEDELTAT_AFTER;
   size_t INITGEOMETRICVALUES_BEFORE;
@@ -101,8 +120,10 @@ class MahycoModuleBase
   size_t UPDATEENERGYANDPRESSUREFORGP_AFTER;
   size_t COMPUTEAVERAGEPRESSURE_BEFORE;
   size_t COMPUTEAVERAGEPRESSURE_AFTER;
-  size_t COMPUTEHYDRODELTAT_BEFORE;
-  size_t COMPUTEHYDRODELTAT_AFTER;
+  size_t COMPUTEVARIABLESFORREMAP_BEFORE;
+  size_t COMPUTEVARIABLESFORREMAP_AFTER;
+  size_t COMPUTEFACEQUANTITESFORREMAP_BEFORE;
+  size_t COMPUTEFACEQUANTITESFORREMAP_AFTER;
  #endif
  public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
   explicit MahycoModuleBase(const ModuleBuildInfo& bi)
@@ -110,20 +131,36 @@ class MahycoModuleBase
   , m_mesh_material_mng(IMeshMaterialMng::getReference(bi.mesh()))
   {
     #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED)
+    ACCBUILD_BEFORE = SciHook::register_base_event("MahycoModuleBase.AccBuild.Before");
+    ACCBUILD_AFTER = SciHook::register_base_event("MahycoModuleBase.AccBuild.After");
+    CHECKOPTIONS_BEFORE = SciHook::register_base_event("MahycoModuleBase.CheckOptions.Before");
+    CHECKOPTIONS_AFTER = SciHook::register_base_event("MahycoModuleBase.CheckOptions.After");
+    INITCARTESIANMESH_BEFORE = SciHook::register_base_event("MahycoModuleBase.InitCartesianMesh.Before");
+    INITCARTESIANMESH_AFTER = SciHook::register_base_event("MahycoModuleBase.InitCartesianMesh.After");
     ALLOCCQS_BEFORE = SciHook::register_base_event("MahycoModuleBase.AllocCqs.Before");
     ALLOCCQS_AFTER = SciHook::register_base_event("MahycoModuleBase.AllocCqs.After");
     INITDTINI_BEFORE = SciHook::register_base_event("MahycoModuleBase.InitDtIni.Before");
     INITDTINI_AFTER = SciHook::register_base_event("MahycoModuleBase.InitDtIni.After");
     INITHYDROVAR_BEFORE = SciHook::register_base_event("MahycoModuleBase.InitHydroVar.Before");
     INITHYDROVAR_AFTER = SciHook::register_base_event("MahycoModuleBase.InitHydroVar.After");
+    HYDROSTARTINITENVANDMAT_BEFORE = SciHook::register_base_event("MahycoModuleBase.HydroStartInitEnvAndMat.Before");
+    HYDROSTARTINITENVANDMAT_AFTER = SciHook::register_base_event("MahycoModuleBase.HydroStartInitEnvAndMat.After");
+    INITENVFORACC_BEFORE = SciHook::register_base_event("MahycoModuleBase.InitEnvForAcc.Before");
+    INITENVFORACC_AFTER = SciHook::register_base_event("MahycoModuleBase.InitEnvForAcc.After");
     COMPUTEGEOMETRICVALUESINI_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeGeometricValuesIni.Before");
     COMPUTEGEOMETRICVALUESINI_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeGeometricValuesIni.After");
     PREPAREFACEGROUPFORBC_BEFORE = SciHook::register_base_event("MahycoModuleBase.PrepareFaceGroupForBc.Before");
     PREPAREFACEGROUPFORBC_AFTER = SciHook::register_base_event("MahycoModuleBase.PrepareFaceGroupForBc.After");
+    INITBOUNDARYCONDITIONSFORACC_BEFORE = SciHook::register_base_event("MahycoModuleBase.InitBoundaryConditionsForAcc.Before");
+    INITBOUNDARYCONDITIONSFORACC_AFTER = SciHook::register_base_event("MahycoModuleBase.InitBoundaryConditionsForAcc.After");
+    SETSYNCVARVERS_BEFORE = SciHook::register_base_event("MahycoModuleBase.SetSyncVarVers.Before");
+    SETSYNCVARVERS_AFTER = SciHook::register_base_event("MahycoModuleBase.SetSyncVarVers.After");
     COMPUTECELLMASS_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeCellMass.Before");
     COMPUTECELLMASS_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeCellMass.After");
     COMPUTENODEMASS_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeNodeMass.Before");
     COMPUTENODEMASS_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeNodeMass.After");
+    CONTINUEFORMULTIMAT_BEFORE = SciHook::register_base_event("MahycoModuleBase.ContinueForMultiMat.Before");
+    CONTINUEFORMULTIMAT_AFTER = SciHook::register_base_event("MahycoModuleBase.ContinueForMultiMat.After");
     CONTINUEFORITERATIONDT_BEFORE = SciHook::register_base_event("MahycoModuleBase.ContinueForIterationDt.Before");
     CONTINUEFORITERATIONDT_AFTER = SciHook::register_base_event("MahycoModuleBase.ContinueForIterationDt.After");
     SAVEVALUESATN_BEFORE = SciHook::register_base_event("MahycoModuleBase.SaveValuesAtN.Before");
@@ -142,6 +179,8 @@ class MahycoModuleBase
     COMPUTEARTIFICIALVISCOSITY_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeArtificialViscosity.After");
     UPDATEENERGYANDPRESSURE_BEFORE = SciHook::register_base_event("MahycoModuleBase.UpdateEnergyAndPressure.Before");
     UPDATEENERGYANDPRESSURE_AFTER = SciHook::register_base_event("MahycoModuleBase.UpdateEnergyAndPressure.After");
+    REMAP_BEFORE = SciHook::register_base_event("MahycoModuleBase.Remap.Before");
+    REMAP_AFTER = SciHook::register_base_event("MahycoModuleBase.Remap.After");
     COMPUTEDELTAT_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeDeltaT.Before");
     COMPUTEDELTAT_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeDeltaT.After");
     INITGEOMETRICVALUES_BEFORE = SciHook::register_base_event("MahycoModuleBase.InitGeometricValues.Before");
@@ -162,8 +201,10 @@ class MahycoModuleBase
     UPDATEENERGYANDPRESSUREFORGP_AFTER = SciHook::register_base_event("MahycoModuleBase.UpdateEnergyAndPressureforGP.After");
     COMPUTEAVERAGEPRESSURE_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeAveragePressure.Before");
     COMPUTEAVERAGEPRESSURE_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeAveragePressure.After");
-    COMPUTEHYDRODELTAT_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeHydroDeltaT.Before");
-    COMPUTEHYDRODELTAT_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeHydroDeltaT.After");
+    COMPUTEVARIABLESFORREMAP_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeVariablesForRemap.Before");
+    COMPUTEVARIABLESFORREMAP_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeVariablesForRemap.After");
+    COMPUTEFACEQUANTITESFORREMAP_BEFORE = SciHook::register_base_event("MahycoModuleBase.ComputeFaceQuantitesForRemap.Before");
+    COMPUTEFACEQUANTITESFORREMAP_AFTER = SciHook::register_base_event("MahycoModuleBase.ComputeFaceQuantitesForRemap.After");
     #endif
   }
 
@@ -191,10 +232,71 @@ class MahycoModuleBase
   bool getWithProjection() { return options()->getWithProjection(); }
   ConstArrayView< ::Types_mahyco::IBoundaryCondition* > getBoundaryCondition() { return options()->getBoundaryCondition(); }
   ::Arcane::Numerics::IGeometryMng* getGeometry() { return options()->getGeometry(); }
+  Integer getDimension() { return options()->getDimension(); }
+  ::CartesianInterface::ICartesianMesh* getCartesianMesh() { return options()->getCartesianMesh(); }
   VersionInfo versionInfo() const { return VersionInfo("1.0"); }
   IMeshMaterialMng* getMeshMaterialMng() const { return m_mesh_material_mng; }
 
  public:  // ***** METHODES CONCRETES
+  /*!
+    Pour préparer les accélérateurs 
+   Cette méthode construit les variables et appelle MahycoModule::accBuild.
+  */
+  void accBuild()
+  {
+    MahycoAccBuildVars vars;
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_ACCBUILD_DISABLED)
+    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
+        new SciHook::SciHookExecutionContext("AccBuildExecutionContext"));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_ACCBUILD_DISABLED)
+    SciHook::trigger(ACCBUILD_BEFORE, ctx);
+    this->accBuild(vars);
+    SciHook::trigger(ACCBUILD_AFTER, ctx);
+    #else
+    this->accBuild(vars);
+    #endif
+  }
+
+  /*!
+    Vérification de la compatibilité des options 
+   Cette méthode construit les variables et appelle MahycoModule::checkOptions.
+  */
+  void checkOptions()
+  {
+    MahycoCheckOptionsVars vars;
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_CHECKOPTIONS_DISABLED)
+    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
+        new SciHook::SciHookExecutionContext("CheckOptionsExecutionContext"));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_CHECKOPTIONS_DISABLED)
+    SciHook::trigger(CHECKOPTIONS_BEFORE, ctx);
+    this->checkOptions(vars);
+    SciHook::trigger(CHECKOPTIONS_AFTER, ctx);
+    #else
+    this->checkOptions(vars);
+    #endif
+  }
+
+  /*!
+   Cette méthode construit les variables et appelle MahycoModule::initCartesianMesh.
+  */
+  void initCartesianMesh()
+  {
+    MahycoInitCartesianMeshVars vars;
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_INITCARTESIANMESH_DISABLED)
+    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
+        new SciHook::SciHookExecutionContext("InitCartesianMeshExecutionContext"));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_INITCARTESIANMESH_DISABLED)
+    SciHook::trigger(INITCARTESIANMESH_BEFORE, ctx);
+    this->initCartesianMesh(vars);
+    SciHook::trigger(INITCARTESIANMESH_AFTER, ctx);
+    #else
+    this->initCartesianMesh(vars);
+    #endif
+  }
+
   /*!
    \dot
      digraph allocCqsGraph
@@ -302,6 +404,65 @@ class MahycoModuleBase
 
   /*!
    \dot
+     digraph hydroStartInitEnvAndMatGraph
+     {
+       compound="true";
+       edge [arrowsize="0.5", fontsize="8"];
+       node [shape="box", fontname="Arial", fontsize="10"];
+       {
+         rank=same;
+         hydroStartInitEnvAndMat [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="materiau | node_coord"];
+         inVars -> hydroStartInitEnvAndMat;
+         outVars [shape="record", label="sens_projection | cell_coord"];
+         hydroStartInitEnvAndMat -> outVars;
+       }
+   
+     }
+   \enddot
+   Cette méthode construit les variables et appelle MahycoModule::hydroStartInitEnvAndMat.
+  */
+  void hydroStartInitEnvAndMat()
+  {
+    MahycoHydroStartInitEnvAndMatVars vars(m_materiau
+        , m_sens_projection
+        , m_node_coord
+        , m_cell_coord);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_HYDROSTARTINITENVANDMAT_DISABLED)
+    std::shared_ptr<MahycoHydroStartInitEnvAndMatExecutionContext> ctx(
+        new MahycoHydroStartInitEnvAndMatExecutionContext("HydroStartInitEnvAndMatExecutionContext"
+            , &vars));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_HYDROSTARTINITENVANDMAT_DISABLED)
+    SciHook::trigger(HYDROSTARTINITENVANDMAT_BEFORE, ctx);
+    this->hydroStartInitEnvAndMat(vars);
+    SciHook::trigger(HYDROSTARTINITENVANDMAT_AFTER, ctx);
+    #else
+    this->hydroStartInitEnvAndMat(vars);
+    #endif
+  }
+
+  /*!
+   Cette méthode construit les variables et appelle MahycoModule::initEnvForAcc.
+  */
+  void initEnvForAcc()
+  {
+    MahycoInitEnvForAccVars vars;
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_INITENVFORACC_DISABLED)
+    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
+        new SciHook::SciHookExecutionContext("InitEnvForAccExecutionContext"));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_INITENVFORACC_DISABLED)
+    SciHook::trigger(INITENVFORACC_BEFORE, ctx);
+    this->initEnvForAcc(vars);
+    SciHook::trigger(INITENVFORACC_AFTER, ctx);
+    #else
+    this->initEnvForAcc(vars);
+    #endif
+  }
+
+  /*!
+   \dot
      digraph computeGeometricValuesIniGraph
      {
        compound="true";
@@ -374,6 +535,44 @@ class MahycoModuleBase
     SciHook::trigger(PREPAREFACEGROUPFORBC_AFTER, ctx);
     #else
     this->prepareFaceGroupForBc(vars);
+    #endif
+  }
+
+  /*!
+   Cette méthode construit les variables et appelle MahycoModule::initBoundaryConditionsForAcc.
+  */
+  void initBoundaryConditionsForAcc()
+  {
+    MahycoInitBoundaryConditionsForAccVars vars;
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_INITBOUNDARYCONDITIONSFORACC_DISABLED)
+    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
+        new SciHook::SciHookExecutionContext("InitBoundaryConditionsForAccExecutionContext"));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_INITBOUNDARYCONDITIONSFORACC_DISABLED)
+    SciHook::trigger(INITBOUNDARYCONDITIONSFORACC_BEFORE, ctx);
+    this->initBoundaryConditionsForAcc(vars);
+    SciHook::trigger(INITBOUNDARYCONDITIONSFORACC_AFTER, ctx);
+    #else
+    this->initBoundaryConditionsForAcc(vars);
+    #endif
+  }
+
+  /*!
+   Cette méthode construit les variables et appelle MahycoModule::setSyncVarVers.
+  */
+  void setSyncVarVers()
+  {
+    MahycoSetSyncVarVersVars vars;
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_SETSYNCVARVERS_DISABLED)
+    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
+        new SciHook::SciHookExecutionContext("SetSyncVarVersExecutionContext"));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_SETSYNCVARVERS_DISABLED)
+    SciHook::trigger(SETSYNCVARVERS_BEFORE, ctx);
+    this->setSyncVarVers(vars);
+    SciHook::trigger(SETSYNCVARVERS_AFTER, ctx);
+    #else
+    this->setSyncVarVers(vars);
     #endif
   }
 
@@ -452,6 +651,25 @@ class MahycoModuleBase
     SciHook::trigger(COMPUTENODEMASS_AFTER, ctx);
     #else
     this->computeNodeMass(vars);
+    #endif
+  }
+
+  /*!
+   Cette méthode construit les variables et appelle MahycoModule::continueForMultiMat.
+  */
+  void continueForMultiMat()
+  {
+    MahycoContinueForMultiMatVars vars;
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_CONTINUEFORMULTIMAT_DISABLED)
+    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
+        new SciHook::SciHookExecutionContext("ContinueForMultiMatExecutionContext"));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_CONTINUEFORMULTIMAT_DISABLED)
+    SciHook::trigger(CONTINUEFORMULTIMAT_BEFORE, ctx);
+    this->continueForMultiMat(vars);
+    SciHook::trigger(CONTINUEFORMULTIMAT_AFTER, ctx);
+    #else
+    this->continueForMultiMat(vars);
     #endif
   }
 
@@ -554,6 +772,10 @@ class MahycoModuleBase
        {
          rank=same;
          updateVelocity [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="pressure_n | pseudo_viscosity_n | cell_cqs_n | velocity_n"];
+         inVars -> updateVelocity;
+         outVars [shape="record", label="velocity"];
+         updateVelocity -> outVars;
        }
    
        subgraph clusterCalledFuncs
@@ -571,10 +793,15 @@ class MahycoModuleBase
   */
   void updateVelocity()
   {
-    MahycoUpdateVelocityVars vars;
+    MahycoUpdateVelocityVars vars(m_pressure_n
+        , m_pseudo_viscosity_n
+        , m_cell_cqs_n
+        , m_velocity_n
+        , m_velocity);
     #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEVELOCITY_DISABLED)
-    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
-        new SciHook::SciHookExecutionContext("UpdateVelocityExecutionContext"));
+    std::shared_ptr<MahycoUpdateVelocityExecutionContext> ctx(
+        new MahycoUpdateVelocityExecutionContext("UpdateVelocityExecutionContext"
+            , &vars));
     #endif
     #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEVELOCITY_DISABLED)
     SciHook::trigger(UPDATEVELOCITY_BEFORE, ctx);
@@ -826,6 +1053,25 @@ class MahycoModuleBase
   }
 
   /*!
+   Cette méthode construit les variables et appelle MahycoModule::remap.
+  */
+  void remap()
+  {
+    MahycoRemapVars vars;
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_REMAP_DISABLED)
+    std::shared_ptr<SciHook::SciHookExecutionContext> ctx(
+        new SciHook::SciHookExecutionContext("RemapExecutionContext"));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_REMAP_DISABLED)
+    SciHook::trigger(REMAP_BEFORE, ctx);
+    this->remap(vars);
+    SciHook::trigger(REMAP_AFTER, ctx);
+    #else
+    this->remap(vars);
+    #endif
+  }
+
+  /*!
    \dot
      digraph computeDeltaTGraph
      {
@@ -839,13 +1085,6 @@ class MahycoModuleBase
          computeDeltaT -> outVars;
        }
    
-       subgraph clusterCalledFuncs
-       {
-         center="true";
-         color="navy";
-         MahycoModuleBase_computeHydroDeltaT [label="computeHydroDeltaT", color="navy", fontcolor="navy", style="rounded", URL="\ref Mahyco::MahycoModuleBase::computeHydroDeltaT"];
-       }
-       computeDeltaT -> MahycoModuleBase_computeHydroDeltaT [lhead="clusterCalledFuncs", style="dashed", label=" call"];
      }
    \enddot
    Cette méthode construit les variables et appelle MahycoModule::computeDeltaT.
@@ -921,7 +1160,7 @@ class MahycoModuleBase
          computeGeometricValuesAux [style="rounded, filled", fillcolor="gray"];
          inVars [shape="record", label="fracvol | velocity | node_coord | cell_volume"];
          inVars -> computeGeometricValuesAux;
-         outVars [shape="record", label="cell_cqs | node_coord | cell_volume"];
+         outVars [shape="record", label="cell_cqs | caracteristic_length | node_coord | cell_volume"];
          computeGeometricValuesAux -> outVars;
        }
    
@@ -934,6 +1173,7 @@ class MahycoModuleBase
     MahycoComputeGeometricValuesAuxVars vars(m_fracvol
         , m_velocity
         , m_cell_cqs
+        , m_caracteristic_length
         , m_node_coord
         , m_cell_volume);
     #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_COMPUTEGEOMETRICVALUESAUX_DISABLED)
@@ -1045,9 +1285,9 @@ class MahycoModuleBase
        {
          rank=same;
          updateVelocityForward [style="rounded, filled", fillcolor="gray"];
-         inVars [shape="record", label="pressure_n | pseudo_viscosity_n | cell_cqs_n | velocity_n"];
+         inVars [shape="record", label="pressure | pseudo_viscosity | cell_cqs | velocity"];
          inVars -> updateVelocityForward;
-         outVars [shape="record", label="velocity_n"];
+         outVars [shape="record", label="velocity"];
          updateVelocityForward -> outVars;
        }
    
@@ -1064,10 +1304,10 @@ class MahycoModuleBase
   */
   void updateVelocityForward()
   {
-    MahycoUpdateVelocityForwardVars vars(m_pressure_n
-        , m_pseudo_viscosity_n
-        , m_cell_cqs_n
-        , m_velocity_n);
+    MahycoUpdateVelocityForwardVars vars(m_pressure
+        , m_pseudo_viscosity
+        , m_cell_cqs
+        , m_velocity);
     #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_UPDATEVELOCITYFORWARD_DISABLED)
     std::shared_ptr<MahycoUpdateVelocityForwardExecutionContext> ctx(
         new MahycoUpdateVelocityForwardExecutionContext("UpdateVelocityForwardExecutionContext"
@@ -1102,7 +1342,7 @@ class MahycoModuleBase
    \enddot
    Cette méthode construit les variables et appelle MahycoModule::updateForceAndVelocity.
   */
-  void updateForceAndVelocity(const Real dt, const VariableCellReal& pressure, const VariableCellReal& pseudo_viscosity, const VariableCellReal3& cell_cqs, const VariableNodeReal3& velocity_in, VariableNodeReal3& velocity_out)
+  void updateForceAndVelocity(const Real dt, const MaterialVariableCellReal& pressure, const MaterialVariableCellReal& pseudo_viscosity, const VariableCellArrayReal3& cell_cqs, const VariableNodeReal3& velocity_in, VariableNodeReal3& velocity_out)
   {
     MahycoUpdateForceAndVelocityVars vars(m_node_mass
         , m_force
@@ -1271,50 +1511,112 @@ class MahycoModuleBase
 
   /*!
    \dot
-     digraph computeHydroDeltaTGraph
+     digraph computeVariablesForRemapGraph
      {
        compound="true";
        edge [arrowsize="0.5", fontsize="8"];
        node [shape="box", fontname="Arial", fontsize="10"];
        {
          rank=same;
-         computeHydroDeltaT [style="rounded, filled", fillcolor="gray"];
-         inVars [shape="record", label="caracteristic_length | sound_speed | velocity"];
-         inVars -> computeHydroDeltaT;
+         computeVariablesForRemap [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="cell_volume | density | internal_energy | pseudo_viscosity | fracvol | node_mass | velocity | u_lagrange"];
+         inVars -> computeVariablesForRemap;
+         outVars [shape="record", label="u_lagrange | u_dual_lagrange | phi_lagrange | phi_dual_lagrange"];
+         computeVariablesForRemap -> outVars;
        }
    
      }
    \enddot
-   Cette méthode construit les variables et appelle MahycoModule::computeHydroDeltaT.
+   Cette méthode construit les variables et appelle MahycoModule::computeVariablesForRemap.
   */
-  Real computeHydroDeltaT()
+  void computeVariablesForRemap()
   {
-    MahycoComputeHydroDeltaTVars vars(m_caracteristic_length
-        , m_sound_speed
-        , m_velocity);
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_COMPUTEHYDRODELTAT_DISABLED)
-    std::shared_ptr<MahycoComputeHydroDeltaTExecutionContext> ctx(
-        new MahycoComputeHydroDeltaTExecutionContext("ComputeHydroDeltaTExecutionContext"
+    MahycoComputeVariablesForRemapVars vars(m_cell_volume
+        , m_density
+        , m_internal_energy
+        , m_pseudo_viscosity
+        , m_fracvol
+        , m_node_mass
+        , m_velocity
+        , m_u_lagrange
+        , m_u_dual_lagrange
+        , m_phi_lagrange
+        , m_phi_dual_lagrange);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_COMPUTEVARIABLESFORREMAP_DISABLED)
+    std::shared_ptr<MahycoComputeVariablesForRemapExecutionContext> ctx(
+        new MahycoComputeVariablesForRemapExecutionContext("ComputeVariablesForRemapExecutionContext"
             , &vars));
     #endif
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_COMPUTEHYDRODELTAT_DISABLED)
-    SciHook::trigger(COMPUTEHYDRODELTAT_BEFORE, ctx);
-    return this->computeHydroDeltaT(vars);
-    SciHook::trigger(COMPUTEHYDRODELTAT_AFTER, ctx);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_COMPUTEVARIABLESFORREMAP_DISABLED)
+    SciHook::trigger(COMPUTEVARIABLESFORREMAP_BEFORE, ctx);
+    this->computeVariablesForRemap(vars);
+    SciHook::trigger(COMPUTEVARIABLESFORREMAP_AFTER, ctx);
     #else
-    return this->computeHydroDeltaT(vars);
+    this->computeVariablesForRemap(vars);
+    #endif
+  }
+
+  /*!
+   \dot
+     digraph computeFaceQuantitesForRemapGraph
+     {
+       compound="true";
+       edge [arrowsize="0.5", fontsize="8"];
+       node [shape="box", fontname="Arial", fontsize="10"];
+       {
+         rank=same;
+         computeFaceQuantitesForRemap [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="cell_coord | node_coord | face_normal | velocity | velocity_n"];
+         inVars -> computeFaceQuantitesForRemap;
+         outVars [shape="record", label="face_coord | face_length_lagrange | face_normal_velocity"];
+         computeFaceQuantitesForRemap -> outVars;
+       }
+   
+     }
+   \enddot
+   Cette méthode construit les variables et appelle MahycoModule::computeFaceQuantitesForRemap.
+  */
+  void computeFaceQuantitesForRemap()
+  {
+    MahycoComputeFaceQuantitesForRemapVars vars(m_cell_coord
+        , m_node_coord
+        , m_face_normal
+        , m_velocity
+        , m_velocity_n
+        , m_face_coord
+        , m_face_length_lagrange
+        , m_face_normal_velocity);
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_COMPUTEFACEQUANTITESFORREMAP_DISABLED)
+    std::shared_ptr<MahycoComputeFaceQuantitesForRemapExecutionContext> ctx(
+        new MahycoComputeFaceQuantitesForRemapExecutionContext("ComputeFaceQuantitesForRemapExecutionContext"
+            , &vars));
+    #endif
+    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED) && not defined(SCIHOOK_MAHYCO_COMPUTEFACEQUANTITESFORREMAP_DISABLED)
+    SciHook::trigger(COMPUTEFACEQUANTITESFORREMAP_BEFORE, ctx);
+    this->computeFaceQuantitesForRemap(vars);
+    SciHook::trigger(COMPUTEFACEQUANTITESFORREMAP_AFTER, ctx);
+    #else
+    this->computeFaceQuantitesForRemap(vars);
     #endif
   }
 
 
  public:  // ***** METHODES ABSTRAITES
+  virtual void accBuild(MahycoAccBuildVars& vars) = 0;
+  virtual void checkOptions(MahycoCheckOptionsVars& vars) = 0;
+  virtual void initCartesianMesh(MahycoInitCartesianMeshVars& vars) = 0;
   virtual void allocCqs(MahycoAllocCqsVars& vars) = 0;
   virtual void initDtIni(MahycoInitDtIniVars& vars) = 0;
   virtual void initHydroVar(MahycoInitHydroVarVars& vars) = 0;
+  virtual void hydroStartInitEnvAndMat(MahycoHydroStartInitEnvAndMatVars& vars) = 0;
+  virtual void initEnvForAcc(MahycoInitEnvForAccVars& vars) = 0;
   virtual void computeGeometricValuesIni(MahycoComputeGeometricValuesIniVars& vars) = 0;
   virtual void prepareFaceGroupForBc(MahycoPrepareFaceGroupForBcVars& vars) = 0;
+  virtual void initBoundaryConditionsForAcc(MahycoInitBoundaryConditionsForAccVars& vars) = 0;
+  virtual void setSyncVarVers(MahycoSetSyncVarVersVars& vars) = 0;
   virtual void computeCellMass(MahycoComputeCellMassVars& vars) = 0;
   virtual void computeNodeMass(MahycoComputeNodeMassVars& vars) = 0;
+  virtual void continueForMultiMat(MahycoContinueForMultiMatVars& vars) = 0;
   virtual void continueForIterationDt(MahycoContinueForIterationDtVars& vars) = 0;
   virtual void saveValuesAtN(MahycoSaveValuesAtNVars& vars) = 0;
   virtual void updateVelocity(MahycoUpdateVelocityVars& vars) = 0;
@@ -1324,6 +1626,7 @@ class MahycoModuleBase
   virtual void updateDensity(MahycoUpdateDensityVars& vars) = 0;
   virtual void computeArtificialViscosity(MahycoComputeArtificialViscosityVars& vars) = 0;
   virtual void updateEnergyAndPressure(MahycoUpdateEnergyAndPressureVars& vars) = 0;
+  virtual void remap(MahycoRemapVars& vars) = 0;
   virtual void computeDeltaT(MahycoComputeDeltaTVars& vars) = 0;
   virtual void initGeometricValues(MahycoInitGeometricValuesVars& vars) = 0;
   virtual void computeGeometricValuesAux(MahycoComputeGeometricValuesAuxVars& vars) = 0;
@@ -1334,7 +1637,8 @@ class MahycoModuleBase
   virtual void updateEnergyAndPressurebyNewton(MahycoUpdateEnergyAndPressurebyNewtonVars& vars) = 0;
   virtual void updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars) = 0;
   virtual void computeAveragePressure(MahycoComputeAveragePressureVars& vars) = 0;
-  virtual Real computeHydroDeltaT(MahycoComputeHydroDeltaTVars& vars) = 0;
+  virtual void computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars) = 0;
+  virtual void computeFaceQuantitesForRemap(MahycoComputeFaceQuantitesForRemapVars& vars) = 0;
 
  protected:  // ***** ATTRIBUTS
   IMeshMaterialMng* m_mesh_material_mng;

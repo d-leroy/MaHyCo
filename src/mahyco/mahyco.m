@@ -251,6 +251,10 @@ module Mahyco
 
     types_mahyco.IGeometryMng geometry;
 
+    Int Dimension;
+
+    types_mahyco.ICartesianMesh CartesianMesh;
+
     def void initGeometricValues()
         in cell_coord,
         in node_coord,
@@ -263,6 +267,7 @@ module Mahyco
         in fracvol,
         in velocity,
         out cell_cqs,
+        out caracteristic_length,
         inout node_coord,
         inout cell_volume;
 
@@ -278,16 +283,16 @@ module Mahyco
         call updateForceAndVelocity;
     
     def void updateVelocityForward()
-        in pressure_n,
-        in pseudo_viscosity_n,
-        in cell_cqs_n,
-        inout velocity_n
+        in pressure,
+        in pseudo_viscosity,
+        in cell_cqs,
+        inout velocity
         call updateForceAndVelocity;
 
     def void updateForceAndVelocity(in Real dt,
-        in Real pressure { Cell },
-        in Real pseudo_viscosity { Cell },
-        in Real[3] cell_cqs { Cell },
+        in Real pressure { MatCell },
+        in Real pseudo_viscosity { MatCell },
+        in Real[*,3] cell_cqs { Cell },
         in Real[3] velocity_in { Node },
         out Real[3] velocity_out { Node })
         in node_mass,
@@ -333,24 +338,48 @@ module Mahyco
         in fracvol,
         inout pressure,
         inout sound_speed;
+    
+    def void computeVariablesForRemap()
+        in cell_volume,
+        in density,
+        in internal_energy,
+        in pseudo_viscosity,
+        in fracvol,
+        in node_mass,
+        in velocity,
+        inout u_lagrange,
+        out u_dual_lagrange,
+        out phi_lagrange,
+        out phi_dual_lagrange;
+    
+    def void computeFaceQuantitesForRemap()
+        in cell_coord,
+        in node_coord,
+        in face_normal,
+        in velocity,
+        in velocity_n,
+        out face_coord,
+        out face_length_lagrange,
+        out face_normal_velocity;
 
-    def Real computeHydroDeltaT()
-        in caracteristic_length,
-        in sound_speed,
-        in velocity;
+    // TODO: templated types
+    // def Real computeHydroDeltaT(inout types_mahyco.IDtCellInfo dt_cell_info)
+    //     in caracteristic_length,
+    //     in sound_speed,
+    //     in velocity;
 
-    // <entry-point method-name="accBuild" name="AccBuild" where="build" property="none" />
-    // @Build
-    // AccBuild;
+    /*! Pour préparer les accélérateurs */
+    @Build
+    accBuild;
 
-    // <entry-point method-name="checkOptions" name="CheckOptions" where="start-init" property="none" />
-    // @StartInit
-    // CheckOptions;
+    /*! Vérification de la compatibilité des options */
+    @StartInit
+    checkOptions;
 
     // TODO: manipulates 'legacy' variables not declared in the AXL
     // <entry-point method-name="initCartesianMesh" name="InitCartesianMesh" where="init" property="none" />
-    // @Init
-    // InitCartesianMesh;
+    @Init
+    initCartesianMesh;
 
     @StartInit
     allocCqs
@@ -373,12 +402,16 @@ module Mahyco
         call initGeometricValues;
 
     // <entry-point method-name="hydroStartInitEnvAndMat" name="HydroStartInitEnvAndMat" where="start-init" property="none" />
-    // @StartInit
-    // HydroStartInitEnvAndMat;
+    @StartInit
+    hydroStartInitEnvAndMat
+        in materiau,
+        out sens_projection,
+        in node_coord,
+        out cell_coord;
 
     // <entry-point method-name="initEnvForAcc" name="InitEnvForAcc" where="init" property="none" />
-    // @Init
-    // InitEnvForAcc;
+    @Init
+    initEnvForAcc;
 
     @StartInit
     computeGeometricValuesIni
@@ -390,12 +423,12 @@ module Mahyco
         out is_dir_face;
 
     // <entry-point method-name="initBoundaryConditionsForAcc" name="InitBoundaryConditionsForAcc" where="init" property="none" />
-    // @Init
-    // InitBoundaryConditionsForAcc;
+    @Init
+    initBoundaryConditionsForAcc;
 
     // <entry-point method-name="setSyncVarVers" name="SetSyncVarVers" where="start-init" property="none" />
-    // @StartInit
-    // SetSyncVarVers;
+    @StartInit
+    setSyncVarVers;
 
     @StartInit
     computeCellMass
@@ -410,8 +443,8 @@ module Mahyco
         out node_mass;
 
     // <entry-point method-name="continueForMultiMat" name="ContinueForMultiMat" where="continue-init" property="none" />
-    // @ContinueInit
-    // ContinueForMultiMat;
+    @ContinueInit
+    continueForMultiMat;
 
     @ContinueInit
     continueForIterationDt
@@ -443,6 +476,11 @@ module Mahyco
 
     @ComputeLoop
     updateVelocity
+        in pressure_n,
+        in pseudo_viscosity_n,
+        in cell_cqs_n,
+        in velocity_n,
+        out velocity
         call updateForceAndVelocity,
         call updateVelocityBackward,
         call updateVelocityWithoutLagrange;
@@ -492,12 +530,12 @@ module Mahyco
     // ComputePressionMoyenne;
 
     // <entry-point method-name="remap" name="Remap" where="compute-loop" property="none" />
-    // @ComputeLoop
-    // Remap;
+    @ComputeLoop
+    remap;
 
     @ComputeLoop
     computeDeltaT
-        out old_deltat
+        out old_deltat;
     /* inout ArcaneBuiltins.GlobalOldDeltaT, ArcaneBuiltins.GlobalDeltaT */
-        call computeHydroDeltaT;
+        // call computeHydroDeltaT;
 }

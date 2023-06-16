@@ -13,6 +13,7 @@
 #include "remap/__IRemap.h"
 #include "remap/adi/__RemapADIServiceVars.h"
 #include "remap/adi/__RemapADIServiceContexts.h"
+#include "types_mahyco/__Limiteur.h"
 #include "scihook/scihookdefs.h"
 #include "remap/adi/RemapADI_axl.h"
 
@@ -44,6 +45,252 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
+  pybind11::class_<RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeAndLimitGradPhiExecutionContext")
+    .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_projectionLimiterId)
+    .def_property_readonly("frontFace", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_frontFace)
+    .def_property_readonly("backFace", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_backFace)
+    .def_property_readonly("cell", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_cell)
+    .def_property_readonly("frontcell", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_frontcell)
+    .def_property_readonly("backcell", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_backcell)
+    .def_property_readonly("nb_vars", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_nb_vars)
+    .def_property_readonly("grad_phi", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_m_grad_phi)
+    .def_property_readonly("grad_phi_face", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_m_grad_phi_face)
+    .def_property_readonly("phi_lagrange", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_m_phi_lagrange)
+    .def_property_readonly("h_cell_lagrange", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_m_h_cell_lagrange)
+    .def("__str__", [](RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIComputeDualGradPhiExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeDualGradPhiExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeDualGradPhiExecutionContext")
+    .def_property_readonly("inode", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_inode)
+    .def_property_readonly("frontfrontnode", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_frontfrontnode)
+    .def_property_readonly("frontnode", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_frontnode)
+    .def_property_readonly("backnode", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_backnode)
+    .def_property_readonly("backbacknode", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_backbacknode)
+    .def_property_readonly("idir", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_idir)
+    .def_property_readonly("phi_dual_lagrange", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_m_phi_dual_lagrange)
+    .def_property_readonly("node_coord", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_m_node_coord)
+    .def("__str__", [](RemapAdi::RemapADIComputeDualGradPhiExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputeDualGradPhiExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeAndLimitGradPhiDualExecutionContext")
+    .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_projectionLimiterId)
+    .def_property_readonly("inode", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_inode)
+    .def_property_readonly("frontnode", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_frontnode)
+    .def_property_readonly("backnode", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_backnode)
+    .def_property_readonly("grad_front", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_grad_front)
+    .def_property_readonly("grad_back", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_grad_back)
+    .def_property_readonly("h0", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_h0)
+    .def_property_readonly("hplus", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_hplus)
+    .def_property_readonly("hmoins", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_hmoins)
+    .def_property_readonly("phi_dual_lagrange", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_m_phi_dual_lagrange)
+    .def_property_readonly("dual_grad_phi", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_m_dual_grad_phi)
+    .def("__str__", [](RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIFluxLimiterExecutionContext, std::shared_ptr<RemapAdi::RemapADIFluxLimiterExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIFluxLimiterExecutionContext")
+    .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIFluxLimiterExecutionContext::get_projectionLimiterId)
+    .def_property_readonly("r", &RemapAdi::RemapADIFluxLimiterExecutionContext::get_r)
+    .def("__str__", [](RemapAdi::RemapADIFluxLimiterExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIFluxLimiterExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIFluxLimiterGExecutionContext, std::shared_ptr<RemapAdi::RemapADIFluxLimiterGExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIFluxLimiterGExecutionContext")
+    .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_projectionLimiterId)
+    .def_property_readonly("gradplus", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_gradplus)
+    .def_property_readonly("gradmoins", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_gradmoins)
+    .def_property_readonly("y0", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_y0)
+    .def_property_readonly("yplus", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_yplus)
+    .def_property_readonly("ymoins", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_ymoins)
+    .def_property_readonly("h0", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_h0)
+    .def_property_readonly("hplus", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_hplus)
+    .def_property_readonly("hmoins", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_hmoins)
+    .def("__str__", [](RemapAdi::RemapADIFluxLimiterGExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIFluxLimiterGExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIComputeFluxPPExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeFluxPPExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeFluxPPExecutionContext")
+    .def_property_readonly("cell", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_cell)
+    .def_property_readonly("frontcell", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_frontcell)
+    .def_property_readonly("backcell", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_backcell)
+    .def_property_readonly("face_normal_velocity", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_face_normal_velocity)
+    .def_property_readonly("deltat_n", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_deltat_n)
+    .def_property_readonly("type", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_type)
+    .def_property_readonly("flux_threshold", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_flux_threshold)
+    .def_property_readonly("projectionPenteBorneDebarFix", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_projectionPenteBorneDebarFix)
+    .def_property_readonly("dual_normal_velocity", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_dual_normal_velocity)
+    .def_property_readonly("calcul_flux_dual", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_calcul_flux_dual)
+    .def_property_readonly("Flux", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_Flux)
+    .def_property_readonly("Flux_dual", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_Flux_dual)
+    .def_property_readonly("nbmat", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_nbmat)
+    .def_property_readonly("nb_vars", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_nb_vars)
+    .def_property_readonly("h_cell_lagrange", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_m_h_cell_lagrange)
+    .def_property_readonly("phi_lagrange", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_m_phi_lagrange)
+    .def_property_readonly("grad_phi", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_m_grad_phi)
+    .def("__str__", [](RemapAdi::RemapADIComputeFluxPPExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputeFluxPPExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIComputeY0ExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeY0ExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeY0ExecutionContext")
+    .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIComputeY0ExecutionContext::get_projectionLimiterId)
+    .def_property_readonly("y0", &RemapAdi::RemapADIComputeY0ExecutionContext::get_y0)
+    .def_property_readonly("yplus", &RemapAdi::RemapADIComputeY0ExecutionContext::get_yplus)
+    .def_property_readonly("ymoins", &RemapAdi::RemapADIComputeY0ExecutionContext::get_ymoins)
+    .def_property_readonly("h0", &RemapAdi::RemapADIComputeY0ExecutionContext::get_h0)
+    .def_property_readonly("hplus", &RemapAdi::RemapADIComputeY0ExecutionContext::get_hplus)
+    .def_property_readonly("hmoins", &RemapAdi::RemapADIComputeY0ExecutionContext::get_hmoins)
+    .def_property_readonly("type", &RemapAdi::RemapADIComputeY0ExecutionContext::get_type)
+    .def("__str__", [](RemapAdi::RemapADIComputeY0ExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputeY0ExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIComputexgxdExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputexgxdExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputexgxdExecutionContext")
+    .def_property_readonly("y0", &RemapAdi::RemapADIComputexgxdExecutionContext::get_y0)
+    .def_property_readonly("yplus", &RemapAdi::RemapADIComputexgxdExecutionContext::get_yplus)
+    .def_property_readonly("ymoins", &RemapAdi::RemapADIComputexgxdExecutionContext::get_ymoins)
+    .def_property_readonly("h0", &RemapAdi::RemapADIComputexgxdExecutionContext::get_h0)
+    .def_property_readonly("y0plus", &RemapAdi::RemapADIComputexgxdExecutionContext::get_y0plus)
+    .def_property_readonly("y0moins", &RemapAdi::RemapADIComputexgxdExecutionContext::get_y0moins)
+    .def_property_readonly("type", &RemapAdi::RemapADIComputexgxdExecutionContext::get_type)
+    .def("__str__", [](RemapAdi::RemapADIComputexgxdExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputexgxdExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIComputeygydExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeygydExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeygydExecutionContext")
+    .def_property_readonly("y0", &RemapAdi::RemapADIComputeygydExecutionContext::get_y0)
+    .def_property_readonly("yplus", &RemapAdi::RemapADIComputeygydExecutionContext::get_yplus)
+    .def_property_readonly("ymoins", &RemapAdi::RemapADIComputeygydExecutionContext::get_ymoins)
+    .def_property_readonly("h0", &RemapAdi::RemapADIComputeygydExecutionContext::get_h0)
+    .def_property_readonly("y0plus", &RemapAdi::RemapADIComputeygydExecutionContext::get_y0plus)
+    .def_property_readonly("y0moins", &RemapAdi::RemapADIComputeygydExecutionContext::get_y0moins)
+    .def_property_readonly("grady", &RemapAdi::RemapADIComputeygydExecutionContext::get_grady)
+    .def_property_readonly("type", &RemapAdi::RemapADIComputeygydExecutionContext::get_type)
+    .def("__str__", [](RemapAdi::RemapADIComputeygydExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputeygydExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIINTYExecutionContext, std::shared_ptr<RemapAdi::RemapADIINTYExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIINTYExecutionContext")
+    .def_property_readonly("X", &RemapAdi::RemapADIINTYExecutionContext::get_X)
+    .def_property_readonly("x0", &RemapAdi::RemapADIINTYExecutionContext::get_x0)
+    .def_property_readonly("y0", &RemapAdi::RemapADIINTYExecutionContext::get_y0)
+    .def_property_readonly("x1", &RemapAdi::RemapADIINTYExecutionContext::get_x1)
+    .def_property_readonly("y1", &RemapAdi::RemapADIINTYExecutionContext::get_y1)
+    .def("__str__", [](RemapAdi::RemapADIINTYExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIINTYExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIComputeFluxPPPureExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeFluxPPPureExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeFluxPPPureExecutionContext")
+    .def_property_readonly("cell", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_cell)
+    .def_property_readonly("frontcell", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_frontcell)
+    .def_property_readonly("backcell", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_backcell)
+    .def_property_readonly("face_normal_velocity", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_face_normal_velocity)
+    .def_property_readonly("deltat_n", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_deltat_n)
+    .def_property_readonly("type", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_type)
+    .def_property_readonly("flux_threshold", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_flux_threshold)
+    .def_property_readonly("projectionPenteBorneDebarFix", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_projectionPenteBorneDebarFix)
+    .def_property_readonly("dual_normal_velocity", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_dual_normal_velocity)
+    .def_property_readonly("calcul_flux_dual", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_calcul_flux_dual)
+    .def_property_readonly("Flux", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_Flux)
+    .def_property_readonly("Flux_dual", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_Flux_dual)
+    .def_property_readonly("nbmat", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_nbmat)
+    .def_property_readonly("nb_vars", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_nb_vars)
+    .def_property_readonly("h_cell_lagrange", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_m_h_cell_lagrange)
+    .def_property_readonly("phi_lagrange", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_m_phi_lagrange)
+    .def_property_readonly("grad_phi", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_m_grad_phi)
+    .def("__str__", [](RemapAdi::RemapADIComputeFluxPPPureExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputeFluxPPPureExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
   pybind11::class_<RemapAdi::RemapADIComputeGradPhiFaceExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeGradPhiFaceExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeGradPhiFaceExecutionContext")
     .def_property_readonly("idir", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_idir)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_nb_vars_to_project)
@@ -52,7 +299,6 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
     .def_property_readonly("cell_coord", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_m_cell_coord)
     .def_property_readonly("phi_lagrange", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_m_phi_lagrange)
     .def_property_readonly("face_coord", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_m_face_coord)
-    .def_property_readonly("cell_coord", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_m_cell_coord)
     .def_property_readonly("is_dir_face", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_m_is_dir_face)
     .def_property_readonly("grad_phi_face", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_m_grad_phi_face)
     .def_property_readonly("deltax_lagrange", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_m_deltax_lagrange)
@@ -90,25 +336,6 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       return oss.str();
     })
     .def("__repr__", [](RemapAdi::RemapADIComputeGradPhiCellExecutionContext &self)
-    {
-      std::ostringstream oss;
-      oss << "[" << self.name << "]";
-      return oss.str();
-    });
-  pybind11::class_<RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext")
-    .def_property_readonly("idir", &RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext::get_idir)
-    .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext::get_nb_vars_to_project)
-    .def_property_readonly("grad_phi_face", &RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext::get_m_grad_phi_face)
-    .def_property_readonly("grad_phi", &RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext::get_m_grad_phi)
-    .def_property_readonly("delta_phi_face_ar", &RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext::get_m_delta_phi_face_ar)
-    .def_property_readonly("delta_phi_face_av", &RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext::get_m_delta_phi_face_av)
-    .def("__str__", [](RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext &self)
-    {
-      std::ostringstream oss;
-      oss << "[" << self.name << "]";
-      return oss.str();
-    })
-    .def("__repr__", [](RemapAdi::RemapADIComputeGradPhiCell_PBorn0_LimCExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";
@@ -253,6 +480,28 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       return oss.str();
     })
     .def("__repr__", [](RemapAdi::RemapADIComputeDualUremapExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<RemapAdi::RemapADIComputeRemapFluxExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeRemapFluxExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeRemapFluxExecutionContext")
+    .def_property_readonly("projectionOrder", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_projectionOrder)
+    .def_property_readonly("projectionAvecPlateauPente", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_projectionAvecPlateauPente)
+    .def_property_readonly("face_normal_velocity", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_face_normal_velocity)
+    .def_property_readonly("face_normal", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_face_normal)
+    .def_property_readonly("face_length", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_face_length)
+    .def_property_readonly("phi_face", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_phi_face)
+    .def_property_readonly("outer_face_normal", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_outer_face_normal)
+    .def_property_readonly("exy", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_exy)
+    .def_property_readonly("deltat_n", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_deltat_n)
+    .def("__str__", [](RemapAdi::RemapADIComputeRemapFluxExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](RemapAdi::RemapADIComputeRemapFluxExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";

@@ -1,5 +1,7 @@
 #set(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra -pedantic -Wnon-virtual-dtor -g " CACHE STRING "" FORCE)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS True)
+
 add_library(mahyco_config INTERFACE)
 if (WANT_PROF_ACC)
     target_compile_definitions(mahyco_config INTERFACE PROF_ACC)
@@ -37,16 +39,14 @@ include(GNUInstallDirs)
 set(MAHYCO_EXPORT_TARGET ${PROJECT_NAME}Targets)
 
 add_executable(Mahyco
-        MahycoAnnexe.cc
+        mahyco/MahycoAnnexe.cc
         MahycoConfig.cmake.in
-        MahycoModule.cc
-        MahycoModule.h
-        main.cc
-        PrepareRemap.cc
-        TypesMahyco.h)
+        mahyco/MahycoModule.cc
+        mahyco/MahycoModule.h
+        main.cc)
 
 arcane_add_arcane_libraries_to_target(Mahyco)
-arcane_target_add_axl(Mahyco Mahyco)
+arcane_target_add_axl(Mahyco mahyco/Mahyco)
 target_include_directories(Mahyco PRIVATE . ${CMAKE_CURRENT_BINARY_DIR})
 if (SCIHOOK_ENABLED)
   target_include_directories(Mahyco PUBLIC ${SCIHOOK_INSTALL_PREFIX}/include ${pybind11_INCLUDE_DIRS})
@@ -63,7 +63,7 @@ add_subdirectory(casTest)
 add_subdirectory(eos)
 
 # Remap
-add_subdirectory(Remap)
+add_subdirectory(remap)
 
 # Cartesian
 add_subdirectory(cartesian)

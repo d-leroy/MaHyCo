@@ -48,6 +48,174 @@ struct RemapADISynchronizeDualUremapVars final
   VariableNodeArrayReal& m_u_dual_lagrange;
 };
 
+//! Classe de variable pour computeAndLimitGradPhi
+struct RemapADIComputeAndLimitGradPhiVars final
+{
+  RemapADIComputeAndLimitGradPhiVars(VariableCellArrayReal& grad_phi,
+      const VariableFaceArrayReal& grad_phi_face,
+      const VariableCellArrayReal& phi_lagrange,
+      const VariableCellReal& h_cell_lagrange)
+  : m_grad_phi(grad_phi)
+  , m_grad_phi_face(grad_phi_face)
+  , m_phi_lagrange(phi_lagrange)
+  , m_h_cell_lagrange(h_cell_lagrange)
+  {}
+
+  /*!
+  [out] grad_phi
+  */
+  VariableCellArrayReal& m_grad_phi;
+  /*!
+  [in] grad_phi_face
+  */
+  const VariableFaceArrayReal& m_grad_phi_face;
+  /*!
+  [in] phi_lagrange
+   PHI LAGRANGE 
+  */
+  const VariableCellArrayReal& m_phi_lagrange;
+  /*!
+  [in] h_cell_lagrange
+  */
+  const VariableCellReal& m_h_cell_lagrange;
+};
+
+//! Classe de variable pour computeDualGradPhi
+struct RemapADIComputeDualGradPhiVars final
+{
+  RemapADIComputeDualGradPhiVars(const VariableNodeArrayReal& phi_dual_lagrange,
+      const VariableNodeReal3& node_coord)
+  : m_phi_dual_lagrange(phi_dual_lagrange)
+  , m_node_coord(node_coord)
+  {}
+
+  /*!
+  [in] phi_dual_lagrange
+   PHI DUAL LAGRANGE 
+  */
+  const VariableNodeArrayReal& m_phi_dual_lagrange;
+  /*!
+  [in] node_coord
+   NODE COORD 
+  */
+  const VariableNodeReal3& m_node_coord;
+};
+
+//! Classe de variable pour computeAndLimitGradPhiDual
+struct RemapADIComputeAndLimitGradPhiDualVars final
+{
+  RemapADIComputeAndLimitGradPhiDualVars(const VariableNodeArrayReal& phi_dual_lagrange,
+      VariableNodeArrayReal& dual_grad_phi)
+  : m_phi_dual_lagrange(phi_dual_lagrange)
+  , m_dual_grad_phi(dual_grad_phi)
+  {}
+
+  /*!
+  [in] phi_dual_lagrange
+   PHI DUAL LAGRANGE 
+  */
+  const VariableNodeArrayReal& m_phi_dual_lagrange;
+  /*!
+  [out] dual_grad_phi
+   GRAD PHI DUAL LAGRANGE pour les vitesses 
+  */
+  VariableNodeArrayReal& m_dual_grad_phi;
+};
+
+//! Classe de variable pour fluxLimiter
+struct RemapADIFluxLimiterVars final
+{
+  RemapADIFluxLimiterVars()
+  {}
+};
+
+//! Classe de variable pour fluxLimiterG
+struct RemapADIFluxLimiterGVars final
+{
+  RemapADIFluxLimiterGVars()
+  {}
+};
+
+//! Classe de variable pour computeFluxPP
+struct RemapADIComputeFluxPPVars final
+{
+  RemapADIComputeFluxPPVars(const VariableCellReal& h_cell_lagrange,
+      const VariableCellArrayReal& phi_lagrange,
+      const VariableCellArrayReal& grad_phi)
+  : m_h_cell_lagrange(h_cell_lagrange)
+  , m_phi_lagrange(phi_lagrange)
+  , m_grad_phi(grad_phi)
+  {}
+
+  /*!
+  [in] h_cell_lagrange
+  */
+  const VariableCellReal& m_h_cell_lagrange;
+  /*!
+  [in] phi_lagrange
+   PHI LAGRANGE 
+  */
+  const VariableCellArrayReal& m_phi_lagrange;
+  /*!
+  [in] grad_phi
+  */
+  const VariableCellArrayReal& m_grad_phi;
+};
+
+//! Classe de variable pour computeY0
+struct RemapADIComputeY0Vars final
+{
+  RemapADIComputeY0Vars()
+  {}
+};
+
+//! Classe de variable pour computexgxd
+struct RemapADIComputexgxdVars final
+{
+  RemapADIComputexgxdVars()
+  {}
+};
+
+//! Classe de variable pour computeygyd
+struct RemapADIComputeygydVars final
+{
+  RemapADIComputeygydVars()
+  {}
+};
+
+//! Classe de variable pour INTY
+struct RemapADIINTYVars final
+{
+  RemapADIINTYVars()
+  {}
+};
+
+//! Classe de variable pour computeFluxPPPure
+struct RemapADIComputeFluxPPPureVars final
+{
+  RemapADIComputeFluxPPPureVars(const VariableCellReal& h_cell_lagrange,
+      const VariableCellArrayReal& phi_lagrange,
+      const VariableCellArrayReal& grad_phi)
+  : m_h_cell_lagrange(h_cell_lagrange)
+  , m_phi_lagrange(phi_lagrange)
+  , m_grad_phi(grad_phi)
+  {}
+
+  /*!
+  [in] h_cell_lagrange
+  */
+  const VariableCellReal& m_h_cell_lagrange;
+  /*!
+  [in] phi_lagrange
+   PHI LAGRANGE 
+  */
+  const VariableCellArrayReal& m_phi_lagrange;
+  /*!
+  [in] grad_phi
+  */
+  const VariableCellArrayReal& m_grad_phi;
+};
+
 //! Classe de variable pour computeGradPhiFace
 struct RemapADIComputeGradPhiFaceVars final
 {
@@ -55,7 +223,6 @@ struct RemapADIComputeGradPhiFaceVars final
       const VariableCellReal3& cell_coord,
       const VariableCellArrayReal& phi_lagrange,
       const VariableFaceReal3& face_coord,
-      const VariableCellReal3& cell_coord,
       VariableFaceArrayByte& is_dir_face,
       VariableFaceArrayReal& grad_phi_face,
       VariableFaceReal& deltax_lagrange,
@@ -64,7 +231,6 @@ struct RemapADIComputeGradPhiFaceVars final
   , m_cell_coord(cell_coord)
   , m_phi_lagrange(phi_lagrange)
   , m_face_coord(face_coord)
-  , m_cell_coord(cell_coord)
   , m_is_dir_face(is_dir_face)
   , m_grad_phi_face(grad_phi_face)
   , m_deltax_lagrange(deltax_lagrange)
@@ -91,11 +257,6 @@ struct RemapADIComputeGradPhiFaceVars final
    FACE COORD 
   */
   const VariableFaceReal3& m_face_coord;
-  /*!
-  [in] cell_coord
-   CELL COORD 
-  */
-  const VariableCellReal3& m_cell_coord;
   /*!
   [out] is_dir_face
   */
@@ -184,37 +345,6 @@ struct RemapADIComputeGradPhiCellVars final
    PURE 
   */
   VariableCellInteger& m_est_pure;
-};
-
-//! Classe de variable pour computeGradPhiCell_PBorn0_LimC
-struct RemapADIComputeGradPhiCell_PBorn0_LimCVars final
-{
-  RemapADIComputeGradPhiCell_PBorn0_LimCVars(const VariableFaceArrayReal& grad_phi_face,
-      VariableCellArrayReal& grad_phi,
-      VariableCellArrayReal& delta_phi_face_ar,
-      VariableCellArrayReal& delta_phi_face_av)
-  : m_grad_phi_face(grad_phi_face)
-  , m_grad_phi(grad_phi)
-  , m_delta_phi_face_ar(delta_phi_face_ar)
-  , m_delta_phi_face_av(delta_phi_face_av)
-  {}
-
-  /*!
-  [in] grad_phi_face
-  */
-  const VariableFaceArrayReal& m_grad_phi_face;
-  /*!
-  [out] grad_phi
-  */
-  VariableCellArrayReal& m_grad_phi;
-  /*!
-  [out] delta_phi_face_ar
-  */
-  VariableCellArrayReal& m_delta_phi_face_ar;
-  /*!
-  [out] delta_phi_face_av
-  */
-  VariableCellArrayReal& m_delta_phi_face_av;
 };
 
 //! Classe de variable pour computeDualGradPhi_LimC
@@ -615,6 +745,13 @@ struct RemapADIComputeDualUremapVars final
    PHI DUAL LAGRANGE 
   */
   VariableNodeArrayReal& m_phi_dual_lagrange;
+};
+
+//! Classe de variable pour computeRemapFlux
+struct RemapADIComputeRemapFluxVars final
+{
+  RemapADIComputeRemapFluxVars()
+  {}
 };
 
 //! Classe de variable pour appliRemap

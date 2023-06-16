@@ -4,9 +4,9 @@ interface Initialisations {
     /*! Numéro du cas test */
     Int casTest;
     /*! Option de retour arriere */
-    Bool reverseOption = "false";
+    opt Bool reverseOption = "false";
     /*! Parametre du cas test */
-    Real parametre = "0.";
+    Real parameter = "0.";
 
     def void initMatMono(in Int dim);
     def void initVarMono(in Int dim);

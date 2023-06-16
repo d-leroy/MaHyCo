@@ -16,7 +16,7 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
-#include "scihook/SciHook.h"
+#include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -85,6 +85,34 @@ struct MahycoInitHydroVarExecutionContext final : SciHook::SciHookExecutionConte
 
   const pybind11::object get_m_sound_speed() const {
     return pybind11::cast(vars->m_sound_speed);
+  }
+};
+
+//! Classe de contexte d'exécution pour hydroStartInitEnvAndMat
+struct MahycoHydroStartInitEnvAndMatExecutionContext final : SciHook::SciHookExecutionContext
+{
+  MahycoHydroStartInitEnvAndMatExecutionContext(std::string execution_context_name,
+      MahycoHydroStartInitEnvAndMatVars *vars)
+  : SciHookExecutionContext(execution_context_name)
+  , vars(vars)
+  {}
+  
+  const MahycoHydroStartInitEnvAndMatVars *vars;
+
+  const pybind11::object get_m_materiau() const {
+    return pybind11::cast(vars->m_materiau);
+  }
+
+  const pybind11::object get_m_sens_projection() const {
+    return pybind11::cast(vars->m_sens_projection);
+  }
+
+  const pybind11::object get_m_node_coord() const {
+    return pybind11::cast(vars->m_node_coord);
+  }
+
+  const pybind11::object get_m_cell_coord() const {
+    return pybind11::cast(vars->m_cell_coord);
   }
 };
 
@@ -253,6 +281,38 @@ struct MahycoSaveValuesAtNExecutionContext final : SciHook::SciHookExecutionCont
 
   const pybind11::object get_m_pseudo_viscosity_n() const {
     return pybind11::cast(vars->m_pseudo_viscosity_n);
+  }
+};
+
+//! Classe de contexte d'exécution pour updateVelocity
+struct MahycoUpdateVelocityExecutionContext final : SciHook::SciHookExecutionContext
+{
+  MahycoUpdateVelocityExecutionContext(std::string execution_context_name,
+      MahycoUpdateVelocityVars *vars)
+  : SciHookExecutionContext(execution_context_name)
+  , vars(vars)
+  {}
+  
+  const MahycoUpdateVelocityVars *vars;
+
+  const pybind11::object get_m_pressure_n() const {
+    return pybind11::cast(vars->m_pressure_n);
+  }
+
+  const pybind11::object get_m_pseudo_viscosity_n() const {
+    return pybind11::cast(vars->m_pseudo_viscosity_n);
+  }
+
+  const pybind11::object get_m_cell_cqs_n() const {
+    return pybind11::cast(vars->m_cell_cqs_n);
+  }
+
+  const pybind11::object get_m_velocity_n() const {
+    return pybind11::cast(vars->m_velocity_n);
+  }
+
+  const pybind11::object get_m_velocity() const {
+    return pybind11::cast(vars->m_velocity);
   }
 };
 
@@ -443,6 +503,10 @@ struct MahycoComputeGeometricValuesAuxExecutionContext final : SciHook::SciHookE
     return pybind11::cast(vars->m_cell_cqs);
   }
 
+  const pybind11::object get_m_caracteristic_length() const {
+    return pybind11::cast(vars->m_caracteristic_length);
+  }
+
   const pybind11::object get_m_node_coord() const {
     return pybind11::cast(vars->m_node_coord);
   }
@@ -511,20 +575,20 @@ struct MahycoUpdateVelocityForwardExecutionContext final : SciHook::SciHookExecu
   
   const MahycoUpdateVelocityForwardVars *vars;
 
-  const pybind11::object get_m_pressure_n() const {
-    return pybind11::cast(vars->m_pressure_n);
+  const pybind11::object get_m_pressure() const {
+    return pybind11::cast(vars->m_pressure);
   }
 
-  const pybind11::object get_m_pseudo_viscosity_n() const {
-    return pybind11::cast(vars->m_pseudo_viscosity_n);
+  const pybind11::object get_m_pseudo_viscosity() const {
+    return pybind11::cast(vars->m_pseudo_viscosity);
   }
 
-  const pybind11::object get_m_cell_cqs_n() const {
-    return pybind11::cast(vars->m_cell_cqs_n);
+  const pybind11::object get_m_cell_cqs() const {
+    return pybind11::cast(vars->m_cell_cqs);
   }
 
-  const pybind11::object get_m_velocity_n() const {
-    return pybind11::cast(vars->m_velocity_n);
+  const pybind11::object get_m_velocity() const {
+    return pybind11::cast(vars->m_velocity);
   }
 };
 
@@ -751,27 +815,103 @@ struct MahycoComputeAveragePressureExecutionContext final : SciHook::SciHookExec
   }
 };
 
-//! Classe de contexte d'exécution pour computeHydroDeltaT
-struct MahycoComputeHydroDeltaTExecutionContext final : SciHook::SciHookExecutionContext
+//! Classe de contexte d'exécution pour computeVariablesForRemap
+struct MahycoComputeVariablesForRemapExecutionContext final : SciHook::SciHookExecutionContext
 {
-  MahycoComputeHydroDeltaTExecutionContext(std::string execution_context_name,
-      MahycoComputeHydroDeltaTVars *vars)
+  MahycoComputeVariablesForRemapExecutionContext(std::string execution_context_name,
+      MahycoComputeVariablesForRemapVars *vars)
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
   
-  const MahycoComputeHydroDeltaTVars *vars;
+  const MahycoComputeVariablesForRemapVars *vars;
 
-  const pybind11::object get_m_caracteristic_length() const {
-    return pybind11::cast(vars->m_caracteristic_length);
+  const pybind11::object get_m_cell_volume() const {
+    return pybind11::cast(vars->m_cell_volume);
   }
 
-  const pybind11::object get_m_sound_speed() const {
-    return pybind11::cast(vars->m_sound_speed);
+  const pybind11::object get_m_density() const {
+    return pybind11::cast(vars->m_density);
+  }
+
+  const pybind11::object get_m_internal_energy() const {
+    return pybind11::cast(vars->m_internal_energy);
+  }
+
+  const pybind11::object get_m_pseudo_viscosity() const {
+    return pybind11::cast(vars->m_pseudo_viscosity);
+  }
+
+  const pybind11::object get_m_fracvol() const {
+    return pybind11::cast(vars->m_fracvol);
+  }
+
+  const pybind11::object get_m_node_mass() const {
+    return pybind11::cast(vars->m_node_mass);
   }
 
   const pybind11::object get_m_velocity() const {
     return pybind11::cast(vars->m_velocity);
+  }
+
+  const pybind11::object get_m_u_lagrange() const {
+    return pybind11::cast(vars->m_u_lagrange);
+  }
+
+  const pybind11::object get_m_u_dual_lagrange() const {
+    return pybind11::cast(vars->m_u_dual_lagrange);
+  }
+
+  const pybind11::object get_m_phi_lagrange() const {
+    return pybind11::cast(vars->m_phi_lagrange);
+  }
+
+  const pybind11::object get_m_phi_dual_lagrange() const {
+    return pybind11::cast(vars->m_phi_dual_lagrange);
+  }
+};
+
+//! Classe de contexte d'exécution pour computeFaceQuantitesForRemap
+struct MahycoComputeFaceQuantitesForRemapExecutionContext final : SciHook::SciHookExecutionContext
+{
+  MahycoComputeFaceQuantitesForRemapExecutionContext(std::string execution_context_name,
+      MahycoComputeFaceQuantitesForRemapVars *vars)
+  : SciHookExecutionContext(execution_context_name)
+  , vars(vars)
+  {}
+  
+  const MahycoComputeFaceQuantitesForRemapVars *vars;
+
+  const pybind11::object get_m_cell_coord() const {
+    return pybind11::cast(vars->m_cell_coord);
+  }
+
+  const pybind11::object get_m_node_coord() const {
+    return pybind11::cast(vars->m_node_coord);
+  }
+
+  const pybind11::object get_m_face_normal() const {
+    return pybind11::cast(vars->m_face_normal);
+  }
+
+  const pybind11::object get_m_velocity() const {
+    return pybind11::cast(vars->m_velocity);
+  }
+
+  const pybind11::object get_m_velocity_n() const {
+    return pybind11::cast(vars->m_velocity_n);
+  }
+
+  const pybind11::object get_m_face_coord() const {
+    return pybind11::cast(vars->m_face_coord);
+  }
+
+  const pybind11::object get_m_face_length_lagrange() const {
+    return pybind11::cast(vars->m_face_length_lagrange);
+  }
+
+  const pybind11::object get_m_face_normal_velocity() const {
+    return pybind11::cast(vars->m_face_normal_velocity);
   }
 };
 

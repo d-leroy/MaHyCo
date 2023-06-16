@@ -36,7 +36,7 @@ class IEnvironment
   /*!  Nom du milieu  */
   virtual String getName() = 0;
   /*!  Nom du materiau  */
-  virtual ArrayString getMaterial() = 0;
+  virtual ConstArrayView< String > getMaterial() = 0;
   /*!  Service d'equation d'état  */
   virtual ::Eos::IEquationOfState* getEosModel() = 0;
 };
@@ -54,7 +54,7 @@ class Environment
  public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
   Environment()
   : m_name(String())
-  , m_material(ArrayString())
+  , m_material(UniqueArray< String >())
   , m_EosModel(0)
   {}
   virtual ~Environment() {}
@@ -63,15 +63,15 @@ class Environment
   String getName() override { return m_name; }
   void setName(String value) { m_name = value; }
 
-  ArrayString getMaterial() override { return m_material; }
-  void setMaterial(ArrayString value) { m_material = value; }
+  ConstArrayView< String > getMaterial() override { return m_material; }
+  void setMaterial(Array< String >& value) { m_material = value; }
 
   ::Eos::IEquationOfState* getEosModel() override { return m_EosModel; }
   void setEosModel(::Eos::IEquationOfState* value) { m_EosModel = value; }
 
  protected:  // ***** ATTRIBUTS
   String m_name;
-  ArrayString m_material;
+  UniqueArray< String > m_material;
   ::Eos::IEquationOfState* m_EosModel;
 };
 

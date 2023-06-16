@@ -24,10 +24,10 @@ MahycoModule::
 
 /*---------------------------------------------------------------------------*/
 /* Pour préparer les accélérateurs */
-/* TODO: Modaniser? */
+/* TODO: Modaniser m_acc_env? */
 /*---------------------------------------------------------------------------*/
 void MahycoModule::
-accBuild() 
+accBuild(MahycoAccBuildVars& vars) 
 {
   m_acc_env = SingletonIAccEnv::accEnv(subDomain());
 }
@@ -37,28 +37,26 @@ accBuild()
 
 /*---------------------------------------------------------------------------*/
 /* Vérification de la compatibilité des options */
-/* TODO: Modaniser? */
 /*---------------------------------------------------------------------------*/
 void MahycoModule::
-checkOptions()
+checkOptions(MahycoCheckOptionsVars& vars)
 {
   IParallelMng* m_parallel_mng = subDomain()->parallelMng();
   my_rank = m_parallel_mng->commRank();
-
 
   info() <<  "Mon rang " << my_rank << " et mon nombre de mailles " << allCells().size();
   info() <<  " Mes mailles pures : " << ownCells().size();
   info() <<  " Mes mailles frantomes : " << allCells().size() - ownCells().size();
 
   info() << " Check donnees ";
-  if ((options()->remap()->getOrdreProjection() == 3) && (mesh()->ghostLayerMng()->nbGhostLayer() != 3) && (m_parallel_mng->isParallel() == true)) {
+  if ((getRemap()->getOrdreProjection() == 3) && (mesh()->ghostLayerMng()->nbGhostLayer() != 3) && (m_parallel_mng->isParallel() == true)) {
     info() << " mode parallele : " << m_parallel_mng->isParallel();
     info() << " nombre de couches de mailles fantomes : " << mesh()->ghostLayerMng()->nbGhostLayer();
-    info() << " incompatible avec la projection d'ordre " << options()->remap()->getOrdreProjection();
+    info() << " incompatible avec la projection d'ordre " << getRemap()->getOrdreProjection();
     info() << " ----------------------------- fin du calcul à la fin de l'init ---------------------------------------------";
     subDomain()->timeLoopMng()->stopComputeLoop(true);
   }
-  if ((options()->withProjection == true) && (mesh()->ghostLayerMng()->nbGhostLayer() < 2) && (m_parallel_mng->isParallel() == true)) {
+  if ((getWithProjection() == true) && (mesh()->ghostLayerMng()->nbGhostLayer() < 2) && (m_parallel_mng->isParallel() == true)) {
     info() << " mode parallele : " << m_parallel_mng->isParallel();
     info() << " nombre de couches de mailles fantomes : " << mesh()->ghostLayerMng()->nbGhostLayer();
     info() << " incompatible avec la projection ";
@@ -72,7 +70,7 @@ checkOptions()
 /* TODO: Modaniser? */
 /*---------------------------------------------------------------------------*/
 void MahycoModule::
-initCartesianMesh()
+initCartesianMesh(MahycoInitCartesianMeshVars& vars)
 {
   m_cartesian_mesh = _initCartMesh();
   m_dimension = mesh()->dimension(); 
@@ -111,10 +109,11 @@ initHydroVar(MahycoInitHydroVarVars& vars)
   getCasModel()->initVar(m_dimension);
   
   if (!getSansLagrange()) {
+    auto mm = getMeshMaterialMng();
     for( Integer i=0,n=getEnvironment().size(); i<n; ++i ) {
         IMeshEnvironment* ienv = mm->environments()[i];
         // Initialise l'énergie et la vitesse du son
-        getEnvironment()[i].eosModel()->initEOS(ienv);
+        getEnvironment()[i]->getEosModel()->initEOS(ienv);
     }
 
     CellToAllEnvCellConverter all_env_cell_converter(mm);
@@ -154,7 +153,7 @@ initHydroVar(MahycoInitHydroVarVars& vars)
     }
   }
   
-  InitGeometricValues();
+  MahycoModuleBase::initGeometricValues();
   
   // deplacé de hydrocontinueInit
   // calcul des volumes via les cqs, differents deu calcul dans computeGeometricValues ?
@@ -195,10 +194,9 @@ initHydroVar(MahycoInitHydroVarVars& vars)
 /* TODO: Modaniser? */
 /*---------------------------------------------------------------------------*/
 void MahycoModule::
-setSyncVarVers()
+setSyncVarVers(MahycoSetSyncVarVersVars& vars)
 {
-  auto* mm = IMeshMaterialMng::getReference(defaultMesh());
-  mm->setSynchronizeVariableVersion(6);
+  getMeshMaterialMng()->setSynchronizeVariableVersion(6);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -220,6 +218,7 @@ computeCellMass(MahycoComputeCellMassVars& vars)
       out_cell_mass_g[cid] = in_density_g[cid] * in_cell_volume_g[cid];
     };
   }
+  auto mm = getMeshMaterialMng();
   ENUMERATE_ENV(ienv,mm){
     IMeshEnvironment* env = *ienv;
     ENUMERATE_ENVCELL(ienvcell,env) {
@@ -267,11 +266,11 @@ computeNodeMass(MahycoComputeNodeMassVars& vars)
 /*---------------------------------------------------------------------------*/
 
 void MahycoModule::
-continueForMultiMat()
+continueForMultiMat(MahycoContinueForMultiMatVars& vars)
 {
   PROF_ACC_BEGIN(__FUNCTION__);
 
-  mm = IMeshMaterialMng::getReference(defaultMesh());
+  auto mm = getMeshMaterialMng();
 
   mm->recreateFromDump();
   m_nb_env = mm->environments().size();
@@ -302,6 +301,8 @@ saveValuesAtN(MahycoSaveValuesAtNVars& vars)
   // le pas de temps a été mis a jour a la fin dunpas de temps precedent et arcanne met dans m_global_old_deltat ce pas de temps ?
   // donc nous ont remet le bon old pas de temps
   m_global_old_deltat = m_old_deltat;
+
+  auto mm = getMeshMaterialMng();
 
 #if 0  
   // synchronisation debut de pas de temps (avec projection nécéssaire ?)
@@ -417,7 +418,7 @@ saveValuesAtN(MahycoSaveValuesAtNVars& vars)
 #endif
 
   bool copy_velocity = !getSansLagrange();
-  bool copy_node_coord = getWithProjection() && getRemap()->isEuler();
+  bool copy_node_coord = getWithProjection() && getRemap()->getIsEulerScheme();
 
   auto queue_node = m_acc_env->newQueue(); // queue asynchrone, pendant ce temps exécution sur queue_cell et menv_queue[*]
   queue_node.setAsync(true);
@@ -458,7 +459,7 @@ computeArtificialViscosity(MahycoComputeArtificialViscosityVars& vars)
 #if 0
   ENUMERATE_ENV(ienv,mm){
     IMeshEnvironment* env = *ienv;
-    Real adiabatic_cst = getEnvironment()[env->id()].eosModel()->getAdiabaticCst(env);
+    Real adiabatic_cst = getEnvironment()[env->id()]->getEosModel()->getAdiabaticCst(env);
     ENUMERATE_ENVCELL(ienvcell,env){
       EnvCell ev = *ienvcell;
       Cell cell = ev.globalCell();
@@ -530,6 +531,7 @@ computeArtificialViscosity(MahycoComputeArtificialViscosityVars& vars)
   // Pour chaque env traité l'un après l'autre, on récupère les mailles mixtes
   // Pour chaque maille mixte, on calcule pseudo_viscosity 
   // et on accumule cette valeur *fracvol dans la grandeur globale
+  auto mm = getMeshMaterialMng();
   ENUMERATE_ENV(ienv,mm){
     IMeshEnvironment* env = *ienv;
 
@@ -658,7 +660,7 @@ void MahycoModule::
 updateVelocity(MahycoUpdateVelocityVars& vars)
 {
   if (getSansLagrange()) {
-    updateVelocityWithoutLagrange();
+    MahycoModuleBase<Mahyco::MahycoModule>::updateVelocityWithoutLagrange();
     PROF_ACC_END;
     return;
   }
@@ -668,7 +670,7 @@ updateVelocity(MahycoUpdateVelocityVars& vars)
   // (qui dans le cas de vnr-csts est la vitesse apres projection du pas de temps précédent donc n),
   // est replacee à n-1/2 pour vnr-csts.
   // Dans le cas de vnr (pas csts) elle est deja en n-1/2
-  if (getSchemaCsts() && getWithProjection()) updateVelocityBackward();
+  if (getSchemaCsts() && getWithProjection()) MahycoModuleBase<Mahyco::MahycoModule>::updateVelocityBackward();
       
       
   debug() << " Entree dans updateVelocity()";
@@ -701,9 +703,9 @@ updateVelocity(MahycoUpdateVelocityVars& vars)
 
   m_velocity.synchronize();
 #else
-  updateForceAndVelocity(0.5 * (m_global_old_deltat() + m_global_deltat()),
-        /* calcul m_force : */ vars.m_pressure_n, vars.m_pseudo_viscosity_n, vars.m_cell_cqs_n,
-        /* calcul m_velocity : */ vars.m_velocity_n, vars.m_velocity);
+  MahycoModuleBase<Mahyco::MahycoModule>::updateForceAndVelocity(0.5 * (m_global_old_deltat() + m_global_deltat()),
+      vars.m_pressure_n, vars.m_pseudo_viscosity_n, vars.m_cell_cqs_n,
+      vars.m_velocity_n, vars.m_velocity);
 #endif
 }
 
@@ -715,9 +717,9 @@ updateVelocityBackward(MahycoUpdateVelocityBackwardVars& vars)
 {
   if (getSansLagrange()) return;
   debug() << " Entree dans updateVelocityBackward()";
-  updateForceAndVelocity(-0.5 * m_global_old_deltat(),
-      /* calcul m_force : */ vars.m_pressure_n, vars.m_pseudo_viscosity_n, vars.m_cell_cqs_n,
-      /* calcul m_velocity_n : */ vars.m_velocity_n, vars.m_velocity_n);
+  MahycoModuleBase<Mahyco::MahycoModule>::updateForceAndVelocity(-0.5 * m_global_old_deltat(),
+      vars.m_pressure_n, vars.m_pseudo_viscosity_n, vars.m_cell_cqs_n,
+      vars.m_velocity_n, vars.m_velocity_n);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -728,9 +730,9 @@ updateVelocityForward(MahycoUpdateVelocityForwardVars& vars)
 {
   if (getSansLagrange()) return;
   debug() << " Entree dans updateVelocityForward()";
-  updateForceAndVelocity(0.5 * m_global_deltat(),
-      /* calcul m_force : */ vars.m_pressure, vars.m_pseudo_viscosity, vars.m_cell_cqs,
-      /* calcul m_velocity : */ vars.m_velocity, vars.m_velocity);
+  MahycoModuleBase<Mahyco::MahycoModule>::updateForceAndVelocity(0.5 * m_global_deltat(),
+      vars.m_pressure, vars.m_pseudo_viscosity, vars.m_cell_cqs,
+      vars.m_velocity, vars.m_velocity);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -740,7 +742,7 @@ void MahycoModule::
 updateVelocityWithoutLagrange(MahycoUpdateVelocityWithoutLagrangeVars& vars)
 {
   bool option(getCasModel()->hasReverseOption());
-  Real factor(getCasModel()->getReverseParameter());
+  Real factor(getCasModel()->getParameter());
   
   Real option_real( (Real) option);
   
@@ -871,7 +873,7 @@ applyBoundaryCondition(MahycoApplyBoundaryConditionVars& vars)
 
   for( auto bc : m_boundary_conditions ) {
     Real value = bc.value;
-    TypesMahyco::eBoundaryCondition type = bc.type;
+    Types_mahyco::BoundaryConditionType type = bc.type;
 
     auto command = makeCommand(queue);
     auto inout_velocity = ax::viewInOut(command,vars.m_velocity);
@@ -879,10 +881,10 @@ applyBoundaryCondition(MahycoApplyBoundaryConditionVars& vars)
     command << RUNCOMMAND_ENUMERATE(Node,nid,bc.boundary_nodes) {
       Real3 velocity = inout_velocity[nid];
       switch(type) {
-        case TypesMahyco::VelocityX: velocity.x = value; break;
-        case TypesMahyco::VelocityY: velocity.y = value; break;
-        case TypesMahyco::VelocityZ: velocity.z = value; break;
-        case TypesMahyco::Unknown: break;
+        case Types_mahyco::BoundaryConditionType::Vx: velocity.x = value; break;
+        case Types_mahyco::BoundaryConditionType::Vy: velocity.y = value; break;
+        case Types_mahyco::BoundaryConditionType::Vz: velocity.z = value; break;
+        case Types_mahyco::BoundaryConditionType::Unknown: break;
       }
       inout_velocity[nid] = velocity;
     }; // non-bloquant
@@ -943,7 +945,7 @@ initGeometricValues(MahycoInitGeometricValuesVars& vars)
 void MahycoModule::
 computeGeometricValuesIni(MahycoComputeGeometricValuesIniVars& vars)
 {
-  computeGeometricValuesAux();
+  MahycoModuleBase<Mahyco::MahycoModule>::computeGeometricValuesAux();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -952,7 +954,7 @@ computeGeometricValuesIni(MahycoComputeGeometricValuesIniVars& vars)
 void MahycoModule::
 computeGeometricValues(MahycoComputeGeometricValuesVars& vars)
 {
-  computeGeometricValuesAux();
+  MahycoModuleBase<Mahyco::MahycoModule>::computeGeometricValuesAux();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1189,6 +1191,7 @@ computeGeometricValuesAux(MahycoComputeGeometricValuesAuxVars& vars)
 
   // maille mixte
   // moyenne sur la maille
+  auto mm = getMeshMaterialMng();
   auto menv_queue = m_acc_env->multiEnvMng()->multiEnvQueue();
   ENUMERATE_ENV(ienv, mm) {
     IMeshEnvironment* env = *ienv;
@@ -1217,6 +1220,23 @@ computeGeometricValuesAux(MahycoComputeGeometricValuesAuxVars& vars)
   menv_queue->waitAllQueues();
 }
 
+/**
+ *******************************************************************************
+ * Fonction appelée à l'intérieur des kernels de updateDensity(), 
+ * permet de mutualiser les formules entre les mailles pures et mixtes
+ *******************************************************************************
+ */
+ARCCORE_HOST_DEVICE inline void compute_density_tau(Real density_n,
+    Real cell_mass, Real cell_volume,
+    Real& density, Real& tau_density)
+{
+  // nouvelle density
+  density = cell_mass / cell_volume;
+  // volume specifique de l'environnement au temps n+1/2
+  tau_density = 
+    0.5 * (1.0 / density_n + 1.0 / density);
+}
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -1225,6 +1245,8 @@ updateDensity(MahycoUpdateDensityVars& vars)
 {
   if (getSansLagrange()) return;
   debug() << my_rank << " : " << " Entree dans updateDensity() ";
+
+  auto mm = getMeshMaterialMng();
 
   // On lance de manière asynchrone les calculs des valeurs globales/pures sur GPU sur queue_glob
   auto queue_glob = m_acc_env->newQueue();
@@ -1325,9 +1347,9 @@ updateEnergyAndPressure(MahycoUpdateEnergyAndPressureVars& vars)
   m_acc_env->multiEnvMng()->checkMultiEnvGlobalCellId();
 
   if (getWithNewton()) 
-    updateEnergyAndPressurebyNewton();
+    MahycoModuleBase<Mahyco::MahycoModule>::updateEnergyAndPressurebyNewton();
   else
-    updateEnergyAndPressureforGP();  
+    MahycoModuleBase<Mahyco::MahycoModule>::updateEnergyAndPressureforGP();
    
 #if 0
   // maille mixte
@@ -1348,13 +1370,14 @@ updateEnergyAndPressure(MahycoUpdateEnergyAndPressureVars& vars)
   // Moyennes reportées dans updateEnergyAndPressurebyNewton() et updateEnergyAndPressureforGP()
 #endif
   if (!getWithProjection()) {
-    // Calcul de la Pression si on ne fait pas de projection 
+    // Calcul de la Pression si on ne fait pas de projection
+    auto mm = getMeshMaterialMng(); 
     for( Integer i=0,n=getEnvironment().size(); i<n; ++i ) {
         IMeshEnvironment* ienv = mm->environments()[i];
         // Calcul de la pression et de la vitesse du son
-        getEnvironment()[i].eosModel()->applyEOS(ienv);
+        getEnvironment()[i]->getEosModel()->applyEOS(ienv);
     }
-    computePressionMoyenne();
+    MahycoModuleBase<Mahyco::MahycoModule>::computeAveragePressure();
   }
 }
 
@@ -1368,6 +1391,7 @@ updateEnergyAndPressurebyNewton(MahycoUpdateEnergyAndPressurebyNewtonVars& vars)
     debug() << " Entree dans updateEnergyAndPressure()";
     bool csts = getSchemaCsts();
     bool pseudo_centree = getPseudoCentree();
+    auto mm = getMeshMaterialMng();
     // Calcul de l'énergie interne
     if (!csts) {
         ENUMERATE_ENV(ienv,mm){
@@ -1388,7 +1412,7 @@ updateEnergyAndPressurebyNewton(MahycoUpdateEnergyAndPressurebyNewtonVars& vars)
             double rn1 = vars.m_density[ev];
             double en  = vars.m_internal_energy_n[ev];
             // les iterations denewton
-            double epsilon = getTreshold();
+            double epsilon = getThreshold();
             double itermax = 50;
             double enew=0, e=en, p=0., c=0., dpde;
             int i = 0;
@@ -1396,7 +1420,7 @@ updateEnergyAndPressurebyNewton(MahycoUpdateEnergyAndPressurebyNewtonVars& vars)
             while(i<itermax && abs(fvnr(e, p, dpde, en, qnn1, pn, rn1, rn))>=epsilon)
             {
                 vars.m_internal_energy[ev] = e;
-                getEnvironment()[env->id()].eosModel()->applyOneCellEOS(env, ev);
+                getEnvironment()[env->id()]->getEosModel()->applyOneCellEOS(env, ev);
                 p = vars.m_pressure[ev];
                 c = vars.m_sound_speed[ev];
                 dpde = vars.m_dpde[ev];
@@ -1463,7 +1487,7 @@ updateEnergyAndPressurebyNewton(MahycoUpdateEnergyAndPressurebyNewtonVars& vars)
             while(i<itermax && abs(f(e, p, dpde, en, qn, pn, cn1, cn, m, qn1, cdn, cdon, qnm1))>=epsilon)
             {
                 vars.m_internal_energy[ev] = e;
-                getEnvironment()[env->id()].eosModel()->applyOneCellEOS(env, ev);
+                getEnvironment()[env->id()]->getEosModel()->applyOneCellEOS(env, ev);
                 p = vars.m_pressure[ev];
                 c = vars.m_sound_speed[ev];
                 dpde = vars.m_dpde[ev];
@@ -1497,6 +1521,35 @@ updateEnergyAndPressurebyNewton(MahycoUpdateEnergyAndPressurebyNewtonVars& vars)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+ARCCORE_HOST_DEVICE inline Real compute_eint(
+    bool pseudo_centree, Real adiabatic_cst,
+    Real pseudo_viscosity_n, Real pseudo_viscosity,
+    Real density_n, Real density, 
+    Real pressure, Real internal_energy_n) 
+{
+  Real pseudo(0.);
+  if (pseudo_centree &&
+      ((pseudo_viscosity_n + pseudo_viscosity) * (1.0 / density - 1.0 / density_n) < 0.))
+    pseudo = 0.5 * (pseudo_viscosity + pseudo_viscosity_n);
+  if (!pseudo_centree &&
+      (pseudo_viscosity * (1.0 / density - 1.0 / density_n) < 0.))
+    pseudo = pseudo_viscosity;
+
+  Real denom_accrois_nrj(1 + 0.5 * (adiabatic_cst - 1.0) *
+      density *
+      (1.0 / density -
+       1.0 / density_n));
+  Real numer_accrois_nrj(internal_energy_n -
+      (0.5 * pressure + pseudo) *
+      (1.0 / density - 1.0 / density_n));
+  Real internal_energy = numer_accrois_nrj / denom_accrois_nrj;
+
+  return internal_energy;
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 void MahycoModule::
 updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars)
 {
@@ -1509,7 +1562,7 @@ updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars)
 #if 0
     ENUMERATE_ENV(ienv,mm){
       IMeshEnvironment* env = *ienv;
-      Real adiabatic_cst = getEnvironment()[env->id()].eosModel()->getAdiabaticCst(env);
+      Real adiabatic_cst = getEnvironment()[env->id()]->getEosModel()->getAdiabaticCst(env);
       ENUMERATE_ENVCELL(ienvcell,env){
         EnvCell ev = *ienvcell;
         Real pseudo(0.);
@@ -1541,7 +1594,7 @@ updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars)
       auto command = makeCommand(queue);
 
       auto in_env_id               = ax::viewIn(command, m_acc_env->multiEnvMng()->envId());
-      auto in_adiabatic_cst_env    = ax::viewIn(command, vars.m_adiabatic_cst_env);
+      auto in_adiabatic_cst_env    = ax::viewIn(command, m_adiabatic_cst_env);
 
       auto in_pseudo_viscosity_n   = ax::viewIn(command, vars.m_pseudo_viscosity_n.globalVariable()); 
       auto in_pseudo_viscosity     = ax::viewIn(command, vars.m_pseudo_viscosity.globalVariable());
@@ -1567,7 +1620,7 @@ updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars)
     }
 
     // Traitement des mailles mixtes via les envView(...)
-
+    auto mm = getMeshMaterialMng();
     ENUMERATE_ENV(ienv,mm){
       IMeshEnvironment* env = *ienv;
 
@@ -1610,9 +1663,10 @@ updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars)
     }
 #endif
   } else {
+    auto mm = getMeshMaterialMng();
     ENUMERATE_ENV(ienv,mm){
       IMeshEnvironment* env = *ienv;
-      Real adiabatic_cst = getEnvironment()[env->id()].eosModel()->getAdiabaticCst();
+      Real adiabatic_cst = getEnvironment()[env->id()]->getEosModel()->getAdiabaticCst();
       ENUMERATE_ENVCELL(ienvcell,env){
         EnvCell ev = *ienvcell;
         Cell cell = ev.globalCell();
@@ -1719,6 +1773,7 @@ computeAveragePressure(MahycoComputeAveragePressureVars& vars)
     };
   }
  
+  auto mm = getMeshMaterialMng();
   ENUMERATE_ENV(ienv,mm){
     IMeshEnvironment* env = *ienv;
 
@@ -1751,73 +1806,161 @@ computeAveragePressure(MahycoComputeAveragePressureVars& vars)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-void MahycoModule::
-prepareFaceGroupForBc(MahycoPrepareFaceGroupForBcVars& vars)
-{
-  Int32UniqueArray face_x0_lid;
-  Int32UniqueArray face_y0_lid;
-  Int32UniqueArray face_z0_lid;
-  Int32UniqueArray face_xmax_lid;
-  Int32UniqueArray face_ymax_lid;
-  Int32UniqueArray face_zmax_lid;
-  Real3 maxCoor= {-1. , -1. , -1.};
-  ENUMERATE_NODE(inode, allNodes()){
-      maxCoor.x = std::max(maxCoor.x, vars.m_node_coord[inode].x);
-      maxCoor.y = std::max(maxCoor.y, vars.m_node_coord[inode].y);
-      maxCoor.z = std::max(maxCoor.z, vars.m_node_coord[inode].z);
+/*---------------------------------------------------------------------------*/
+/* DtCellInfo : type pour stocker les infos à la maille qui fait le pas de temps */
+/* DtCellInfoVoid : type vide, aucune info demandée                          */
+/*---------------------------------------------------------------------------*/
+class DtCellInfo {
+ public:
+  // VarCellSetter pour affecter une variable var sur accélérateur
+  class VarCellSetter {
+   public:
+    VarCellSetter(ax::RunCommand& command, VariableCellReal& var) :
+      m_out_var (ax::viewOut(command, var))
+    {}
+
+    ARCCORE_HOST_DEVICE VarCellSetter(const VarCellSetter& other) :
+      m_out_var (other.m_out_var)
+    {}
+
+    ARCCORE_HOST_DEVICE inline void setCellValue(CellLocalId cid, Real value) const {
+      m_out_var.setValue(cid, value);
+    }
+
+    ax::VariableCellRealOutView m_out_var;
+  };
+
+  DtCellInfo(IMesh* mesh) :
+    m_dx_sound (VariableBuildInfo(mesh, "TemporaryCellDxSound")),
+    m_minimum_aux (FloatInfo < Real >::maxValue()),
+    m_cell_id(-1), m_nbenvcell(-1),
+    m_cc(0.), m_ll(0.)
+  {}
+
+  VarCellSetter dxSoundSetter(ax::RunCommand& command) {
+    return VarCellSetter(command, m_dx_sound);
   }
-  ENUMERATE_FACE(iface, allFaces()){
-     const Face& face = *iface;
-     Integer face_local_id = face.localId();
-     for (Integer idir = 0 ; idir <  mesh()->dimension() ; ++idir) {
-         vars.m_is_dir_face[face][idir] = false;
-     }
-     bool flag_x0(true);
-     bool flag_y0(true);
-     bool flag_z0(true);
-     bool flag_xmax(true);
-     bool flag_ymax(true);
-     bool flag_zmax(true);
-     for (NodeEnumerator inode(face.nodes()); inode.index() < face.nbNode(); ++inode) {
-         if (vars.m_node_coord[inode].x > getTreshold())  flag_x0 = false;
-         if (vars.m_node_coord[inode].y > getTreshold())  flag_y0 = false;
-         if (vars.m_node_coord[inode].z > getTreshold())  flag_z0 = false;
-         if (math::abs(vars.m_node_coord[inode].x - maxCoor.x) > getTreshold()) flag_xmax = false;
-         if (math::abs(vars.m_node_coord[inode].y - maxCoor.y) > getTreshold()) flag_ymax = false;
-         if (math::abs(vars.m_node_coord[inode].z - maxCoor.z) > getTreshold()) flag_zmax = false;
-     }
-     if (flag_x0 == true) face_x0_lid.add(face_local_id);
-     if (flag_y0 == true) face_y0_lid.add(face_local_id);
-     if (flag_z0 == true) face_z0_lid.add(face_local_id);
-     if (flag_xmax == true) face_xmax_lid.add(face_local_id);
-     if (flag_ymax == true) face_ymax_lid.add(face_local_id);
-     if (flag_zmax == true) face_zmax_lid.add(face_local_id);
-   }
-   
-   mesh()->faceFamily()->createGroup("XMIN", face_x0_lid,true);
-   mesh()->faceFamily()->createGroup("YMIN", face_y0_lid,true);
-   mesh()->faceFamily()->createGroup("ZMIN", face_z0_lid,true);
-   FaceGroup facexmin = mesh()->faceFamily()->findGroup("XMIN");
-   FaceGroup faceymin = mesh()->faceFamily()->findGroup("YMIN");
-   FaceGroup facezmin = mesh()->faceFamily()->findGroup("ZMIN");
-   info() << " taille x 0 " << facexmin.size();
-   info() << " taille y 0 " << faceymin.size();
-   info() << " taille z 0 " << facezmin.size();
-   
-   mesh()->faceFamily()->createGroup("XMAX", face_xmax_lid,true);
-   mesh()->faceFamily()->createGroup("YMAX", face_ymax_lid,true);
-   mesh()->faceFamily()->createGroup("ZMAX", face_zmax_lid,true);
-   FaceGroup facexmax = mesh()->faceFamily()->findGroup("XMAX");
-   FaceGroup faceymax = mesh()->faceFamily()->findGroup("YMAX");
-   FaceGroup facezmax = mesh()->faceFamily()->findGroup("ZMAX");
-   info() << " taille x max " << facexmax.size();
-   info() << " taille y max " << faceymax.size();
-   info() << " taille z max " << facezmax.size();
-   
- 
-   info() << " nombre total de face " << allFaces().size();
-   
-   info() << " creation des groupes de dimension " << m_dimension;
+
+  Real computeMinCellInfo(CellGroup cell_group, Materials::IMeshMaterialMng* mm, 
+      const Materials::MaterialVariableCellReal& v_sound_speed,
+      const VariableCellReal& v_caracteristic_length) {
+    CellToAllEnvCellConverter all_env_cell_converter(mm);
+
+    // On recherche en séquentiel sur CPU les infos de la maille qui a le plus petit dx_sound
+    m_minimum_aux = FloatInfo < Real >::maxValue(); 
+    ENUMERATE_CELL(icell, cell_group){
+      Cell cell = * icell;
+      Real dx_sound = m_dx_sound[icell];
+      m_minimum_aux = math::min(m_minimum_aux, dx_sound);
+      if (m_minimum_aux == dx_sound) {
+        m_cell_id = icell.localId();
+        m_cc = v_sound_speed[icell];
+        m_ll = v_caracteristic_length[icell];
+        AllEnvCell all_env_cell = all_env_cell_converter[cell];
+        m_nbenvcell = all_env_cell.nbEnvironment();
+      }
+    }
+    return m_minimum_aux;
+  }
+
+  String strInfo() const {
+    StringBuilder strb;
+    strb+=" par ";
+    strb+=m_cell_id;
+    strb+=" (avec ";
+    strb+=m_nbenvcell;
+    strb+=" envs) avec ";
+    strb+=m_cc;
+    strb+=" ";
+    strb+=m_ll;
+    strb+=" et min ";
+    strb+=m_minimum_aux;
+    return strb.toString();
+  }
+
+protected:
+  VariableCellReal m_dx_sound;
+  Real m_minimum_aux;
+  Integer m_cell_id;
+  Integer m_nbenvcell;
+  Real m_cc;
+  Real m_ll;
+};
+
+class DtCellInfoVoid {
+ public:
+  // VarCellSetter vide, n'affecte rien aucune variable sur accélérateur
+  class VarCellSetter {
+   public:
+
+    ARCCORE_HOST_DEVICE inline void setCellValue([[maybe_unused]] CellLocalId cid, [[maybe_unused]] Real value) const {
+      // aucune valeur modifiée
+    }
+  };
+
+  VarCellSetter dxSoundSetter([[maybe_unused]] ax::RunCommand& command) {
+    return VarCellSetter();
+  }
+
+  Real computeMinCellInfo([[maybe_unused]] CellGroup cell_group, [[maybe_unused]] Materials::IMeshMaterialMng* mm, 
+      [[maybe_unused]] const Materials::MaterialVariableCellReal& v_sound_speed,
+      [[maybe_unused]] const VariableCellReal& v_caracteristic_length) {
+    return FloatInfo < Real >::maxValue();
+  }
+
+  String strInfo() const {
+    return String(" (aucune info sur les mailles)");
+  }
+};
+
+/*---------------------------------------------------------------------------*/
+/* Calcul d'un pas de temps à partir des grandeurs hydrodynamiques           */
+/*---------------------------------------------------------------------------*/
+template<typename DtCellInfoType>
+Real MahycoModule::
+computeHydroDeltaT(DtCellInfoType &dt_cell_info)
+{
+  // Calcul du pas de temps pour le respect du critère de CFL
+  Real minimum_aux;
+  {
+    auto queue = m_acc_env->newQueue();
+    auto command = makeCommand(queue);
+    ax::ReducerMin<Real> minimum_aux_reducer(command);
+
+    bool with_projection = options()->withProjection;
+
+    auto in_caracteristic_length = ax::viewIn(command, m_caracteristic_length);
+    auto in_sound_speed          = ax::viewIn(command, m_sound_speed.globalVariable());
+    auto in_velocity             = ax::viewIn(command, m_velocity);
+    typename DtCellInfoType::VarCellSetter out_dx_sound(dt_cell_info.dxSoundSetter(command));
+
+    auto cnc = m_acc_env->connectivityView().cellNode();
+
+    command << RUNCOMMAND_ENUMERATE(Cell,cid,allCells()) {
+      Real cell_dx = in_caracteristic_length[cid];
+      Real sound_speed = in_sound_speed[cid];
+      Real vmax(0.);
+      if (with_projection) {
+        for( NodeLocalId nid : cnc.nodes(cid) ){
+          vmax = math::max(in_velocity[nid].normL2(), vmax);
+        }
+      }
+      Real dx_sound = cell_dx / (sound_speed + vmax);
+      minimum_aux_reducer.min(dx_sound);
+      // On récupère éventuellement (ça va dépendre du type de dt_cell_info) la valeur de dx_sound sur cid
+      out_dx_sound.setCellValue(cid, dx_sound);
+    };
+    minimum_aux = minimum_aux_reducer.reduce();
+  }
+  // En fonction du type de dt_cell_info, on calcule ou pas les infos sur la maille qui fait le pas de temps
+  auto mm = getMeshMaterialMng();
+  [[maybe_unused]] Real h_minimum_aux = dt_cell_info.computeMinCellInfo(allCells(), mm, m_sound_speed, m_caracteristic_length);
+  ARCANE_ASSERT(h_minimum_aux==minimum_aux, ("Les minimum_aux calculés sur CPU et GPU sont différents"));
+
+  Real dt_hydro = options()->cfl() * minimum_aux;
+  dt_hydro = parallelMng()->reduce(Parallel::ReduceMin, dt_hydro);
+
+  return dt_hydro;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -1890,7 +2033,7 @@ computeDeltaT(MahycoComputeDeltaTVars& vars)
 #else
     DtCellInfoVoid dt_cell_info; // en optimisé, on ne calcule pas les infos sur la maille qui fait le pas de temps
 #endif
-    new_dt = computeHydroDeltaT(dt_cell_info);
+    new_dt = MahycoModule::computeHydroDeltaT(dt_cell_info);
     
     // respect de taux de croissance max
     new_dt = math::min(new_dt, 1.05 * m_global_old_deltat());
@@ -1901,7 +2044,7 @@ computeDeltaT(MahycoComputeDeltaTVars& vars)
     if (new_dt < getDeltatMin()) {
       // On RECALCULE le pas de temps en récupérant les infos sur la maille cette fois-ci
       DtCellInfo dt_cell_info_min(defaultMesh());
-      new_dt = computeHydroDeltaT(dt_cell_info_min);
+      new_dt = MahycoModule::computeHydroDeltaT(dt_cell_info_min);
       info() << " pas de temps minimum ";
       info() << " nouveau pas de temps " << new_dt << dt_cell_info_min.strInfo();
       exit(1);
@@ -1940,49 +2083,279 @@ computeDeltaT(MahycoComputeDeltaTVars& vars)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-Real MahycoModule::
-computeHydroDeltaT(MahycoComputeHydroDeltaTVars& vars)
+void MahycoModule::
+computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars)
 {
-  // Calcul du pas de temps pour le respect du critère de CFL
-  Real minimum_aux;
+  PROF_ACC_BEGIN(__FUNCTION__);
+  debug() << " Entree dans computeVariablesForRemap()";
+ 
+  if (options()->remap()->hasProjectionPenteBorne() == 0)
   {
-    auto queue = m_acc_env->newQueue();
-    auto command = makeCommand(queue);
-    ax::ReducerMin<Real> minimum_aux_reducer(command);
+    // Spécialisation
+    computeVariablesForRemap_PBorn0();
+    PROF_ACC_END;
+    return;
+  }
 
-    bool with_projection = getWithProjection();
-
-    auto in_caracteristic_length = ax::viewIn(command, vars.m_caracteristic_length);
-    auto in_sound_speed          = ax::viewIn(command, vars.m_sound_speed.globalVariable());
-    auto in_velocity             = ax::viewIn(command, vars.m_velocity);
-    typename DtCellInfoType::VarCellSetter out_dx_sound(dt_cell_info.dxSoundSetter(command));
-
-    auto cnc = m_acc_env->connectivityView().cellNode();
-
-    command << RUNCOMMAND_ENUMERATE(Cell,cid,allCells()) {
-      Real cell_dx = in_caracteristic_length[cid];
-      Real sound_speed = in_sound_speed[cid];
-      Real vmax(0.);
-      if (with_projection) {
-        for( NodeLocalId nid : cnc.nodes(cid) ){
-          vmax = math::max(in_velocity[nid].normL2(), vmax);
+  Integer nb_total_env = mm->environments().size();
+  Integer index_env;
+  
+  vars.m_u_lagrange.fill(0.);
+ 
+  ENUMERATE_ENV(ienv,mm){
+    IMeshEnvironment* env = *ienv;
+    ENUMERATE_ENVCELL(ienvcell,env){
+      EnvCell ev = *ienvcell;  
+      Cell cell = ev.globalCell();
+      index_env = ev.environmentId();
+      
+      // // volumes matériels (partiels)
+      vars.m_u_lagrange[cell][index_env] = vars.m_cell_volume[ev];
+      // // masses matériels (partiels)
+      vars.m_u_lagrange[cell][nb_total_env + index_env] = vars.m_cell_volume[ev] * vars.m_density[ev];
+      // // energies matériels (partiels)
+      vars.m_u_lagrange[cell][2 * nb_total_env + index_env] = vars.m_cell_volume[ev] * vars.m_density[ev] * vars.m_internal_energy[ev];
+      // // Quantites de mouvement centrees
+      vars.m_u_lagrange[cell][3 * nb_total_env + 0] = 0.;
+      vars.m_u_lagrange[cell][3 * nb_total_env + 1] = 0.;
+      vars.m_u_lagrange[cell][3 * nb_total_env + 2] = 0.;
+      // // energie cinetique centree
+      vars.m_u_lagrange[cell][3 * nb_total_env + 3] = 0.;
+      // // Pseudo partiel pour la quantité de mouvement
+      vars.m_u_lagrange[cell][3 * nb_total_env + 4] = vars.m_cell_volume[ev] * vars.m_pseudo_viscosity[ev];
+//       if (cell.localId() == 754) info() << cell.localId() << " pseudo avant proj " << m_pseudo_viscosity[ev] 
+//            << " ul " << m_u_lagrange[cell][3 * nb_total_env + 4] << " " << index_env;
+      
+      if (options()->remap()->hasProjectionPenteBorne() == 1) {     
+        // Cell cell = ev.globalCell();
+        vars.m_phi_lagrange[cell][index_env]  = vars.m_fracvol[ev];
+        vars.m_phi_lagrange[cell][nb_total_env + index_env] = vars.m_density[ev];
+        vars.m_phi_lagrange[cell][2 * nb_total_env + index_env] = vars.m_internal_energy[ev];
+        // les phi sur la vitesse et energie cinétique n'existent pas en VnR
+        vars.m_phi_lagrange[cell][3 * nb_total_env + 0] = 0.;
+        vars.m_phi_lagrange[cell][3 * nb_total_env + 1] = 0.;
+        vars.m_phi_lagrange[cell][3 * nb_total_env + 2] = 0.;
+        vars.m_phi_lagrange[cell][3 * nb_total_env + 3] = 0.;
+        
+        vars.m_phi_lagrange[cell][3 * nb_total_env + 4] = vars.m_pseudo_viscosity[ev];
+      } else {
+        for (Integer ivar = 0; ivar < m_nb_vars_to_project; ivar++) {
+          vars.m_phi_lagrange[cell][ivar] = vars.m_u_lagrange[cell][ivar] / vars.m_cell_volume[cell];
         }
       }
-      Real dx_sound = cell_dx / (sound_speed + vmax);
-      minimum_aux_reducer.min(dx_sound);
-      // On récupère éventuellement (ça va dépendre du type de dt_cell_info) la valeur de dx_sound sur cid
-      out_dx_sound.setCellValue(cid, dx_sound);
-    };
-    minimum_aux = minimum_aux_reducer.reduce();
+      
+    }
   }
-  // En fonction du type de dt_cell_info, on calcule ou pas les infos sur la maille qui fait le pas de temps
-  [[maybe_unused]] Real h_minimum_aux = dt_cell_info.computeMinCellInfo(allCells(), mm, m_sound_speed, m_caracteristic_length);
-  ARCANE_ASSERT(h_minimum_aux==minimum_aux, ("Les minimum_aux calculés sur CPU et GPU sont différents"));
+  
+  ENUMERATE_NODE(inode, allNodes()){
+    // variables duales
+    // quantité de mouvement
+    vars.m_u_dual_lagrange[inode][0] = vars.m_node_mass[inode] * vars.m_velocity[inode].x;
+    vars.m_u_dual_lagrange[inode][1] = vars.m_node_mass[inode] * vars.m_velocity[inode].y;
+    vars.m_u_dual_lagrange[inode][2] = vars.m_node_mass[inode] * vars.m_velocity[inode].z;
+    // masse nodale    
+    vars.m_u_dual_lagrange[inode][3] = vars.m_node_mass[inode];
+    // projection de l'energie cinétique
+    //     if (options->projectionConservative == 1)
+    vars.m_u_dual_lagrange[inode][4] = 0.5 * vars.m_node_mass[inode] * vars.m_velocity[inode].squareNormL2();
 
-  Real dt_hydro = getCfl() * minimum_aux;
-  dt_hydro = parallelMng()->reduce(Parallel::ReduceMin, dt_hydro);
+    //         if (limiteurs->projectionAvecPlateauPente == 1) {   
+    // *** variables Phi
+     vars.m_phi_dual_lagrange[inode][0] = vars.m_velocity[inode].x;
+     vars.m_phi_dual_lagrange[inode][1] = vars.m_velocity[inode].y;
+     vars.m_phi_dual_lagrange[inode][2] = vars.m_velocity[inode].z;
+     // masse nodale
+     vars.m_phi_dual_lagrange[inode][3] = vars.m_node_mass[inode];
+     // Phi energie cinétique
+     //     if (options->projectionConservative == 1)
+     vars.m_phi_dual_lagrange[inode][4] = 0.5 * vars.m_velocity[inode].squareNormL2();
+  }
+ 
+  PROF_ACC_END;
+}
 
-  return dt_hydro;
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+void MahycoModule::
+computeFaceQuantitesForRemap(MahycoComputeFaceQuantitesForRemapVars& vars)
+{
+  PROF_ACC_BEGIN(__FUNCTION__);
+  debug() << " Entree dans computeFaceQuantitesForRemap()";
+  bool csts = options()->schemaCsts();  
+  Real one_over_nbnode = m_dimension == 2 ? .5  : .25 ;
+  
+  if (m_dimension == 3) {
+//     ENUMERATE_FACE (iFace, allFaces()) {
+//     Face face = *iFace;
+//     Real3 face_vec1 = m_node_coord[face.node(2)] - m_node_coord[face.node(0)]; 
+//     Real3 face_vec2 = m_node_coord[face.node(3)] - m_node_coord[face.node(1)]; 
+//     m_face_length_lagrange[face][0]  = 0.5 * math::abs(produit(face_vec1.y, face_vec2.z, face_vec1.z, face_vec2.y));
+//     m_face_length_lagrange[face][1]  = 0.5 * math::abs(produit(face_vec2.x, face_vec1.z, face_vec2.z, face_vec1.x));
+//     m_face_length_lagrange[face][2]  = 0.5 * math::abs(produit(face_vec1.x, face_vec2.y, face_vec1.y, face_vec2.x));
+//     }
+    
+    auto fnc = m_acc_env->connectivityView().faceNode();
+    
+    auto queue = m_acc_env->newQueue();
+    auto command = makeCommand(queue);
+    
+    auto in_node_coord = ax::viewIn(command,vars.m_node_coord);
+    auto out_face_length = ax::viewOut(command,vars.m_face_length_lagrange);
+    
+    command << RUNCOMMAND_ENUMERATE(Face,fid,allFaces()) {
+    
+      Real3 coord[4];
+      Int32 index=0;
+      for( NodeLocalId nid : fnc.nodes(fid) ){
+        coord[index]=in_node_coord[nid];
+        ++index;
+      }
+     
+      Real3 face_vec1 = coord[2] - coord[0];
+      Real3 face_vec2 = coord[3] - coord[1];
+      
+      Real3 out_face_length_temp = 0.5 * math::cross(face_vec1, face_vec2);
+      out_face_length[fid] = out_face_length_temp.absolute();
+    };
+    
+  } 
+  else {
+     Real3 tempveclen;
+     ENUMERATE_FACE (iFace, allFaces()) {
+        Face face = *iFace;
+        tempveclen = vars.m_node_coord[face.node(1)] - vars.m_node_coord[face.node(0)]; 
+        vars.m_face_length_lagrange[face][0] = math::abs(tempveclen.y);
+        vars.m_face_length_lagrange[face][1] = math::abs(tempveclen.x);
+        vars.m_face_length_lagrange[face][2] = 0.;
+    }
+  }
+  
+  if (csts) {
+    ENUMERATE_FACE (iFace, allFaces()) {
+      Face face = *iFace;
+      Real3 vitesse_moy = {0. , 0. , 0.};
+      vars.m_face_coord[face]=0.;
+      for (Integer inode = 0; inode < face.nbNode(); ++inode) {
+        vars.m_face_coord[face] +=  one_over_nbnode * vars.m_node_coord[face.node(inode)];
+        vitesse_moy += 0.5 * (vars.m_velocity[face.node(inode)] + vars.m_velocity_n[face.node(inode)]);
+      }
+      vars.m_face_normal_velocity[face] = math::dot((one_over_nbnode * vitesse_moy), vars.m_face_normal[face]);  
+    }
+  }
+  else {
+//     ENUMERATE_FACE (iFace, allFaces()) {
+//       Face face = *iFace;
+//       Real3 vitesse_moy = {0. , 0. , 0.};
+//       m_face_coord[face]=0.;
+//       for (Integer inode = 0; inode < face.nbNode(); ++inode) {
+//         m_face_coord[face] +=  one_over_nbnode * m_node_coord[face.node(inode)];
+//         vitesse_moy += m_velocity[face.node(inode)];
+//       }
+//       m_face_normal_velocity[face] = math::dot((one_over_nbnode * vitesse_moy), m_face_normal[face]);  
+//     }
+    
+    auto fnc = m_acc_env->connectivityView().faceNode();
+    
+    auto queue = m_acc_env->newQueue();
+    auto command = makeCommand(queue);
+    
+    auto in_node_coord = ax::viewIn(command,vars.m_node_coord);
+    auto in_velocity = ax::viewIn(command,vars.m_velocity);
+    auto in_face_normal = ax::viewIn(command,vars.m_face_normal);
+    
+    auto out_face_coord = ax::viewOut(command,vars.m_face_coord);
+    auto out_face_normal_velocity = ax::viewOut(command,vars.m_face_normal_velocity);
+    
+    command << RUNCOMMAND_ENUMERATE(Face,fid,allFaces()) {
+
+      Real3 vitesse_moy = {0. , 0. , 0.};
+      out_face_coord[fid] = Real3(0., 0., 0.);
+      
+      Int32 index=0;
+      for( NodeLocalId nid : fnc.nodes(fid) ){
+        out_face_coord[fid] += one_over_nbnode * in_node_coord[nid];
+        vitesse_moy += in_velocity[nid];
+        ++index;
+      }    
+      out_face_normal_velocity[fid] = math::dot((one_over_nbnode * vitesse_moy), in_face_normal[fid]);
+    };
+  }
+  
+  // Ces deux var ont été calculées sur allFaces, on enlève les synchro
+  // m_face_length_lagrange.synchronize();
+  // m_face_normal_velocity.synchronize();
+  PROF_ACC_END;
+}
+
+
+/*---------------------------------------------------------------------------*/
+/* TODO: modaniser? isoler dans Utils ou Aux? */
+/*---------------------------------------------------------------------------*/
+
+ARCCORE_HOST_DEVICE inline void MahycoModule::
+computeCQs(Real3 node_coord[8], Real3 face_coord[6], Span<Real3> out_cqs)
+{
+  const Real3 c0 = face_coord[0];
+  const Real3 c1 = face_coord[1];
+  const Real3 c2 = face_coord[2];
+  const Real3 c3 = face_coord[3];
+  const Real3 c4 = face_coord[4];
+  const Real3 c5 = face_coord[5];
+
+  // Calcul des normales face 1 :
+  const Real3 n1a04 = 0.5 * math::vecMul(node_coord[0] - c0, node_coord[3] - c0);
+  const Real3 n1a03 = 0.5 * math::vecMul(node_coord[3] - c0, node_coord[2] - c0);
+  const Real3 n1a02 = 0.5 * math::vecMul(node_coord[2] - c0, node_coord[1] - c0);
+  const Real3 n1a01 = 0.5 * math::vecMul(node_coord[1] - c0, node_coord[0] - c0);
+
+  // Calcul des normales face 2 :
+  const Real3 n2a05 = 0.5 * math::vecMul(node_coord[0] - c1, node_coord[4] - c1);
+  const Real3 n2a12 = 0.5 * math::vecMul(node_coord[4] - c1, node_coord[7] - c1);
+  const Real3 n2a08 = 0.5 * math::vecMul(node_coord[7] - c1, node_coord[3] - c1);
+  const Real3 n2a04 = 0.5 * math::vecMul(node_coord[3] - c1, node_coord[0] - c1);
+
+  // Calcul des normales face 3 :
+  const Real3 n3a01 = 0.5 * math::vecMul(node_coord[0] - c2, node_coord[1] - c2);
+  const Real3 n3a06 = 0.5 * math::vecMul(node_coord[1] - c2, node_coord[5] - c2);
+  const Real3 n3a09 = 0.5 * math::vecMul(node_coord[5] - c2, node_coord[4] - c2);
+  const Real3 n3a05 = 0.5 * math::vecMul(node_coord[4] - c2, node_coord[0] - c2);
+
+  // Calcul des normales face 4 :
+  const Real3 n4a09 = 0.5 * math::vecMul(node_coord[4] - c3, node_coord[5] - c3);
+  const Real3 n4a10 = 0.5 * math::vecMul(node_coord[5] - c3, node_coord[6] - c3);
+  const Real3 n4a11 = 0.5 * math::vecMul(node_coord[6] - c3, node_coord[7] - c3);
+  const Real3 n4a12 = 0.5 * math::vecMul(node_coord[7] - c3, node_coord[4] - c3);
+
+  // Calcul des normales face 5 :
+  const Real3 n5a02 = 0.5 * math::vecMul(node_coord[1] - c4, node_coord[2] - c4);
+  const Real3 n5a07 = 0.5 * math::vecMul(node_coord[2] - c4, node_coord[6] - c4);
+  const Real3 n5a10 = 0.5 * math::vecMul(node_coord[6] - c4, node_coord[5] - c4);
+  const Real3 n5a06 = 0.5 * math::vecMul(node_coord[5] - c4, node_coord[1] - c4);
+
+  // Calcul des normales face 6 :
+  const Real3 n6a03 = 0.5 * math::vecMul(node_coord[2] - c5, node_coord[3] - c5);
+  const Real3 n6a08 = 0.5 * math::vecMul(node_coord[3] - c5, node_coord[7] - c5);
+  const Real3 n6a11 = 0.5 * math::vecMul(node_coord[7] - c5, node_coord[6] - c5);
+  const Real3 n6a07 = 0.5 * math::vecMul(node_coord[6] - c5, node_coord[2] - c5);
+
+  // Calcul des résultantes aux sommets :
+  out_cqs[0] = (5. * (n1a01 + n1a04 + n2a04 + n2a05 + n3a05 + n3a01) +
+                          (n1a02 + n1a03 + n2a08 + n2a12 + n3a06 + n3a09)) * (1. / 12.);
+  out_cqs[1] = (5. * (n1a01 + n1a02 + n3a01 + n3a06 + n5a06 + n5a02) +
+                          (n1a04 + n1a03 + n3a09 + n3a05 + n5a10 + n5a07)) * (1. / 12.);
+  out_cqs[2] = (5. * (n1a02 + n1a03 + n5a07 + n5a02 + n6a07 + n6a03) +
+                          (n1a01 + n1a04 + n5a06 + n5a10 + n6a11 + n6a08)) * (1. / 12.);
+  out_cqs[3] = (5. * (n1a03 + n1a04 + n2a08 + n2a04 + n6a08 + n6a03) +
+                          (n1a01 + n1a02 + n2a05 + n2a12 + n6a07 + n6a11)) * (1. / 12.);
+  out_cqs[4] = (5. * (n2a05 + n2a12 + n3a05 + n3a09 + n4a09 + n4a12) +
+                          (n2a08 + n2a04 + n3a01 + n3a06 + n4a10 + n4a11)) * (1. / 12.);
+  out_cqs[5] = (5. * (n3a06 + n3a09 + n4a09 + n4a10 + n5a10 + n5a06) +
+                          (n3a01 + n3a05 + n4a12 + n4a11 + n5a07 + n5a02)) * (1. / 12.);
+  out_cqs[6] = (5. * (n4a11 + n4a10 + n5a10 + n5a07 + n6a07 + n6a11) +
+                          (n4a12 + n4a09 + n5a06 + n5a02 + n6a03 + n6a08)) * (1. / 12.);
+  out_cqs[7] = (5. * (n2a08 + n2a12 + n4a12 + n4a11 + n6a11 + n6a08) +
+                          (n2a04 + n2a05 + n4a09 + n4a10 + n6a07 + n6a03)) * (1. / 12.);
 }
 
 /*---------------------------------------------------------------------------*/

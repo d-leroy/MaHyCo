@@ -21,7 +21,8 @@ enum class BoundaryConditionType
 {
   Vx,
   Vy,
-  Vz
+  Vz,
+  Unknown
 };
 
 /*---------------------------------------------------------------------------*/

@@ -1,24 +1,6 @@
 package remap.adi;
 
 service caseoption RemapADI implements remap.Remap {
-    /*! Définition de la valeur limite des petites fractions et autres */
-    Real Threshold="1.e-10";
-    /*!  projection type Euler (retour sur maillage initial) */
-    Bool IsEulerScheme="true";
-    /*! Définition de la valeur limite des petites fractions et autres */
-    Int OrdreProjection="2";
-    /*! Conservation de l energie totale lors de la projection */
-    Bool ConservationEnergieTotale="false";
-    /*!  projection pente borne en volume dans les mailles mixtes et en masse dans les mailles pures */
-    Bool ProjectionPenteBorneMixte="false";
-    /*!  identifiant du limiteur pour les mailles mixtes */
-    Int ProjectionLimiteurId="0";
-    /*!  identifiant du limiteur pour les mailles pures */
-    Int ProjectionLimiteurPureId="0";
-    /*!  projection avec l'algorithme pente-borne */
-    Bool ProjectionPenteBorne="false";
-    /*!  projection avec l'algorithme pente-borne en evitant l'artefact de debar avec la valeur moyenne (1) ou valeur aux mailles (2) */
-    Int ProjectionPenteBorneDebarFix="0";
     /*!  identifiant de la methode de calcul du flux de masse duale */
     Int CalculFluxMasse="0";
 
@@ -53,9 +35,78 @@ service caseoption RemapADI implements remap.Remap {
     def void synchronizeDualUremap()
         out mahyco.phi_dual_lagrange, out mahyco.u_dual_lagrange;
     
+    def void computeAndLimitGradPhi(in Int projectionLimiterId, in Face frontFace, in Face backFace, 
+                                    in Cell cell, in Cell frontcell, in Cell backcell, in Int nb_vars)
+        out remap.grad_phi,
+        in remap.grad_phi_face,
+        in mahyco.phi_lagrange,
+        in remap.h_cell_lagrange
+        call fluxLimiter, call fluxLimiterG;
+    
+    def void computeDualGradPhi(in Node inode, in Node frontfrontnode, in Node frontnode, 
+                                in Node backnode, in Node backbacknode, in Int idir)
+        in mahyco.phi_dual_lagrange, in mahyco.node_coord
+        call computeAndLimitGradPhiDual, call fluxLimiter;
+    
+    def void computeAndLimitGradPhiDual(in Int projectionLimiterId, in Node inode, in Node frontnode, in Node backnode, 
+                                        in Real[3] grad_front, in Real[3] grad_back, in Real h0, in Real hplus, in Real hmoins)
+        in mahyco.phi_dual_lagrange,
+        out mahyco.dual_grad_phi
+        call fluxLimiter, call fluxLimiterG;
+    
+    def Real fluxLimiter(in Int projectionLimiterId, in Real r);
+    
+    def Real fluxLimiterG(in Int projectionLimiterId, in Real gradplus, in Real gradmoins,
+                          in Real y0, in Real yplus,in Real ymoins,
+                          in Real h0, in Real hplus, in Real hmoins);
+    
+    def void computeFluxPP(in Cell cell, in Cell frontcell, in Cell backcell,
+                           in Real face_normal_velocity, in Real deltat_n,
+                           in Int type, in Real flux_threshold, 
+                           in Int projectionPenteBorneDebarFix, 
+                           in Real dual_normal_velocity,
+                           in Int calcul_flux_dual,
+                           inout types_mahyco.RealArrayView Flux,
+                           inout types_mahyco.RealArrayView Flux_dual,
+                           in Int nbmat, in Int nb_vars)
+        in remap.h_cell_lagrange,
+        in mahyco.phi_lagrange,
+        in remap.grad_phi
+        call computeY0,
+        call computexgxd,
+        call computeygyd,
+        call INTY;
+    
+    def Real computeY0(in Int projectionLimiterId, in Real y0, in Real yplus, in Real ymoins,
+                       in Real h0, in Real hplus, in Real hmoins, in Int type);
+    
+    def Real computexgxd(in Real y0, in Real yplus, in Real ymoins, in Real h0,
+                         in Real y0plus, in Real y0moins, in Int type);
+    
+    def Real computeygyd(in Real y0, in Real yplus, in Real ymoins, in Real h0,
+                         in Real y0plus, in Real y0moins, in Real grady,in Int type);
+    
+    def Real INTY(in Real X,in Real x0,in Real y0, in Real x1, in Real y1);
+
+    def void computeFluxPPPure(in Cell cell, in Cell frontcell, in Cell backcell, 
+                               in Real face_normal_velocity, in Real deltat_n,
+                               in Int type, in Real flux_threshold, 
+                               in Int projectionPenteBorneDebarFix, 
+                               in Real dual_normal_velocity,
+                               in Int calcul_flux_dual,
+                               inout types_mahyco.RealArrayView Flux,
+                               inout types_mahyco.RealArrayView Flux_dual,
+                               in Int nbmat, in Int nb_vars)
+        in remap.h_cell_lagrange,
+        in mahyco.phi_lagrange,
+        in remap.grad_phi
+        call computeY0,
+        call computexgxd,
+        call computeygyd,
+        call INTY;
+
     def void computeGradPhiFace(in Int idir, in Int nb_vars_to_project, in Int nb_env)
-        in mahyco.face_normal, in mahyco.cell_coord, in mahyco.phi_lagrange,
-        in mahyco.face_coord, in mahyco.cell_coord,
+        in mahyco.face_normal, in mahyco.cell_coord, in mahyco.phi_lagrange, in mahyco.face_coord,
         out remap.is_dir_face, out remap.grad_phi_face,
         inout remap.deltax_lagrange, inout remap.h_cell_lagrange;
     
@@ -63,13 +114,13 @@ service caseoption RemapADI implements remap.Remap {
         in mahyco.outer_face_normal, in mahyco.face_normal_velocity,
         in mahyco.face_length_lagrange, in remap.is_dir_face,
         out remap.grad_phi, out remap.dual_phi_flux, out remap.delta_phi_face_av, out remap.delta_phi_face_ar,
-        inout mahyco.est_mixte, inout mahyco.est_pure
-        call computeGradPhiCell_PBorn0_LimC;
+        inout mahyco.est_mixte, inout mahyco.est_pure;
+        // call computeGradPhiCell_PBorn0_LimC;
 
     // TODO: templated function?
-    def void computeGradPhiCell_PBorn0_LimC(in Int idir, in Int nb_vars_to_project)
-        in remap.grad_phi_face,
-        out remap.grad_phi, out remap.delta_phi_face_ar, out remap.delta_phi_face_av;
+    // def void computeGradPhiCell_PBorn0_LimC(in Int idir, in Int nb_vars_to_project)
+    //     in remap.grad_phi_face,
+    //     out remap.grad_phi, out remap.delta_phi_face_ar, out remap.delta_phi_face_av;
 
     def void computeDualGradPhi_LimC(in Int idir)
         in mahyco.phi_dual_lagrange, in mahyco.node_coord,
@@ -109,4 +160,9 @@ service caseoption RemapADI implements remap.Remap {
         inout remap.back_flux_mass_env, inout remap.front_flux_mass_env,
         inout mahyco.u_dual_lagrange, inout mahyco.phi_dual_lagrange
         call computeDualGradPhi_LimC;
+
+    def Real computeRemapFlux(in Int projectionOrder, in Int projectionAvecPlateauPente,
+                              in Real face_normal_velocity, in Real[3] face_normal,
+                              in Real face_length, in Real phi_face,
+                              in Real[3] outer_face_normal, in Real[3] exy, in Real deltat_n);
 }

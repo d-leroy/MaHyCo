@@ -37,8 +37,9 @@ class IInitialisations
   virtual Integer getCasTest() = 0;
   /*!  Option de retour arriere  */
   virtual bool getReverseOption() = 0;
+  virtual bool hasReverseOption() const = 0;
   /*!  Parametre du cas test  */
-  virtual Real getParametre() = 0;
+  virtual Real getParameter() = 0;
 
  public:  // ***** METHODES ABSTRAITES
   /*!

@@ -11,7 +11,7 @@
 #include "arcane/ItemVectorView.h"
 #include "arcane/VariableTypes.h"
 #include "arcane/utils/Array.h"
-#include "scihook/SciHook.h"
+#include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

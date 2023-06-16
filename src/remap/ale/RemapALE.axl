@@ -2,8 +2,48 @@
   <interface name="::Remap::IRemap"/>
   <variables/>
   <options>
+    <simple name="ordre-projection" type="integer" default="2">
+      <description> Définition de la valeur limite des petites fractions et autres </description>
+    </simple>
     <simple name="threshold" type="real" default="1.e-10">
       <description> Définition de la valeur limite des petites fractions et autres </description>
+    </simple>
+    <simple name="is-euler-scheme" type="bool" default="true">
+      <description> projection type Euler (retour sur maillage initial) </description>
+    </simple>
+    <simple name="conservation-energie-totale" type="bool" default="false">
+      <description> Conservation de l energie totale lors de la projection </description>
+    </simple>
+    <simple name="projection-pente-borne-mixte" type="bool" default="false">
+      <description> projection pente borne en volume dans les mailles mixtes et en masse dans les mailles pures </description>
+    </simple>
+    <enumeration name="projection-limiteur-id" type="::Types_mahyco::Limiteur" default="minmod">
+      <description> identifiant du limiteur pour les mailles mixtes </description>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::Minmod" name="minmod"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::SuperBee" name="super-bee"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::VanLeer" name="van-leer"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::MinmodG" name="minmod-g"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::SuperBeeG" name="super-bee-g"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::VanLeerG" name="van-leer-g"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::ArithmeticG" name="arithmetic-g"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::UltrabeeG" name="ultrabee-g"/>
+    </enumeration>
+    <enumeration name="projection-limiteur-pure-id" type="::Types_mahyco::Limiteur" default="minmod">
+      <description> identifiant du limiteur pour les mailles pures </description>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::Minmod" name="minmod"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::SuperBee" name="super-bee"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::VanLeer" name="van-leer"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::MinmodG" name="minmod-g"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::SuperBeeG" name="super-bee-g"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::VanLeerG" name="van-leer-g"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::ArithmeticG" name="arithmetic-g"/>
+      <enumvalue genvalue="::Types_mahyco::Limiteur::UltrabeeG" name="ultrabee-g"/>
+    </enumeration>
+    <simple name="projection-pente-borne" type="bool" default="false">
+      <description> projection avec l'algorithme pente-borne </description>
+    </simple>
+    <simple name="projection-pente-borne-debar-fix" type="integer" default="0">
+      <description> projection avec l'algorithme pente-borne en evitant l'artefact de debar avec la valeur moyenne (1) ou valeur aux mailles (2) </description>
     </simple>
     <simple name="volum-criteria" type="real" default="1.">
       <description> Critere de remaillage d'un noeud sur le rapport du volume min et max des elements entourant ce noeud </description>
@@ -13,30 +53,6 @@
     </simple>
     <simple name="nb-iteration-winslow" type="integer" default="3">
       <description> Nombre d'itération de lissage du maillage </description>
-    </simple>
-    <simple name="is-euler-scheme" type="bool" default="false">
-      <description>  projection type Euler (retour sur maillage initial) </description>
-    </simple>
-    <simple name="ordre-projection" type="integer" default="2">
-      <description> Définition de la valeur limite des petites fractions et autres </description>
-    </simple>
-    <simple name="conservation-energie-totale" type="bool" default="false">
-      <description> Conservation de l energie totale lors de la projection </description>
-    </simple>
-    <simple name="projection-pente-borne-mixte" type="bool" default="false">
-      <description>  projection pente borne en volume dans les mailles mixtes et en masse dans les mailles pures </description>
-    </simple>
-    <simple name="projection-limiteur-id" type="integer" default="0">
-      <description>  identifiant du limiteur pour les mailles mixtes </description>
-    </simple>
-    <simple name="projection-limiteur-pure-id" type="integer" default="0">
-      <description>  identifiant du limiteur pour les mailles pures </description>
-    </simple>
-    <simple name="projection-pente-borne" type="bool" default="false">
-      <description>  projection avec l'algorithme pente-borne </description>
-    </simple>
-    <simple name="projection-pente-borne-debar-fix" type="integer" default="0">
-      <description>  projection avec l'algorithme pente-borne en evitant l'artefact de debar avec la valeur moyenne (1) ou valeur aux mailles (2) </description>
     </simple>
     <simple name="projection-dual" type="integer" default="0">
       <description>  identifiant de la methode de projection duale </description>

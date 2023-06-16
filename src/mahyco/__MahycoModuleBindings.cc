@@ -10,8 +10,15 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
+#include "arcane/geometry/IGeometryMng.h"
 #include "mahyco/__MahycoModuleVars.h"
 #include "mahyco/__MahycoModuleContexts.h"
+#include "types_mahyco/__IMaterial.h"
+#include "types_mahyco/__IEnvironment.h"
+#include "cas_test/__IInitialisations.h"
+#include "remap/__IRemap.h"
+#include "types_mahyco/__IBoundaryCondition.h"
+#include "cartesian/interface/ICartesianMesh.h"
 #include "scihook/scihookdefs.h"
 #include "mahyco/Mahyco_axl.h"
 
@@ -58,6 +65,23 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       return oss.str();
     })
     .def("__repr__", [](Mahyco::MahycoInitHydroVarExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext, std::shared_ptr<Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoHydroStartInitEnvAndMatExecutionContext")
+    .def_property_readonly("materiau", &Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext::get_m_materiau)
+    .def_property_readonly("sens_projection", &Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext::get_m_sens_projection)
+    .def_property_readonly("node_coord", &Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext::get_m_node_coord)
+    .def_property_readonly("cell_coord", &Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext::get_m_cell_coord)
+    .def("__str__", [](Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";
@@ -150,6 +174,24 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       return oss.str();
     })
     .def("__repr__", [](Mahyco::MahycoSaveValuesAtNExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<Mahyco::MahycoUpdateVelocityExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateVelocityExecutionContext")
+    .def_property_readonly("pressure_n", &Mahyco::MahycoUpdateVelocityExecutionContext::get_m_pressure_n)
+    .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoUpdateVelocityExecutionContext::get_m_pseudo_viscosity_n)
+    .def_property_readonly("cell_cqs_n", &Mahyco::MahycoUpdateVelocityExecutionContext::get_m_cell_cqs_n)
+    .def_property_readonly("velocity_n", &Mahyco::MahycoUpdateVelocityExecutionContext::get_m_velocity_n)
+    .def_property_readonly("velocity", &Mahyco::MahycoUpdateVelocityExecutionContext::get_m_velocity)
+    .def("__str__", [](Mahyco::MahycoUpdateVelocityExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](Mahyco::MahycoUpdateVelocityExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";
@@ -260,6 +302,7 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
     .def_property_readonly("fracvol", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_fracvol)
     .def_property_readonly("velocity", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_velocity)
     .def_property_readonly("cell_cqs", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_cell_cqs)
+    .def_property_readonly("caracteristic_length", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_caracteristic_length)
     .def_property_readonly("node_coord", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_node_coord)
     .def_property_readonly("cell_volume", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_cell_volume)
     .def("__str__", [](Mahyco::MahycoComputeGeometricValuesAuxExecutionContext &self)
@@ -307,10 +350,10 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       return oss.str();
     });
   pybind11::class_<Mahyco::MahycoUpdateVelocityForwardExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityForwardExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateVelocityForwardExecutionContext")
-    .def_property_readonly("pressure_n", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_pressure_n)
-    .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_pseudo_viscosity_n)
-    .def_property_readonly("cell_cqs_n", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_cell_cqs_n)
-    .def_property_readonly("velocity_n", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_velocity_n)
+    .def_property_readonly("pressure", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_pressure)
+    .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_pseudo_viscosity)
+    .def_property_readonly("cell_cqs", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_cell_cqs)
+    .def_property_readonly("velocity", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_velocity)
     .def("__str__", [](Mahyco::MahycoUpdateVelocityForwardExecutionContext &self)
     {
       std::ostringstream oss;
@@ -418,17 +461,46 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeHydroDeltaTExecutionContext, std::shared_ptr<Mahyco::MahycoComputeHydroDeltaTExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeHydroDeltaTExecutionContext")
-    .def_property_readonly("caracteristic_length", &Mahyco::MahycoComputeHydroDeltaTExecutionContext::get_m_caracteristic_length)
-    .def_property_readonly("sound_speed", &Mahyco::MahycoComputeHydroDeltaTExecutionContext::get_m_sound_speed)
-    .def_property_readonly("velocity", &Mahyco::MahycoComputeHydroDeltaTExecutionContext::get_m_velocity)
-    .def("__str__", [](Mahyco::MahycoComputeHydroDeltaTExecutionContext &self)
+  pybind11::class_<Mahyco::MahycoComputeVariablesForRemapExecutionContext, std::shared_ptr<Mahyco::MahycoComputeVariablesForRemapExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeVariablesForRemapExecutionContext")
+    .def_property_readonly("cell_volume", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_cell_volume)
+    .def_property_readonly("density", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_density)
+    .def_property_readonly("internal_energy", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_internal_energy)
+    .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_pseudo_viscosity)
+    .def_property_readonly("fracvol", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_fracvol)
+    .def_property_readonly("node_mass", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_node_mass)
+    .def_property_readonly("velocity", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_velocity)
+    .def_property_readonly("u_lagrange", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_u_lagrange)
+    .def_property_readonly("u_dual_lagrange", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_u_dual_lagrange)
+    .def_property_readonly("phi_lagrange", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_phi_lagrange)
+    .def_property_readonly("phi_dual_lagrange", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_phi_dual_lagrange)
+    .def("__str__", [](Mahyco::MahycoComputeVariablesForRemapExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";
       return oss.str();
     })
-    .def("__repr__", [](Mahyco::MahycoComputeHydroDeltaTExecutionContext &self)
+    .def("__repr__", [](Mahyco::MahycoComputeVariablesForRemapExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  pybind11::class_<Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext, std::shared_ptr<Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeFaceQuantitesForRemapExecutionContext")
+    .def_property_readonly("cell_coord", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_cell_coord)
+    .def_property_readonly("node_coord", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_node_coord)
+    .def_property_readonly("face_normal", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_face_normal)
+    .def_property_readonly("velocity", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_velocity)
+    .def_property_readonly("velocity_n", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_velocity_n)
+    .def_property_readonly("face_coord", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_face_coord)
+    .def_property_readonly("face_length_lagrange", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_face_length_lagrange)
+    .def_property_readonly("face_normal_velocity", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_face_normal_velocity)
+    .def("__str__", [](Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";

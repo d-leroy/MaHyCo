@@ -1,22 +1,5 @@
-#ifndef REMAP___REMAPALESERVICEVARS_H
-#define REMAP___REMAPALESERVICEVARS_H
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-#include "arcane/ArcaneTypes.h"
-#include "arcane/ItemTypes.h"
-#include "arcane/Item.h"
-#include "arcane/ItemVector.h"
-#include "arcane/ItemVectorView.h"
-#include "arcane/VariableTypes.h"
-#include "arcane/utils/Array.h"
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-using namespace Arcane;
-namespace Remap {
+#ifndef TYPES_MAHYCO___LIMITEUR_H
+#define TYPES_MAHYCO___LIMITEUR_H
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -25,9 +8,33 @@ namespace Remap {
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-}  // namespace Remap
+namespace Types_mahyco {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#endif  // REMAP___REMAPALESERVICEVARS_H
+/*!
+ * \brief Classe représentant l'énumération Limiteur
+ * 
+ */
+enum class Limiteur
+{
+  Minmod,
+  SuperBee,
+  VanLeer,
+  MinmodG,
+  SuperBeeG,
+  VanLeerG,
+  ArithmeticG,
+  UltrabeeG
+};
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+}  // namespace Types_mahyco
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#endif  // TYPES_MAHYCO___LIMITEUR_H

@@ -13,6 +13,7 @@
 #include "arcane/utils/Array.h"
 #include "remap/__IRemap.h"
 #include "remap/ale/__RemapALEServiceVars.h"
+#include "types_mahyco/__Limiteur.h"
 #include "remap/ale/RemapALE_axl.h"
 
 /*---------------------------------------------------------------------------*/
@@ -48,18 +49,18 @@ class RemapALEServiceBase
   }
 
  public:  // ***** ACCESSEURS
+  Integer getOrdreProjection() { return options()->getOrdreProjection(); }
   Real getThreshold() { return options()->getThreshold(); }
+  bool getIsEulerScheme() { return options()->getIsEulerScheme(); }
+  bool getConservationEnergieTotale() { return options()->getConservationEnergieTotale(); }
+  bool getProjectionPenteBorneMixte() { return options()->getProjectionPenteBorneMixte(); }
+  ::Types_mahyco::Limiteur getProjectionLimiteurId() { return options()->getProjectionLimiteurId(); }
+  ::Types_mahyco::Limiteur getProjectionLimiteurPureId() { return options()->getProjectionLimiteurPureId(); }
+  bool getProjectionPenteBorne() { return options()->getProjectionPenteBorne(); }
+  Integer getProjectionPenteBorneDebarFix() { return options()->getProjectionPenteBorneDebarFix(); }
   Real getVolumCriteria() { return options()->getVolumCriteria(); }
   Real getAngleCriteria() { return options()->getAngleCriteria(); }
   Integer getNbIterationWinslow() { return options()->getNbIterationWinslow(); }
-  bool getIsEulerScheme() { return options()->getIsEulerScheme(); }
-  Integer getOrdreProjection() { return options()->getOrdreProjection(); }
-  bool getConservationEnergieTotale() { return options()->getConservationEnergieTotale(); }
-  bool getProjectionPenteBorneMixte() { return options()->getProjectionPenteBorneMixte(); }
-  Integer getProjectionLimiteurId() { return options()->getProjectionLimiteurId(); }
-  Integer getProjectionLimiteurPureId() { return options()->getProjectionLimiteurPureId(); }
-  bool getProjectionPenteBorne() { return options()->getProjectionPenteBorne(); }
-  Integer getProjectionPenteBorneDebarFix() { return options()->getProjectionPenteBorneDebarFix(); }
   Integer getProjectionDual() { return options()->getProjectionDual(); }
   const String getImplName() const { return "RemapALEService"; }
 

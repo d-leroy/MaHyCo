@@ -1978,7 +1978,7 @@ computePressionMoyenne()
   }
 #endif
   PROF_ACC_END;
-}     
+}
 
 /*---------------------------------------------------------------------------*/
 /* DtCellInfo : type pour stocker les infos à la maille qui fait le pas de temps */

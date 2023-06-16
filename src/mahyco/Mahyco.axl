@@ -25,6 +25,15 @@
     <variable field-name="sound_speed" name="SoundSpeed" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
       <description> SOUND SPEED </description>
     </variable>
+    <variable field-name="materiau" name="Materiau" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> Materiau </description>
+    </variable>
+    <variable field-name="sens_projection" name="SensProjection" data-type="integer" item-kind="none" dim="0" dump="true" need-sync="false" restore="false" execution-depend="false">
+      <description> sens de la projection </description>
+    </variable>
+    <variable field-name="cell_coord" name="CellCoord" data-type="real3" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> CELL COORD </description>
+    </variable>
     <variable field-name="is_dir_face" name="IsDirFace" data-type="bool" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
       <description> isDirFace </description>
     </variable>
@@ -73,9 +82,6 @@
     <variable field-name="pseudo_viscosity_n" name="PseudoViscosityN" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
       <description> PSEUDO OLD N </description>
     </variable>
-    <variable field-name="cell_coord" name="CellCoord" data-type="real3" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> CELL COORD </description>
-    </variable>
     <variable field-name="div_u" name="DivU" data-type="real" item-kind="cell" dim="0" dump="false" need-sync="true" restore="false" execution-depend="false">
       <description> DIV U </description>
     </variable>
@@ -103,15 +109,41 @@
     <variable field-name="dpde" name="DpDe" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
       <description> DPDE </description>
     </variable>
+    <variable field-name="u_lagrange" name="ULagrange" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> U LAGRANGE </description>
+    </variable>
+    <variable field-name="u_dual_lagrange" name="UDualLagrange" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> U DUAL LAGRANGE </description>
+    </variable>
+    <variable field-name="phi_lagrange" name="PhiLagrange" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> PHI LAGRANGE </description>
+    </variable>
+    <variable field-name="phi_dual_lagrange" name="PhiDualLagrange" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> PHI DUAL LAGRANGE </description>
+    </variable>
+    <variable field-name="face_length_lagrange" name="FaceLengthLagrange" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> FACE LENGHT </description>
+    </variable>
+    <variable field-name="face_normal_velocity" name="FaceNormalVelocity" data-type="real" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> FACE NORMAL VELOCITY </description>
+    </variable>
   </variables>
   <entry-points>
+    <entry-point method-name="accBuild" name="AccBuild" where="build" property="none"/>
+    <entry-point method-name="checkOptions" name="CheckOptions" where="start-init" property="none"/>
+    <entry-point method-name="initCartesianMesh" name="InitCartesianMesh" where="init" property="none"/>
     <entry-point method-name="allocCqs" name="AllocCqs" where="start-init" property="none"/>
     <entry-point method-name="initDtIni" name="InitDtIni" where="start-init" property="none"/>
     <entry-point method-name="initHydroVar" name="InitHydroVar" where="start-init" property="none"/>
+    <entry-point method-name="hydroStartInitEnvAndMat" name="HydroStartInitEnvAndMat" where="start-init" property="none"/>
+    <entry-point method-name="initEnvForAcc" name="InitEnvForAcc" where="init" property="none"/>
     <entry-point method-name="computeGeometricValuesIni" name="ComputeGeometricValuesIni" where="start-init" property="none"/>
     <entry-point method-name="prepareFaceGroupForBc" name="PrepareFaceGroupForBc" where="start-init" property="none"/>
+    <entry-point method-name="initBoundaryConditionsForAcc" name="InitBoundaryConditionsForAcc" where="init" property="none"/>
+    <entry-point method-name="setSyncVarVers" name="SetSyncVarVers" where="start-init" property="none"/>
     <entry-point method-name="computeCellMass" name="ComputeCellMass" where="start-init" property="none"/>
     <entry-point method-name="computeNodeMass" name="ComputeNodeMass" where="start-init" property="none"/>
+    <entry-point method-name="continueForMultiMat" name="ContinueForMultiMat" where="continue-init" property="none"/>
     <entry-point method-name="continueForIterationDt" name="ContinueForIterationDt" where="continue-init" property="none"/>
     <entry-point method-name="saveValuesAtN" name="SaveValuesAtN" where="compute-loop" property="none"/>
     <entry-point method-name="updateVelocity" name="UpdateVelocity" where="compute-loop" property="none"/>
@@ -121,6 +153,7 @@
     <entry-point method-name="updateDensity" name="UpdateDensity" where="compute-loop" property="none"/>
     <entry-point method-name="computeArtificialViscosity" name="ComputeArtificialViscosity" where="compute-loop" property="none"/>
     <entry-point method-name="updateEnergyAndPressure" name="UpdateEnergyAndPressure" where="compute-loop" property="none"/>
+    <entry-point method-name="remap" name="Remap" where="compute-loop" property="none"/>
     <entry-point method-name="computeDeltaT" name="ComputeDeltaT" where="compute-loop" property="none"/>
   </entry-points>
   <options>
@@ -213,6 +246,7 @@
         <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vx" name="vx"/>
         <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vy" name="vy"/>
         <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vz" name="vz"/>
+        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Unknown" name="unknown"/>
       </enumeration>
       <simple name="surface" type="string">
         <description> Surface sur laquelle s'applique la condition aux limites </description>
@@ -222,5 +256,7 @@
       </simple>
     </complex>
     <service-instance name="geometry" type="::Arcane::Numerics::IGeometryMng"/>
+    <simple name="dimension" type="integer"/>
+    <service-instance name="cartesian-mesh" type="::CartesianInterface::ICartesianMesh"/>
   </options>
 </module>

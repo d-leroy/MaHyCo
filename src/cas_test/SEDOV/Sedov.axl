@@ -5,10 +5,10 @@
     <simple name="cas-test" type="integer">
       <description> Numéro du cas test </description>
     </simple>
-    <simple name="reverse-option" type="bool" default="false">
+    <simple name="reverse-option" type="bool" default="false" optional="true">
       <description> Option de retour arriere </description>
     </simple>
-    <simple name="parametre" type="real" default="0.">
+    <simple name="parameter" type="real" default="0.">
       <description> Parametre du cas test </description>
     </simple>
   </options>
