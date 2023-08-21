@@ -39,6 +39,7 @@ bin/ModaneHeadless
 bin/generate.sh
 
 # Python
+.venv
 python/__pycache__
 
 # Simulation output

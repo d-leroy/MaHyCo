@@ -16,10 +16,16 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
+#include "remap/adi/__RemapADIServiceVars.h"
+#include "types_mahyco/__Limiteur.h"
+#include "arcane/utils/UtilsTypes.h"
+#include "scihook/scihookdefs.h"
 #include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+
+#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_DISABLED)
 
 using namespace Arcane;
 using namespace Arcane::Materials;
@@ -36,7 +42,7 @@ struct RemapADISynchronizeDualUremapExecutionContext final : SciHook::SciHookExe
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const RemapADISynchronizeDualUremapVars *vars;
 
   const pybind11::object get_m_phi_dual_lagrange() const {
@@ -53,7 +59,7 @@ struct RemapADIComputeAndLimitGradPhiExecutionContext final : SciHook::SciHookEx
 {
   RemapADIComputeAndLimitGradPhiExecutionContext(std::string execution_context_name,
       RemapADIComputeAndLimitGradPhiVars *vars,
-      const Integer projectionLimiterId,
+      const ::Types_mahyco::Limiteur projectionLimiterId,
       const Face frontFace,
       const Face backFace,
       const Cell cell,
@@ -70,8 +76,8 @@ struct RemapADIComputeAndLimitGradPhiExecutionContext final : SciHook::SciHookEx
   , nb_vars(nb_vars)
   , vars(vars)
   {}
-  
-  const Integer projectionLimiterId;
+
+  const ::Types_mahyco::Limiteur projectionLimiterId;
   const Face frontFace;
   const Face backFace;
   const Cell cell;
@@ -145,7 +151,7 @@ struct RemapADIComputeDualGradPhiExecutionContext final : SciHook::SciHookExecut
   , idir(idir)
   , vars(vars)
   {}
-  
+
   const Node inode;
   const Node frontfrontnode;
   const Node frontnode;
@@ -192,7 +198,7 @@ struct RemapADIComputeAndLimitGradPhiDualExecutionContext final : SciHook::SciHo
 {
   RemapADIComputeAndLimitGradPhiDualExecutionContext(std::string execution_context_name,
       RemapADIComputeAndLimitGradPhiDualVars *vars,
-      const Integer projectionLimiterId,
+      const ::Types_mahyco::Limiteur projectionLimiterId,
       const Node inode,
       const Node frontnode,
       const Node backnode,
@@ -213,8 +219,8 @@ struct RemapADIComputeAndLimitGradPhiDualExecutionContext final : SciHook::SciHo
   , hmoins(hmoins)
   , vars(vars)
   {}
-  
-  const Integer projectionLimiterId;
+
+  const ::Types_mahyco::Limiteur projectionLimiterId;
   const Node inode;
   const Node frontnode;
   const Node backnode;
@@ -274,14 +280,14 @@ struct RemapADIComputeAndLimitGradPhiDualExecutionContext final : SciHook::SciHo
 struct RemapADIFluxLimiterExecutionContext final : SciHook::SciHookExecutionContext
 {
   RemapADIFluxLimiterExecutionContext(std::string execution_context_name,
-      const Integer projectionLimiterId,
+      const ::Types_mahyco::Limiteur projectionLimiterId,
       const Real r)
   : SciHookExecutionContext(execution_context_name)
   , projectionLimiterId(projectionLimiterId)
   , r(r)
   {}
-  
-  const Integer projectionLimiterId;
+
+  const ::Types_mahyco::Limiteur projectionLimiterId;
   const Real r;
 
   const pybind11::object get_projectionLimiterId() const {
@@ -297,7 +303,7 @@ struct RemapADIFluxLimiterExecutionContext final : SciHook::SciHookExecutionCont
 struct RemapADIFluxLimiterGExecutionContext final : SciHook::SciHookExecutionContext
 {
   RemapADIFluxLimiterGExecutionContext(std::string execution_context_name,
-      const Integer projectionLimiterId,
+      const ::Types_mahyco::Limiteur projectionLimiterId,
       const Real gradplus,
       const Real gradmoins,
       const Real y0,
@@ -317,8 +323,8 @@ struct RemapADIFluxLimiterGExecutionContext final : SciHook::SciHookExecutionCon
   , hplus(hplus)
   , hmoins(hmoins)
   {}
-  
-  const Integer projectionLimiterId;
+
+  const ::Types_mahyco::Limiteur projectionLimiterId;
   const Real gradplus;
   const Real gradmoins;
   const Real y0;
@@ -380,8 +386,8 @@ struct RemapADIComputeFluxPPExecutionContext final : SciHook::SciHookExecutionCo
       const Integer projectionPenteBorneDebarFix,
       const Real dual_normal_velocity,
       const Integer calcul_flux_dual,
-      RealArrayView* Flux,
-      RealArrayView* Flux_dual,
+      ::Arcane::RealArrayView* flux,
+      ::Arcane::RealArrayView* flux_dual,
       const Integer nbmat,
       const Integer nb_vars)
   : SciHookExecutionContext(execution_context_name)
@@ -395,13 +401,13 @@ struct RemapADIComputeFluxPPExecutionContext final : SciHook::SciHookExecutionCo
   , projectionPenteBorneDebarFix(projectionPenteBorneDebarFix)
   , dual_normal_velocity(dual_normal_velocity)
   , calcul_flux_dual(calcul_flux_dual)
-  , Flux(Flux)
-  , Flux_dual(Flux_dual)
+  , flux(flux)
+  , flux_dual(flux_dual)
   , nbmat(nbmat)
   , nb_vars(nb_vars)
   , vars(vars)
   {}
-  
+
   const Cell cell;
   const Cell frontcell;
   const Cell backcell;
@@ -412,8 +418,8 @@ struct RemapADIComputeFluxPPExecutionContext final : SciHook::SciHookExecutionCo
   const Integer projectionPenteBorneDebarFix;
   const Real dual_normal_velocity;
   const Integer calcul_flux_dual;
-  RealArrayView* Flux;
-  RealArrayView* Flux_dual;
+  ::Arcane::RealArrayView* flux;
+  ::Arcane::RealArrayView* flux_dual;
   const Integer nbmat;
   const Integer nb_vars;
   const RemapADIComputeFluxPPVars *vars;
@@ -458,12 +464,12 @@ struct RemapADIComputeFluxPPExecutionContext final : SciHook::SciHookExecutionCo
     return pybind11::cast(calcul_flux_dual);
   }
 
-  const pybind11::object get_Flux() const {
-    return pybind11::cast(Flux);
+  const pybind11::object get_flux() const {
+    return pybind11::cast(flux);
   }
 
-  const pybind11::object get_Flux_dual() const {
-    return pybind11::cast(Flux_dual);
+  const pybind11::object get_flux_dual() const {
+    return pybind11::cast(flux_dual);
   }
 
   const pybind11::object get_nbmat() const {
@@ -491,7 +497,7 @@ struct RemapADIComputeFluxPPExecutionContext final : SciHook::SciHookExecutionCo
 struct RemapADIComputeY0ExecutionContext final : SciHook::SciHookExecutionContext
 {
   RemapADIComputeY0ExecutionContext(std::string execution_context_name,
-      const Integer projectionLimiterId,
+      const ::Types_mahyco::Limiteur projectionLimiterId,
       const Real y0,
       const Real yplus,
       const Real ymoins,
@@ -509,8 +515,8 @@ struct RemapADIComputeY0ExecutionContext final : SciHook::SciHookExecutionContex
   , hmoins(hmoins)
   , type(type)
   {}
-  
-  const Integer projectionLimiterId;
+
+  const ::Types_mahyco::Limiteur projectionLimiterId;
   const Real y0;
   const Real yplus;
   const Real ymoins;
@@ -572,7 +578,7 @@ struct RemapADIComputexgxdExecutionContext final : SciHook::SciHookExecutionCont
   , y0moins(y0moins)
   , type(type)
   {}
-  
+
   const Real y0;
   const Real yplus;
   const Real ymoins;
@@ -632,7 +638,7 @@ struct RemapADIComputeygydExecutionContext final : SciHook::SciHookExecutionCont
   , grady(grady)
   , type(type)
   {}
-  
+
   const Real y0;
   const Real yplus;
   const Real ymoins;
@@ -691,7 +697,7 @@ struct RemapADIINTYExecutionContext final : SciHook::SciHookExecutionContext
   , x1(x1)
   , y1(y1)
   {}
-  
+
   const Real X;
   const Real x0;
   const Real y0;
@@ -734,8 +740,8 @@ struct RemapADIComputeFluxPPPureExecutionContext final : SciHook::SciHookExecuti
       const Integer projectionPenteBorneDebarFix,
       const Real dual_normal_velocity,
       const Integer calcul_flux_dual,
-      RealArrayView* Flux,
-      RealArrayView* Flux_dual,
+      ::Arcane::RealArrayView* Flux,
+      ::Arcane::RealArrayView* Flux_dual,
       const Integer nbmat,
       const Integer nb_vars)
   : SciHookExecutionContext(execution_context_name)
@@ -755,7 +761,7 @@ struct RemapADIComputeFluxPPPureExecutionContext final : SciHook::SciHookExecuti
   , nb_vars(nb_vars)
   , vars(vars)
   {}
-  
+
   const Cell cell;
   const Cell frontcell;
   const Cell backcell;
@@ -766,8 +772,8 @@ struct RemapADIComputeFluxPPPureExecutionContext final : SciHook::SciHookExecuti
   const Integer projectionPenteBorneDebarFix;
   const Real dual_normal_velocity;
   const Integer calcul_flux_dual;
-  RealArrayView* Flux;
-  RealArrayView* Flux_dual;
+  ::Arcane::RealArrayView* Flux;
+  ::Arcane::RealArrayView* Flux_dual;
   const Integer nbmat;
   const Integer nb_vars;
   const RemapADIComputeFluxPPPureVars *vars;
@@ -855,7 +861,7 @@ struct RemapADIComputeGradPhiFaceExecutionContext final : SciHook::SciHookExecut
   , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
   const Integer idir;
   const Integer nb_vars_to_project;
   const Integer nb_env;
@@ -920,7 +926,7 @@ struct RemapADIComputeGradPhiCellExecutionContext final : SciHook::SciHookExecut
   , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
   const Integer idir;
   const Integer nb_vars_to_project;
   const Integer nb_env;
@@ -979,37 +985,6 @@ struct RemapADIComputeGradPhiCellExecutionContext final : SciHook::SciHookExecut
   }
 };
 
-//! Classe de contexte d'exécution pour computeDualGradPhi_LimC
-struct RemapADIComputeDualGradPhi_LimCExecutionContext final : SciHook::SciHookExecutionContext
-{
-  RemapADIComputeDualGradPhi_LimCExecutionContext(std::string execution_context_name,
-      RemapADIComputeDualGradPhi_LimCVars *vars,
-      const Integer idir)
-  : SciHookExecutionContext(execution_context_name)
-  , idir(idir)
-  , vars(vars)
-  {}
-  
-  const Integer idir;
-  const RemapADIComputeDualGradPhi_LimCVars *vars;
-
-  const pybind11::object get_idir() const {
-    return pybind11::cast(idir);
-  }
-
-  const pybind11::object get_m_phi_dual_lagrange() const {
-    return pybind11::cast(vars->m_phi_dual_lagrange);
-  }
-
-  const pybind11::object get_m_node_coord() const {
-    return pybind11::cast(vars->m_node_coord);
-  }
-
-  const pybind11::object get_m_dual_grad_phi() const {
-    return pybind11::cast(vars->m_dual_grad_phi);
-  }
-};
-
 //! Classe de contexte d'exécution pour computeUpwindFaceQuantitiesForProjection
 struct RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext final : SciHook::SciHookExecutionContext
 {
@@ -1024,7 +999,7 @@ struct RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext final : 
   , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
   const Integer idir;
   const Integer nb_vars_to_project;
   const Integer nb_env;
@@ -1107,7 +1082,7 @@ struct RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContex
   , nb_vars_to_project(nb_vars_to_project)
   , vars(vars)
   {}
-  
+
   const Integer idir;
   const Integer nb_vars_to_project;
   const RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars *vars;
@@ -1167,7 +1142,7 @@ struct RemapADIComputeUremapExecutionContext final : SciHook::SciHookExecutionCo
   , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
   const Integer idir;
   const Integer nb_vars_to_project;
   const Integer nb_env;
@@ -1195,6 +1170,10 @@ struct RemapADIComputeUremapExecutionContext final : SciHook::SciHookExecutionCo
 
   const pybind11::object get_m_outer_face_normal() const {
     return pybind11::cast(vars->m_outer_face_normal);
+  }
+
+  const pybind11::object get_m_face_normal_velocity() const {
+    return pybind11::cast(vars->m_face_normal_velocity);
   }
 
   const pybind11::object get_m_phi_face() const {
@@ -1236,7 +1215,7 @@ struct RemapADIComputeUremap_PBorn0ExecutionContext final : SciHook::SciHookExec
   , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
   const Integer idir;
   const Integer nb_vars_to_project;
   const Integer nb_env;
@@ -1299,12 +1278,26 @@ struct RemapADIComputeUremap_PBorn0ExecutionContext final : SciHook::SciHookExec
 struct RemapADIComputeDualUremapExecutionContext final : SciHook::SciHookExecutionContext
 {
   RemapADIComputeDualUremapExecutionContext(std::string execution_context_name,
-      RemapADIComputeDualUremapVars *vars)
+      RemapADIComputeDualUremapVars *vars,
+      const Integer idir,
+      const Integer nb_env)
   : SciHookExecutionContext(execution_context_name)
+  , idir(idir)
+  , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
+  const Integer idir;
+  const Integer nb_env;
   const RemapADIComputeDualUremapVars *vars;
+
+  const pybind11::object get_idir() const {
+    return pybind11::cast(idir);
+  }
+
+  const pybind11::object get_nb_env() const {
+    return pybind11::cast(nb_env);
+  }
 
   const pybind11::object get_m_dual_phi_flux() const {
     return pybind11::cast(vars->m_dual_phi_flux);
@@ -1375,7 +1368,7 @@ struct RemapADIComputeRemapFluxExecutionContext final : SciHook::SciHookExecutio
   , exy(exy)
   , deltat_n(deltat_n)
   {}
-  
+
   const Integer projectionOrder;
   const Integer projectionAvecPlateauPente;
   const Real face_normal_velocity;
@@ -1439,7 +1432,7 @@ struct RemapADIAppliRemapExecutionContext final : SciHook::SciHookExecutionConte
   , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
   const Integer dimension;
   const Integer withDualProjection;
   const Integer nb_vars_to_project;
@@ -1479,7 +1472,7 @@ struct RemapADIResizeRemapVariablesExecutionContext final : SciHook::SciHookExec
   , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
   const Integer nb_vars_to_project;
   const Integer nb_env;
   const RemapADIResizeRemapVariablesVars *vars;
@@ -1561,7 +1554,7 @@ struct RemapADISynchronizeUremapExecutionContext final : SciHook::SciHookExecuti
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const RemapADISynchronizeUremapVars *vars;
 
   const pybind11::object get_m_phi_lagrange() const {
@@ -1601,7 +1594,7 @@ struct RemapADIRemapVariablesExecutionContext final : SciHook::SciHookExecutionC
   , nb_env(nb_env)
   , vars(vars)
   {}
-  
+
   const Integer dimension;
   const Integer withDualProjection;
   const Integer nb_vars_to_project;
@@ -1685,13 +1678,8 @@ struct RemapADIRemapVariablesExecutionContext final : SciHook::SciHookExecutionC
   }
 };
 
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
 }  // namespace RemapAdi
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
+#endif // defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_DISABLED)
 
 #endif  // REMAP_ADI___REMAPADISERVICECONTEXTS_H

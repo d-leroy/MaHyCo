@@ -1,22 +1,22 @@
-#include "SciHook.h"
+#include "mahyco/__MahycoModuleBindings.h"
+#include "cas_test/OTHER/__OtherServiceBindings.h"
+#include "cas_test/RIDER/__RiderServiceBindings.h"
+#include "cas_test/SEDOV/__SedovServiceBindings.h"
+#include "cas_test/SOD/__SodServiceBindings.h"
+#include "eos/perfectgas/__PerfectGasServiceBindings.h"
+#include "eos/stiffenedgas/__StiffenedGasServiceBindings.h"
+#include "remap/ale/__RemapALEServiceBindings.h"
+#include "remap/adi/__RemapADIServiceBindings.h"
 
-void
-try_import(const char *module_name) {
-  try {
-    pybind11::module_::import(module_name);
-  } catch (pybind11::error_already_set &e) {
-    std::cout << e.what() << '\n';
-  }
-}
-
-void
-import_modules(pybind11::module_ __attribute__((unused)) m) {
-  try_import("cas_testother_other");
-  try_import("cas_testrider_rider");
-  try_import("cas_testsedov_sedov");
-  try_import("cas_testsod_sod");
-  try_import("eosperfectgas_perfectgas");
-  try_import("eosstiffenedgas_stiffenedgas");
-  try_import("mahyco_mahyco");
-  try_import("remapadi_remapadi");
+void bind_submodules(py::module __attribute__((unused)) &m) {
+  py::module_ arcpy = py::module_::import("arcpy");
+  Mahyco::bind_mahyco_mahyco(m);
+  Cas_testOTHER::bind_cas_test_other_other(m);
+  Cas_testRIDER::bind_cas_test_rider_rider(m);
+  Cas_testSEDOV::bind_cas_test_sedov_sedov(m);
+  Cas_testSOD::bind_cas_test_sod_sod(m);
+  EosPerfectgas::bind_eos_perfectgas_perfectgas(m);
+  EosStiffenedgas::bind_eos_stiffenedgas_stiffenedgas(m);
+  RemapAle::bind_remap_ale_remapale(m);
+  RemapAdi::bind_remap_adi_remapadi(m);
 }

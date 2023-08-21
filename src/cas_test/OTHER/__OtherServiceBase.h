@@ -11,18 +11,21 @@
 #include "arcane/ItemVectorView.h"
 #include "arcane/VariableTypes.h"
 #include "arcane/utils/Array.h"
+#include "arcane/materials/ComponentItemVector.h"
+#include "arcane/materials/ComponentItemVectorView.h"
+#include "arcane/materials/MeshEnvironmentVariableRef.h"
+#include "arcane/materials/MeshMaterialVariableRef.h"
+#include "arcane/materials/IMeshMaterialMng.h"
 #include "cas_test/__IInitialisations.h"
 #include "cas_test/OTHER/__OtherServiceVars.h"
-#include "scihook/scihookdefs.h"
 #include "cas_test/OTHER/Other_axl.h"
-#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED)
-#include "cas_test/OTHER/__OtherServiceContexts.h"
-#endif
+#include "cas_test/OTHER/__OtherServiceSciHookMacros.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 using namespace Arcane;
+using namespace Arcane::Materials;
 namespace Cas_testOTHER {
 
 /*---------------------------------------------------------------------------*/
@@ -36,31 +39,14 @@ template<class T>
 class OtherServiceBase
 : public ArcaneOtherObject
 {
- #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED)
- private:
-  size_t INITMATMONO_BEFORE;
-  size_t INITMATMONO_AFTER;
-  size_t INITVARMONO_BEFORE;
-  size_t INITVARMONO_AFTER;
-  size_t INITMAT_BEFORE;
-  size_t INITMAT_AFTER;
-  size_t INITVAR_BEFORE;
-  size_t INITVAR_AFTER;
- #endif
+ SCIHOOK_DECLARE_CAS_TEST_OTHER_OTHER_EVENTS
+
  public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
   explicit OtherServiceBase(const ServiceBuildInfo& bi)
   : ArcaneOtherObject(bi)
+  , m_mesh_material_mng(IMeshMaterialMng::getReference(bi.mesh()))
   {
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED)
-    INITMATMONO_BEFORE = SciHook::register_base_event("OtherServiceBase.InitMatMono.Before");
-    INITMATMONO_AFTER = SciHook::register_base_event("OtherServiceBase.InitMatMono.After");
-    INITVARMONO_BEFORE = SciHook::register_base_event("OtherServiceBase.InitVarMono.Before");
-    INITVARMONO_AFTER = SciHook::register_base_event("OtherServiceBase.InitVarMono.After");
-    INITMAT_BEFORE = SciHook::register_base_event("OtherServiceBase.InitMat.Before");
-    INITMAT_AFTER = SciHook::register_base_event("OtherServiceBase.InitMat.After");
-    INITVAR_BEFORE = SciHook::register_base_event("OtherServiceBase.InitVar.Before");
-    INITVAR_AFTER = SciHook::register_base_event("OtherServiceBase.InitVar.After");
-    #endif
+    SCIHOOK_INITIALIZE_CAS_TEST_OTHER_OTHER_EVENTS
   }
 
   virtual ~OtherServiceBase()
@@ -68,11 +54,12 @@ class OtherServiceBase
   }
 
  public:  // ***** ACCESSEURS
-  Integer getCasTest() { return options()->getCasTest(); }
+  ::Cas_test::Test getCasTest() { return options()->getCasTest(); }
   bool getReverseOption() { return options()->getReverseOption(); }
   bool hasReverseOption() const { return options()->hasReverseOption(); }
   Real getParameter() { return options()->getParameter(); }
   const String getImplName() const { return "OtherService"; }
+  IMeshMaterialMng* getMeshMaterialMng() const { return m_mesh_material_mng; }
 
  public:  // ***** METHODES CONCRETES
   /*!
@@ -81,18 +68,9 @@ class OtherServiceBase
   void initMatMono(const Integer dim) override
   {
     OtherInitMatMonoVars vars;
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_INITMATMONO_DISABLED)
-    std::shared_ptr<OtherInitMatMonoExecutionContext> ctx(
-        new OtherInitMatMonoExecutionContext("InitMatMonoExecutionContext"
-            , dim));
-    #endif
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_INITMATMONO_DISABLED)
-    SciHook::trigger(INITMATMONO_BEFORE, ctx);
+    SCIHOOK_TRIGGER_INITMATMONO_BEFORE
     this->initMatMono(vars, dim);
-    SciHook::trigger(INITMATMONO_AFTER, ctx);
-    #else
-    this->initMatMono(vars, dim);
-    #endif
+    SCIHOOK_TRIGGER_INITMATMONO_AFTER
   }
 
   /*!
@@ -101,58 +79,74 @@ class OtherServiceBase
   void initVarMono(const Integer dim) override
   {
     OtherInitVarMonoVars vars;
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_INITVARMONO_DISABLED)
-    std::shared_ptr<OtherInitVarMonoExecutionContext> ctx(
-        new OtherInitVarMonoExecutionContext("InitVarMonoExecutionContext"
-            , dim));
-    #endif
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_INITVARMONO_DISABLED)
-    SciHook::trigger(INITVARMONO_BEFORE, ctx);
+    SCIHOOK_TRIGGER_INITVARMONO_BEFORE
     this->initVarMono(vars, dim);
-    SciHook::trigger(INITVARMONO_AFTER, ctx);
-    #else
-    this->initVarMono(vars, dim);
-    #endif
+    SCIHOOK_TRIGGER_INITVARMONO_AFTER
   }
 
   /*!
+   \dot
+     digraph initMatGraph
+     {
+       compound="true";
+       edge [arrowsize="0.5", fontsize="8"];
+       node [shape="box", fontname="Arial", fontsize="10"];
+       {
+         rank=same;
+         initMat [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="cell_coord"];
+         inVars -> initMat;
+         outVars [shape="record", label="materiau"];
+         initMat -> outVars;
+       }
+
+     }
+   \enddot
    Cette méthode construit les variables et appelle OtherService::initMat.
   */
   void initMat(const Integer dim) override
   {
-    OtherInitMatVars vars;
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_INITMAT_DISABLED)
-    std::shared_ptr<OtherInitMatExecutionContext> ctx(
-        new OtherInitMatExecutionContext("InitMatExecutionContext"
-            , dim));
-    #endif
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_INITMAT_DISABLED)
-    SciHook::trigger(INITMAT_BEFORE, ctx);
+    OtherInitMatVars vars(m_cell_coord
+        , m_materiau);
+    SCIHOOK_TRIGGER_INITMAT_BEFORE
     this->initMat(vars, dim);
-    SciHook::trigger(INITMAT_AFTER, ctx);
-    #else
-    this->initMat(vars, dim);
-    #endif
+    SCIHOOK_TRIGGER_INITMAT_AFTER
   }
 
   /*!
+   \dot
+     digraph initVarGraph
+     {
+       compound="true";
+       edge [arrowsize="0.5", fontsize="8"];
+       node [shape="box", fontname="Arial", fontsize="10"];
+       {
+         rank=same;
+         initVar [style="rounded, filled", fillcolor="gray"];
+         inVars [shape="record", label="cell_coord | velocity"];
+         inVars -> initVar;
+         outVars [shape="record", label="pseudo_viscosity | density | pressure | internal_energy | fracvol | mass_fraction | velocity_n | velocity"];
+         initVar -> outVars;
+       }
+
+     }
+   \enddot
    Cette méthode construit les variables et appelle OtherService::initVar.
   */
   void initVar(const Integer dim) override
   {
-    OtherInitVarVars vars;
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_INITVAR_DISABLED)
-    std::shared_ptr<OtherInitVarExecutionContext> ctx(
-        new OtherInitVarExecutionContext("InitVarExecutionContext"
-            , dim));
-    #endif
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_DISABLED) && not defined(SCIHOOK_CAS_TEST_OTHER_INITVAR_DISABLED)
-    SciHook::trigger(INITVAR_BEFORE, ctx);
+    OtherInitVarVars vars(m_cell_coord
+        , m_pseudo_viscosity
+        , m_density
+        , m_pressure
+        , m_internal_energy
+        , m_fracvol
+        , m_mass_fraction
+        , m_velocity_n
+        , m_velocity);
+    SCIHOOK_TRIGGER_INITVAR_BEFORE
     this->initVar(vars, dim);
-    SciHook::trigger(INITVAR_AFTER, ctx);
-    #else
-    this->initVar(vars, dim);
-    #endif
+    SCIHOOK_TRIGGER_INITVAR_AFTER
   }
 
 
@@ -163,6 +157,7 @@ class OtherServiceBase
   virtual void initVar(OtherInitVarVars& vars, const Integer dim) = 0;
 
  protected:  // ***** ATTRIBUTS
+  IMeshMaterialMng* m_mesh_material_mng;
 };
 
 /*---------------------------------------------------------------------------*/

@@ -178,7 +178,7 @@
     <service-instance name="cas-model" type="::Cas_test::IInitialisations">
       <description> Service d'initialisation du cas test </description>
     </service-instance>
-    <service-instance name="remap" type="::Remap::IRemap">
+    <service-instance name="remap-service" type="::Remap::IRemap" default="RemapADI">
       <description> Service de projection </description>
     </service-instance>
     <simple name="cartesian-sort-faces" type="bool" default="true">
@@ -195,34 +195,29 @@
     </simple>
     <simple name="deltat-min" type="real">
       <description>
-        Valeur minimale que peut prendre le 
-        <em>deltat</em>
-          		entre deux itérations.
+          Valeur minimale que peut prendre le &lt;em&gt;deltat&lt;/em&gt;
+          entre deux itérations.
       </description>
+
     </simple>
     <simple name="deltat-max" type="real">
       <description>
-        Valeur maximale que peut prendre le 
-        <em>deltat</em>
-          		entre deux itérations. Si le deltat calculé est supérieur
-  		à cette valeur, il est ramené à cette valeur.
+          Valeur maximale que peut prendre le &lt;em&gt;deltat&lt;/em&gt;
+          entre deux itérations. Si le deltat calculé est supérieur
+          à cette valeur, il est ramené à cette valeur.
       </description>
+
     </simple>
     <simple name="deltat-init" type="real">
-      <description>
-         Valeur du 
-        <em>deltat</em>
-         au moment du démarrage. 
-      </description>
+      <description> Valeur du &lt;em&gt;deltat&lt;/em&gt; au moment du démarrage. </description>
     </simple>
     <simple name="final-time" type="real">
-      <name lang="fr">temps-final</name>
+      <name lang="fr">temps--final</name>
       <description>
-        Temps auquel on stoppe la simulation. Le code s'arrête dès que
-  		le temps courant est 
-        <strong>strictement</strong>
-         supérieur à ce temps.
+          Temps auquel on stoppe la simulation. Le code s'arrête dès que
+          le temps courant est &lt;strong&gt;strictement&lt;/strong&gt; supérieur à ce temps.
       </description>
+
     </simple>
     <simple name="cfl" type="real" default="0.3">
       <description> Définition de la CFL </description>
@@ -243,9 +238,9 @@
       <description> Condition aux limites </description>
       <enumeration name="type" type="::Types_mahyco::BoundaryConditionType">
         <description> Type de condition aux limites </description>
-        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vx" name="vx"/>
-        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vy" name="vy"/>
-        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vz" name="vz"/>
+        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vx" name="Vx"/>
+        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vy" name="Vy"/>
+        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vz" name="Vz"/>
         <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Unknown" name="unknown"/>
       </enumeration>
       <simple name="surface" type="string">
@@ -255,8 +250,6 @@
         <description> Valeur de la composante à fixer </description>
       </simple>
     </complex>
-    <service-instance name="geometry" type="::Arcane::Numerics::IGeometryMng"/>
-    <simple name="dimension" type="integer"/>
-    <service-instance name="cartesian-mesh" type="::CartesianInterface::ICartesianMesh"/>
+    <service-instance name="geometry" type="::Arcane::Numerics::IGeometryMng" default="Euclidian3Geometry"/>
   </options>
 </module>

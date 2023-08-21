@@ -16,14 +16,10 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
-#include "arcane/materials/IMeshEnvironment.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/perfectgas/__PerfectGasServiceVars.h"
-#include "scihook/scihookdefs.h"
 #include "eos/perfectgas/PerfectGas_axl.h"
-#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED)
-#include "eos/perfectgas/__PerfectGasServiceContexts.h"
-#endif
+#include "eos/perfectgas/__PerfectGasServiceSciHookMacros.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -43,28 +39,14 @@ template<class T>
 class PerfectGasServiceBase
 : public ArcanePerfectGasObject
 {
- #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED)
- private:
-  size_t INITEOS_BEFORE;
-  size_t INITEOS_AFTER;
-  size_t APPLYEOS_BEFORE;
-  size_t APPLYEOS_AFTER;
-  size_t APPLYONECELLEOS_BEFORE;
-  size_t APPLYONECELLEOS_AFTER;
- #endif
+ SCIHOOK_DECLARE_EOS_PERFECTGAS_PERFECTGAS_EVENTS
+
  public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
   explicit PerfectGasServiceBase(const ServiceBuildInfo& bi)
   : ArcanePerfectGasObject(bi)
   , m_mesh_material_mng(IMeshMaterialMng::getReference(bi.mesh()))
   {
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED)
-    INITEOS_BEFORE = SciHook::register_base_event("PerfectGasServiceBase.InitEOS.Before");
-    INITEOS_AFTER = SciHook::register_base_event("PerfectGasServiceBase.InitEOS.After");
-    APPLYEOS_BEFORE = SciHook::register_base_event("PerfectGasServiceBase.ApplyEOS.Before");
-    APPLYEOS_AFTER = SciHook::register_base_event("PerfectGasServiceBase.ApplyEOS.After");
-    APPLYONECELLEOS_BEFORE = SciHook::register_base_event("PerfectGasServiceBase.ApplyOneCellEOS.Before");
-    APPLYONECELLEOS_AFTER = SciHook::register_base_event("PerfectGasServiceBase.ApplyOneCellEOS.After");
-    #endif
+    SCIHOOK_INITIALIZE_EOS_PERFECTGAS_PERFECTGAS_EVENTS
   }
 
   virtual ~PerfectGasServiceBase()
@@ -94,7 +76,7 @@ class PerfectGasServiceBase
          outVars [shape="record", label="internal_energy | sound_speed"];
          initEOS -> outVars;
        }
-   
+
      }
    \enddot
    Cette méthode construit les variables et appelle PerfectGasService::initEOS.
@@ -105,19 +87,9 @@ class PerfectGasServiceBase
         , m_density
         , m_internal_energy
         , m_sound_speed);
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_INITEOS_DISABLED)
-    std::shared_ptr<PerfectGasInitEOSExecutionContext> ctx(
-        new PerfectGasInitEOSExecutionContext("InitEOSExecutionContext"
-            , &vars
-            , env));
-    #endif
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_INITEOS_DISABLED)
-    SciHook::trigger(INITEOS_BEFORE, ctx);
+    SCIHOOK_TRIGGER_INITEOS_BEFORE
     this->initEOS(vars, env);
-    SciHook::trigger(INITEOS_AFTER, ctx);
-    #else
-    this->initEOS(vars, env);
-    #endif
+    SCIHOOK_TRIGGER_INITEOS_AFTER
   }
 
   /*!
@@ -135,7 +107,7 @@ class PerfectGasServiceBase
          outVars [shape="record", label="pressure | sound_speed | dpde"];
          applyEOS -> outVars;
        }
-   
+
      }
    \enddot
    Cette méthode construit les variables et appelle PerfectGasService::applyEOS.
@@ -147,19 +119,9 @@ class PerfectGasServiceBase
         , m_pressure
         , m_sound_speed
         , m_dpde);
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_APPLYEOS_DISABLED)
-    std::shared_ptr<PerfectGasApplyEOSExecutionContext> ctx(
-        new PerfectGasApplyEOSExecutionContext("ApplyEOSExecutionContext"
-            , &vars
-            , env));
-    #endif
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_APPLYEOS_DISABLED)
-    SciHook::trigger(APPLYEOS_BEFORE, ctx);
+    SCIHOOK_TRIGGER_APPLYEOS_BEFORE
     this->applyEOS(vars, env);
-    SciHook::trigger(APPLYEOS_AFTER, ctx);
-    #else
-    this->applyEOS(vars, env);
-    #endif
+    SCIHOOK_TRIGGER_APPLYEOS_AFTER
   }
 
   /*!
@@ -177,7 +139,7 @@ class PerfectGasServiceBase
          outVars [shape="record", label="pressure | sound_speed | dpde"];
          applyOneCellEOS -> outVars;
        }
-   
+
      }
    \enddot
    Cette méthode construit les variables et appelle PerfectGasService::applyOneCellEOS.
@@ -189,20 +151,9 @@ class PerfectGasServiceBase
         , m_pressure
         , m_sound_speed
         , m_dpde);
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_APPLYONECELLEOS_DISABLED)
-    std::shared_ptr<PerfectGasApplyOneCellEOSExecutionContext> ctx(
-        new PerfectGasApplyOneCellEOSExecutionContext("ApplyOneCellEOSExecutionContext"
-            , &vars
-            , env
-            , ev));
-    #endif
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_APPLYONECELLEOS_DISABLED)
-    SciHook::trigger(APPLYONECELLEOS_BEFORE, ctx);
+    SCIHOOK_TRIGGER_APPLYONECELLEOS_BEFORE
     this->applyOneCellEOS(vars, env, ev);
-    SciHook::trigger(APPLYONECELLEOS_AFTER, ctx);
-    #else
-    this->applyOneCellEOS(vars, env, ev);
-    #endif
+    SCIHOOK_TRIGGER_APPLYONECELLEOS_AFTER
   }
 
 

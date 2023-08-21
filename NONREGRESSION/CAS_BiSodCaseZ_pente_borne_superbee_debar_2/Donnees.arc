@@ -69,15 +69,15 @@
     </eos-model> 
   </environment>
    
-   <cas-model name="SOD">
-   <cas-test>15</cas-test>
+   <cas-model name="Sod">
+   <cas-test>bi-sod-case-z</cas-test>
    </cas-model>
-   <remap name="RemapADI">
+   <remap-service name="RemapADI">
     <ordre-projection>2</ordre-projection>
     <projection-pente-borne>true</projection-pente-borne>
     <projection-pente-borne-debar-fix>2</projection-pente-borne-debar-fix>
-    <projection-limiteur-id>1</projection-limiteur-id>
-   </remap>
+    <projection-limiteur-id>super-bee</projection-limiteur-id>
+   </remap-service>
     <pseudo-centree>0</pseudo-centree>
     <schema-csts>0</schema-csts>
      <deltat-init>0.00001</deltat-init>

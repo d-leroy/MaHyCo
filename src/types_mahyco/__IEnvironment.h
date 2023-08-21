@@ -61,13 +61,13 @@ class Environment
 
  public:  // ***** ACCESSEURS
   String getName() override { return m_name; }
-  void setName(String value) { m_name = value; }
+  void setName(String value) { m_name = value ; }
 
   ConstArrayView< String > getMaterial() override { return m_material; }
-  void setMaterial(Array< String >& value) { m_material = value; }
+  void setMaterial(Array< String >& value) { m_material = value ; }
 
   ::Eos::IEquationOfState* getEosModel() override { return m_EosModel; }
-  void setEosModel(::Eos::IEquationOfState* value) { m_EosModel = value; }
+  void setEosModel(::Eos::IEquationOfState* value) { m_EosModel = value ; }
 
  protected:  // ***** ATTRIBUTS
   String m_name;

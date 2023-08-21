@@ -206,6 +206,7 @@ class MahycoModule
   void updateDensity(MahycoUpdateDensityVars& vars) override;
   void computeArtificialViscosity(MahycoComputeArtificialViscosityVars& vars) override;
   void updateEnergyAndPressure(MahycoUpdateEnergyAndPressureVars& vars) override;
+  void remap(MahycoRemapVars& vars) override;
   void computeDeltaT(MahycoComputeDeltaTVars& vars) override;
   void initGeometricValues(MahycoInitGeometricValuesVars& vars) override;
   void computeGeometricValuesAux(MahycoComputeGeometricValuesAuxVars& vars) override;
@@ -217,6 +218,7 @@ class MahycoModule
   void updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars) override;
   void computeAveragePressure(MahycoComputeAveragePressureVars& vars) override;
   void computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars) override;
+  void computeVariablesForRemap_PBorn0(MahycoComputeVariablesForRemap_PBorn0Vars& vars) override;
   void computeFaceQuantitesForRemap(MahycoComputeFaceQuantitesForRemapVars& vars) override;
 };
 

@@ -61,13 +61,13 @@ class BoundaryCondition
 
  public:  // ***** ACCESSEURS
   BoundaryConditionType getType() override { return m_type; }
-  void setType(BoundaryConditionType value) { m_type = value; }
+  void setType(BoundaryConditionType value) { m_type = value ; }
 
   String getSurface() override { return m_surface; }
-  void setSurface(String value) { m_surface = value; }
+  void setSurface(String value) { m_surface = value ; }
 
   Real getValue() override { return m_value; }
-  void setValue(Real value) { m_value = value; }
+  void setValue(Real value) { m_value = value ; }
 
  protected:  // ***** ATTRIBUTS
   BoundaryConditionType m_type;

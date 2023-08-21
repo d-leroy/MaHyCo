@@ -59,6 +59,21 @@ class RemapADIService
   ~RemapADIService();
 
  private:
+  Real evaluate_grad(Real hm, Real h0, Real hp, Real ym,
+                            Real y0, Real yp);
+  Real evaluate_ystar(Real hmm, Real hm, Real hp, Real hpp,
+                            [[maybe_unused]] Real ymm, Real ym, Real yp,
+                            [[maybe_unused]] Real ypp, Real gradm, Real gradp);
+  Real evaluate_fm(Real x, Real dx, Real up, Real du, Real u6);
+  Real evaluate_fp(Real x, Real dx, Real um, Real du, Real u6);
+  Real2 define_interval(Real a, Real b);
+  Real2 intersection(Real2 I1, Real2 I2);
+  Real ComputeFluxOrdre3(Real ymmm, Real ymm, Real ym, Real yp,
+                            Real ypp, Real yppp, Real hmmm,
+                            Real hmm, Real hm, Real hp, Real hpp,
+                            Real hppp, Real vdt);
+
+ private:
    // Pour l'utilisation des accélérateurs
    IAccEnv* m_acc_env=nullptr;
 
@@ -73,22 +88,33 @@ class RemapADIService
   template<typename LimType>
   void computeGradPhiCell_PBorn0_LimC(Integer idir, Integer nb_vars_to_project);
 
+  /**
+  * Spécialisation par les limiteurs classiques de computeDualGradPhi
+  * Est publique car fait appel à l'accélérateur
+  **/
+  template<typename LimType>
+  void computeDualGradPhi_LimC(Integer idir);
+
   void synchronizeDualUremap(RemapADISynchronizeDualUremapVars& vars) override;
+  void computeAndLimitGradPhi(RemapADIComputeAndLimitGradPhiVars& vars, const Types_mahyco::Limiteur projectionLimiterId, const Face frontFace, const Face backFace, const Cell cell, const Cell frontcell, const Cell backcell, const Integer nb_vars) override;
   void computeDualGradPhi(RemapADIComputeDualGradPhiVars& vars, const Node inode, const Node frontfrontnode, const Node frontnode, const Node backnode, const Node backbacknode, const Integer idir) override;
-  void computeAndLimitGradPhiDual(RemapADIComputeAndLimitGradPhiDualVars& vars, const Integer projectionLimiterId, const Node inode, const Node frontnode, const Node backnode, const Real3 grad_front, const Real3 grad_back, const Real h0, const Real hplus, const Real hmoins) override;
-  Real fluxLimiterG(RemapADIFluxLimiterGVars& vars, const Integer projectionLimiterId, const Real gradplus, const Real gradmoins, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real hplus, const Real hmoins) override;
-  void computeFluxPP(RemapADIComputeFluxPPVars& vars, const Cell cell, const Cell frontcell, const Cell backcell, const Real face_normal_velocity, const Real deltat_n, const Integer type, const Real flux_threshold, const Integer projectionPenteBorneDebarFix, const Real dual_normal_velocity, const Integer calcul_flux_dual, RealArrayView* Flux, RealArrayView* Flux_dual, const Integer nbmat, const Integer nb_vars) override;
-  Real computeY0(RemapADIComputeY0Vars& vars, const Integer projectionLimiterId, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real hplus, const Real hmoins, const Integer type) override;
+  void computeAndLimitGradPhiDual(RemapADIComputeAndLimitGradPhiDualVars& vars, const Types_mahyco::Limiteur projectionLimiterId, const Node inode, const Node frontnode, const Node backnode, const Real3 grad_front, const Real3 grad_back, const Real h0, const Real hplus, const Real hmoins) override;
+  Real fluxLimiter(RemapADIFluxLimiterVars& vars, const Types_mahyco::Limiteur projectionLimiterId, const Real r) override;
+  Real fluxLimiterG(RemapADIFluxLimiterGVars& vars, const Types_mahyco::Limiteur projectionLimiterId, const Real gradplus, const Real gradmoins, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real hplus, const Real hmoins) override;
+  void computeFluxPP(RemapADIComputeFluxPPVars& vars, const Cell cell, const Cell frontcell, const Cell backcell, const Real face_normal_velocity, const Real deltat_n, const Integer type, const Real flux_threshold, const Integer projectionPenteBorneDebarFix, const Real dual_normal_velocity, const Integer calcul_flux_dual, ::Arcane::RealArrayView* flux, ::Arcane::RealArrayView* flux_dual, const Integer nbmat, const Integer nb_vars) override;
+  void computeFluxPPPure(RemapADIComputeFluxPPPureVars& vars, const Cell cell, const Cell frontcell, const Cell backcell, const Real face_normal_velocity, const Real deltat_n, const Integer type, const Real flux_threshold, const Integer projectionPenteBorneDebarFix, const Real dual_normal_velocity, const Integer calcul_flux_dual, ::Arcane::RealArrayView* flux, ::Arcane::RealArrayView* flux_dual, const Integer nbmat, const Integer nb_vars) override;
+  Real computeY0(RemapADIComputeY0Vars& vars, const Types_mahyco::Limiteur projectionLimiterId, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real hplus, const Real hmoins, const Integer type) override;
   Real computexgxd(RemapADIComputexgxdVars& vars, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real y0plus, const Real y0moins, const Integer type) override;
   Real computeygyd(RemapADIComputeygydVars& vars, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real y0plus, const Real y0moins, const Real grady, const Integer type) override;
+  Real INTY(RemapADIINTYVars& vars, const Real X, const Real x0, const Real y0, const Real x1, const Real y1) override;
   void computeGradPhiFace(RemapADIComputeGradPhiFaceVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
   void computeGradPhiCell(RemapADIComputeGradPhiCellVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
-  void computeDualGradPhi_LimC(RemapADIComputeDualGradPhi_LimCVars& vars, const Integer idir) override;
   void computeUpwindFaceQuantitiesForProjection(RemapADIComputeUpwindFaceQuantitiesForProjectionVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
   void computeUpwindFaceQuantitiesForProjection_PBorn0_O2(RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars& vars, const Integer idir, const Integer nb_vars_to_project) override;
   void computeUremap(RemapADIComputeUremapVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
   void computeUremap_PBorn0(RemapADIComputeUremap_PBorn0Vars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
-  void computeDualUremap(RemapADIComputeDualUremapVars& vars) override;
+  void computeDualUremap(RemapADIComputeDualUremapVars& vars, const Integer idir, const Integer nb_env) override;
+  Real computeRemapFlux(RemapADIComputeRemapFluxVars& vars, const Integer projectionOrder, const Integer projectionAvecPlateauPente, const Real face_normal_velocity, const Real3 face_normal, const Real face_length, const Real phi_face, const Real3 outer_face_normal, const Real3 exy, const Real deltat_n) override;
   void appliRemap(RemapADIAppliRemapVars& vars, const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env) override;
   void resizeRemapVariables(RemapADIResizeRemapVariablesVars& vars, const Integer nb_vars_to_project, const Integer nb_env) override;
   void synchronizeUremap(RemapADISynchronizeUremapVars& vars) override;

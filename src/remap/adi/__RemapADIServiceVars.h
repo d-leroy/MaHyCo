@@ -347,34 +347,6 @@ struct RemapADIComputeGradPhiCellVars final
   VariableCellInteger& m_est_pure;
 };
 
-//! Classe de variable pour computeDualGradPhi_LimC
-struct RemapADIComputeDualGradPhi_LimCVars final
-{
-  RemapADIComputeDualGradPhi_LimCVars(const VariableNodeArrayReal& phi_dual_lagrange,
-      const VariableNodeReal3& node_coord,
-      VariableNodeArrayReal& dual_grad_phi)
-  : m_phi_dual_lagrange(phi_dual_lagrange)
-  , m_node_coord(node_coord)
-  , m_dual_grad_phi(dual_grad_phi)
-  {}
-
-  /*!
-  [in] phi_dual_lagrange
-   PHI DUAL LAGRANGE 
-  */
-  const VariableNodeArrayReal& m_phi_dual_lagrange;
-  /*!
-  [in] node_coord
-   NODE COORD 
-  */
-  const VariableNodeReal3& m_node_coord;
-  /*!
-  [out] dual_grad_phi
-   GRAD PHI DUAL LAGRANGE pour les vitesses 
-  */
-  VariableNodeArrayReal& m_dual_grad_phi;
-};
-
 //! Classe de variable pour computeUpwindFaceQuantitiesForProjection
 struct RemapADIComputeUpwindFaceQuantitiesForProjectionVars final
 {
@@ -533,6 +505,7 @@ struct RemapADIComputeUremapVars final
   RemapADIComputeUremapVars(const VariableFaceReal3& face_normal,
       const VariableFaceReal3& face_length_lagrange,
       const VariableCellArrayReal3& outer_face_normal,
+      const VariableFaceReal& face_normal_velocity,
       const VariableFaceArrayReal& phi_face,
       VariableCellArrayReal& dual_phi_flux,
       VariableCellInteger& est_mixte,
@@ -542,6 +515,7 @@ struct RemapADIComputeUremapVars final
   : m_face_normal(face_normal)
   , m_face_length_lagrange(face_length_lagrange)
   , m_outer_face_normal(outer_face_normal)
+  , m_face_normal_velocity(face_normal_velocity)
   , m_phi_face(phi_face)
   , m_dual_phi_flux(dual_phi_flux)
   , m_est_mixte(est_mixte)
@@ -565,6 +539,11 @@ struct RemapADIComputeUremapVars final
    U REMAP2 
   */
   const VariableCellArrayReal3& m_outer_face_normal;
+  /*!
+  [in] face_normal_velocity
+   FACE NORMAL VELOCITY 
+  */
+  const VariableFaceReal& m_face_normal_velocity;
   /*!
   [in] phi_face
   */

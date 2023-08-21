@@ -67,8 +67,8 @@
     </eos-model> 
   </environment>
    
-   <cas-model name="SOD">
-   <cas-test>15</cas-test>
+   <cas-model name="Sod">
+   <cas-test>bi-sod-case-z</cas-test>
    </cas-model>
    
     <pseudo-centree>0</pseudo-centree>

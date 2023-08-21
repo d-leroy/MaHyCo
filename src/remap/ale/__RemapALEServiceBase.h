@@ -13,8 +13,8 @@
 #include "arcane/utils/Array.h"
 #include "remap/__IRemap.h"
 #include "remap/ale/__RemapALEServiceVars.h"
-#include "types_mahyco/__Limiteur.h"
 #include "remap/ale/RemapALE_axl.h"
+#include "remap/ale/__RemapALEServiceSciHookMacros.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -33,15 +33,13 @@ template<class T>
 class RemapALEServiceBase
 : public ArcaneRemapALEObject
 {
- #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ALE_DISABLED)
- private:
- #endif
+ SCIHOOK_DECLARE_REMAP_ALE_REMAPALE_EVENTS
+
  public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
   explicit RemapALEServiceBase(const ServiceBuildInfo& bi)
   : ArcaneRemapALEObject(bi)
   {
-    #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ALE_DISABLED)
-    #endif
+    SCIHOOK_INITIALIZE_REMAP_ALE_REMAPALE_EVENTS
   }
 
   virtual ~RemapALEServiceBase()
@@ -51,6 +49,7 @@ class RemapALEServiceBase
  public:  // ***** ACCESSEURS
   Integer getOrdreProjection() { return options()->getOrdreProjection(); }
   Real getThreshold() { return options()->getThreshold(); }
+  Real getArithmeticThreshold() { return options()->getArithmeticThreshold(); }
   bool getIsEulerScheme() { return options()->getIsEulerScheme(); }
   bool getConservationEnergieTotale() { return options()->getConservationEnergieTotale(); }
   bool getProjectionPenteBorneMixte() { return options()->getProjectionPenteBorneMixte(); }

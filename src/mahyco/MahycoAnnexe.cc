@@ -101,7 +101,7 @@ hydroStartInitEnvAndMat(MahycoHydroStartInitEnvAndMatVars& vars)
   m_is_dir_face.resize(3); // dimension 3
   m_outer_face_normal.resize(6); // dimension 6 faces par mailles
   
-  options()->remap()->resizeRemapVariables(m_nb_vars_to_project, m_nb_env);
+  options()->remapService()->resizeRemapVariables(m_nb_vars_to_project, m_nb_env);
   
   Real one_over_nbnode = m_dimension == 2 ? .25  : .125 ;
    ENUMERATE_CELL(icell, allCells()){

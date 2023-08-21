@@ -625,8 +625,64 @@ struct MahycoUpdateEnergyAndPressureVars final
 //! Classe de variable pour remap
 struct MahycoRemapVars final
 {
-  MahycoRemapVars()
+  MahycoRemapVars(const MaterialVariableCellReal& fracvol,
+      VariableCellReal& materiau,
+      MaterialVariableCellReal& pseudo_viscosity_n,
+      MaterialVariableCellReal& pressure_n,
+      MaterialVariableCellReal& cell_volume_n,
+      MaterialVariableCellReal& density_n,
+      MaterialVariableCellReal& internal_energy_n,
+      MaterialVariableCellReal& tau_density)
+  : m_fracvol(fracvol)
+  , m_materiau(materiau)
+  , m_pseudo_viscosity_n(pseudo_viscosity_n)
+  , m_pressure_n(pressure_n)
+  , m_cell_volume_n(cell_volume_n)
+  , m_density_n(density_n)
+  , m_internal_energy_n(internal_energy_n)
+  , m_tau_density(tau_density)
   {}
+
+  /*!
+  [in] fracvol
+   FRACVOL 
+  */
+  const MaterialVariableCellReal& m_fracvol;
+  /*!
+  [out] materiau
+   Materiau 
+  */
+  VariableCellReal& m_materiau;
+  /*!
+  [out] pseudo_viscosity_n
+   PSEUDO OLD N 
+  */
+  MaterialVariableCellReal& m_pseudo_viscosity_n;
+  /*!
+  [out] pressure_n
+   PRESSURE OLD N 
+  */
+  MaterialVariableCellReal& m_pressure_n;
+  /*!
+  [out] cell_volume_n
+   CELL VOLUME OLD N 
+  */
+  MaterialVariableCellReal& m_cell_volume_n;
+  /*!
+  [out] density_n
+   DENSITY OLD N 
+  */
+  MaterialVariableCellReal& m_density_n;
+  /*!
+  [out] internal_energy_n
+   INTERNAL ENERGY OLD N 
+  */
+  MaterialVariableCellReal& m_internal_energy_n;
+  /*!
+  [out] tau_density
+   TAUX DENSITY 
+  */
+  MaterialVariableCellReal& m_tau_density;
 };
 
 //! Classe de variable pour computeDeltaT
@@ -1201,6 +1257,83 @@ struct MahycoComputeVariablesForRemapVars final
    FRACVOL 
   */
   const MaterialVariableCellReal& m_fracvol;
+  /*!
+  [in] node_mass
+   NODE MASS 
+  */
+  const VariableNodeReal& m_node_mass;
+  /*!
+  [in] velocity
+   VELOCITY 
+  */
+  const VariableNodeReal3& m_velocity;
+  /*!
+  [inout] u_lagrange
+   U LAGRANGE 
+  */
+  VariableCellArrayReal& m_u_lagrange;
+  /*!
+  [out] u_dual_lagrange
+   U DUAL LAGRANGE 
+  */
+  VariableNodeArrayReal& m_u_dual_lagrange;
+  /*!
+  [out] phi_lagrange
+   PHI LAGRANGE 
+  */
+  VariableCellArrayReal& m_phi_lagrange;
+  /*!
+  [out] phi_dual_lagrange
+   PHI DUAL LAGRANGE 
+  */
+  VariableNodeArrayReal& m_phi_dual_lagrange;
+};
+
+//! Classe de variable pour computeVariablesForRemap_PBorn0
+struct MahycoComputeVariablesForRemap_PBorn0Vars final
+{
+  MahycoComputeVariablesForRemap_PBorn0Vars(const MaterialVariableCellReal& pseudo_viscosity,
+      const MaterialVariableCellReal& density,
+      const MaterialVariableCellReal& cell_volume,
+      const MaterialVariableCellReal& internal_energy,
+      const VariableNodeReal& node_mass,
+      const VariableNodeReal3& velocity,
+      VariableCellArrayReal& u_lagrange,
+      VariableNodeArrayReal& u_dual_lagrange,
+      VariableCellArrayReal& phi_lagrange,
+      VariableNodeArrayReal& phi_dual_lagrange)
+  : m_pseudo_viscosity(pseudo_viscosity)
+  , m_density(density)
+  , m_cell_volume(cell_volume)
+  , m_internal_energy(internal_energy)
+  , m_node_mass(node_mass)
+  , m_velocity(velocity)
+  , m_u_lagrange(u_lagrange)
+  , m_u_dual_lagrange(u_dual_lagrange)
+  , m_phi_lagrange(phi_lagrange)
+  , m_phi_dual_lagrange(phi_dual_lagrange)
+  {}
+
+  /*!
+  [in] pseudo_viscosity
+   PSEUDO 
+  */
+  const MaterialVariableCellReal& m_pseudo_viscosity;
+  /*!
+  [in] density
+   DENSITY 
+  */
+  const MaterialVariableCellReal& m_density;
+  /*!
+  [in] cell_volume
+   CELL VOLUME 
+  */
+  const MaterialVariableCellReal& m_cell_volume;
+  /*!
+  [in] internal_energy
+   INTERNAL ENERGY 
+  */
+  const MaterialVariableCellReal& m_internal_energy;
   /*!
   [in] node_mass
    NODE MASS 

@@ -67,15 +67,15 @@
     </eos-model> 
   </environment>
   
-   <cas-model name="SEDOV">
-   <cas-test>11</cas-test>
+   <cas-model name="Sedov">
+   <cas-test>bi-sedov</cas-test>
    </cas-model>
-   <remap name="RemapALE">
+   <remap-service name="RemapALE">
     <is-euler-scheme>true</is-euler-scheme>
     <!-- <volum-criteria>0.8</volum-criteria>
     <nb-iteration-winslow>10</nb-iteration-winslow> -->
     <ordre-projection>2</ordre-projection>
-   </remap>
+   </remap-service>
        <!--<with-projection>false</with-projection>-->
     <pseudo-centree>0</pseudo-centree>
     <schema-csts>0</schema-csts>

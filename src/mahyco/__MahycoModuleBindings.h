@@ -1,3 +1,9 @@
+#ifndef MAHYCO___MAHYCOMODULEBINDINGS_H
+#define MAHYCO___MAHYCOMODULEBINDINGS_H
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 #include "arcane/ArcaneTypes.h"
 #include "arcane/ItemTypes.h"
 #include "arcane/Item.h"
@@ -10,17 +16,9 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
-#include "arcane/geometry/IGeometryMng.h"
-#include "mahyco/__MahycoModuleVars.h"
-#include "mahyco/__MahycoModuleContexts.h"
-#include "types_mahyco/__IMaterial.h"
-#include "types_mahyco/__IEnvironment.h"
-#include "cas_test/__IInitialisations.h"
-#include "remap/__IRemap.h"
-#include "types_mahyco/__IBoundaryCondition.h"
-#include "cartesian/interface/ICartesianMesh.h"
 #include "scihook/scihookdefs.h"
-#include "mahyco/Mahyco_axl.h"
+#include "mahyco/__MahycoModuleContexts.h"
+#include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -32,10 +30,12 @@ namespace Mahyco {
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED)
-PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
+void bind_mahyco_mahyco(py::module __attribute__((unused)) &m)
 {
-  pybind11::class_<Mahyco::MahycoAllocCqsExecutionContext, std::shared_ptr<Mahyco::MahycoAllocCqsExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoAllocCqsExecutionContext")
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_DISABLED)
+  auto sub_mahyco_mahyco = m.def_submodule("mahyco_mahyco", "Bindings for Mahyco");
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_ALLOCCQS_DISABLED)
+  pybind11::class_<Mahyco::MahycoAllocCqsExecutionContext, std::shared_ptr<Mahyco::MahycoAllocCqsExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoAllocCqsExecutionContext")
     .def_property_readonly("cell_cqs", &Mahyco::MahycoAllocCqsExecutionContext::get_m_cell_cqs)
     .def_property_readonly("cell_cqs_n", &Mahyco::MahycoAllocCqsExecutionContext::get_m_cell_cqs_n)
     .def("__str__", [](Mahyco::MahycoAllocCqsExecutionContext &self)
@@ -50,7 +50,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoInitHydroVarExecutionContext, std::shared_ptr<Mahyco::MahycoInitHydroVarExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoInitHydroVarExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_ALLOCCQS_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_INITHYDROVAR_DISABLED)
+  pybind11::class_<Mahyco::MahycoInitHydroVarExecutionContext, std::shared_ptr<Mahyco::MahycoInitHydroVarExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoInitHydroVarExecutionContext")
     .def_property_readonly("cell_cqs", &Mahyco::MahycoInitHydroVarExecutionContext::get_m_cell_cqs)
     .def_property_readonly("mass_fraction", &Mahyco::MahycoInitHydroVarExecutionContext::get_m_mass_fraction)
     .def_property_readonly("node_coord", &Mahyco::MahycoInitHydroVarExecutionContext::get_m_node_coord)
@@ -70,7 +72,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext, std::shared_ptr<Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoHydroStartInitEnvAndMatExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_INITHYDROVAR_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_HYDROSTARTINITENVANDMAT_DISABLED)
+  pybind11::class_<Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext, std::shared_ptr<Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoHydroStartInitEnvAndMatExecutionContext")
     .def_property_readonly("materiau", &Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext::get_m_materiau)
     .def_property_readonly("sens_projection", &Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext::get_m_sens_projection)
     .def_property_readonly("node_coord", &Mahyco::MahycoHydroStartInitEnvAndMatExecutionContext::get_m_node_coord)
@@ -87,7 +91,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoPrepareFaceGroupForBcExecutionContext, std::shared_ptr<Mahyco::MahycoPrepareFaceGroupForBcExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoPrepareFaceGroupForBcExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_HYDROSTARTINITENVANDMAT_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_PREPAREFACEGROUPFORBC_DISABLED)
+  pybind11::class_<Mahyco::MahycoPrepareFaceGroupForBcExecutionContext, std::shared_ptr<Mahyco::MahycoPrepareFaceGroupForBcExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoPrepareFaceGroupForBcExecutionContext")
     .def_property_readonly("node_coord", &Mahyco::MahycoPrepareFaceGroupForBcExecutionContext::get_m_node_coord)
     .def_property_readonly("is_dir_face", &Mahyco::MahycoPrepareFaceGroupForBcExecutionContext::get_m_is_dir_face)
     .def("__str__", [](Mahyco::MahycoPrepareFaceGroupForBcExecutionContext &self)
@@ -102,7 +108,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeCellMassExecutionContext, std::shared_ptr<Mahyco::MahycoComputeCellMassExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeCellMassExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_PREPAREFACEGROUPFORBC_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTECELLMASS_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeCellMassExecutionContext, std::shared_ptr<Mahyco::MahycoComputeCellMassExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeCellMassExecutionContext")
     .def_property_readonly("density", &Mahyco::MahycoComputeCellMassExecutionContext::get_m_density)
     .def_property_readonly("cell_volume", &Mahyco::MahycoComputeCellMassExecutionContext::get_m_cell_volume)
     .def_property_readonly("mass_fraction", &Mahyco::MahycoComputeCellMassExecutionContext::get_m_mass_fraction)
@@ -119,7 +127,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeNodeMassExecutionContext, std::shared_ptr<Mahyco::MahycoComputeNodeMassExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeNodeMassExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTECELLMASS_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTENODEMASS_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeNodeMassExecutionContext, std::shared_ptr<Mahyco::MahycoComputeNodeMassExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeNodeMassExecutionContext")
     .def_property_readonly("cell_mass", &Mahyco::MahycoComputeNodeMassExecutionContext::get_m_cell_mass)
     .def_property_readonly("node_mass", &Mahyco::MahycoComputeNodeMassExecutionContext::get_m_node_mass)
     .def("__str__", [](Mahyco::MahycoComputeNodeMassExecutionContext &self)
@@ -134,7 +144,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoContinueForIterationDtExecutionContext, std::shared_ptr<Mahyco::MahycoContinueForIterationDtExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoContinueForIterationDtExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTENODEMASS_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_CONTINUEFORITERATIONDT_DISABLED)
+  pybind11::class_<Mahyco::MahycoContinueForIterationDtExecutionContext, std::shared_ptr<Mahyco::MahycoContinueForIterationDtExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoContinueForIterationDtExecutionContext")
     .def_property_readonly("old_deltat", &Mahyco::MahycoContinueForIterationDtExecutionContext::get_m_old_deltat)
     .def("__str__", [](Mahyco::MahycoContinueForIterationDtExecutionContext &self)
     {
@@ -148,7 +160,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoSaveValuesAtNExecutionContext, std::shared_ptr<Mahyco::MahycoSaveValuesAtNExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoSaveValuesAtNExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_CONTINUEFORITERATIONDT_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_SAVEVALUESATN_DISABLED)
+  pybind11::class_<Mahyco::MahycoSaveValuesAtNExecutionContext, std::shared_ptr<Mahyco::MahycoSaveValuesAtNExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoSaveValuesAtNExecutionContext")
     .def_property_readonly("old_deltat", &Mahyco::MahycoSaveValuesAtNExecutionContext::get_m_old_deltat)
     .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoSaveValuesAtNExecutionContext::get_m_pseudo_viscosity)
     .def_property_readonly("pressure", &Mahyco::MahycoSaveValuesAtNExecutionContext::get_m_pressure)
@@ -179,7 +193,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdateVelocityExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateVelocityExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_SAVEVALUESATN_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEVELOCITY_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdateVelocityExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdateVelocityExecutionContext")
     .def_property_readonly("pressure_n", &Mahyco::MahycoUpdateVelocityExecutionContext::get_m_pressure_n)
     .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoUpdateVelocityExecutionContext::get_m_pseudo_viscosity_n)
     .def_property_readonly("cell_cqs_n", &Mahyco::MahycoUpdateVelocityExecutionContext::get_m_cell_cqs_n)
@@ -197,7 +213,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoApplyBoundaryConditionExecutionContext, std::shared_ptr<Mahyco::MahycoApplyBoundaryConditionExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoApplyBoundaryConditionExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEVELOCITY_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_APPLYBOUNDARYCONDITION_DISABLED)
+  pybind11::class_<Mahyco::MahycoApplyBoundaryConditionExecutionContext, std::shared_ptr<Mahyco::MahycoApplyBoundaryConditionExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoApplyBoundaryConditionExecutionContext")
     .def_property_readonly("velocity", &Mahyco::MahycoApplyBoundaryConditionExecutionContext::get_m_velocity)
     .def("__str__", [](Mahyco::MahycoApplyBoundaryConditionExecutionContext &self)
     {
@@ -211,7 +229,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdatePositionExecutionContext, std::shared_ptr<Mahyco::MahycoUpdatePositionExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdatePositionExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_APPLYBOUNDARYCONDITION_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEPOSITION_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdatePositionExecutionContext, std::shared_ptr<Mahyco::MahycoUpdatePositionExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdatePositionExecutionContext")
     .def_property_readonly("velocity", &Mahyco::MahycoUpdatePositionExecutionContext::get_m_velocity)
     .def_property_readonly("cell_coord", &Mahyco::MahycoUpdatePositionExecutionContext::get_m_cell_coord)
     .def_property_readonly("node_coord", &Mahyco::MahycoUpdatePositionExecutionContext::get_m_node_coord)
@@ -227,7 +247,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdateDensityExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateDensityExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateDensityExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEPOSITION_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEDENSITY_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdateDensityExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateDensityExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdateDensityExecutionContext")
     .def_property_readonly("cell_mass", &Mahyco::MahycoUpdateDensityExecutionContext::get_m_cell_mass)
     .def_property_readonly("cell_volume", &Mahyco::MahycoUpdateDensityExecutionContext::get_m_cell_volume)
     .def_property_readonly("density_n", &Mahyco::MahycoUpdateDensityExecutionContext::get_m_density_n)
@@ -246,7 +268,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeArtificialViscosityExecutionContext, std::shared_ptr<Mahyco::MahycoComputeArtificialViscosityExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeArtificialViscosityExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEDENSITY_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEARTIFICIALVISCOSITY_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeArtificialViscosityExecutionContext, std::shared_ptr<Mahyco::MahycoComputeArtificialViscosityExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeArtificialViscosityExecutionContext")
     .def_property_readonly("div_u", &Mahyco::MahycoComputeArtificialViscosityExecutionContext::get_m_div_u)
     .def_property_readonly("caracteristic_length", &Mahyco::MahycoComputeArtificialViscosityExecutionContext::get_m_caracteristic_length)
     .def_property_readonly("sound_speed", &Mahyco::MahycoComputeArtificialViscosityExecutionContext::get_m_sound_speed)
@@ -265,7 +289,32 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeDeltaTExecutionContext, std::shared_ptr<Mahyco::MahycoComputeDeltaTExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeDeltaTExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEARTIFICIALVISCOSITY_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_REMAP_DISABLED)
+  pybind11::class_<Mahyco::MahycoRemapExecutionContext, std::shared_ptr<Mahyco::MahycoRemapExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoRemapExecutionContext")
+    .def_property_readonly("fracvol", &Mahyco::MahycoRemapExecutionContext::get_m_fracvol)
+    .def_property_readonly("materiau", &Mahyco::MahycoRemapExecutionContext::get_m_materiau)
+    .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoRemapExecutionContext::get_m_pseudo_viscosity_n)
+    .def_property_readonly("pressure_n", &Mahyco::MahycoRemapExecutionContext::get_m_pressure_n)
+    .def_property_readonly("cell_volume_n", &Mahyco::MahycoRemapExecutionContext::get_m_cell_volume_n)
+    .def_property_readonly("density_n", &Mahyco::MahycoRemapExecutionContext::get_m_density_n)
+    .def_property_readonly("internal_energy_n", &Mahyco::MahycoRemapExecutionContext::get_m_internal_energy_n)
+    .def_property_readonly("tau_density", &Mahyco::MahycoRemapExecutionContext::get_m_tau_density)
+    .def("__str__", [](Mahyco::MahycoRemapExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](Mahyco::MahycoRemapExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_REMAP_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEDELTAT_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeDeltaTExecutionContext, std::shared_ptr<Mahyco::MahycoComputeDeltaTExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeDeltaTExecutionContext")
     .def_property_readonly("old_deltat", &Mahyco::MahycoComputeDeltaTExecutionContext::get_m_old_deltat)
     .def("__str__", [](Mahyco::MahycoComputeDeltaTExecutionContext &self)
     {
@@ -279,7 +328,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoInitGeometricValuesExecutionContext, std::shared_ptr<Mahyco::MahycoInitGeometricValuesExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoInitGeometricValuesExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEDELTAT_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_INITGEOMETRICVALUES_DISABLED)
+  pybind11::class_<Mahyco::MahycoInitGeometricValuesExecutionContext, std::shared_ptr<Mahyco::MahycoInitGeometricValuesExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoInitGeometricValuesExecutionContext")
     .def_property_readonly("cell_coord", &Mahyco::MahycoInitGeometricValuesExecutionContext::get_m_cell_coord)
     .def_property_readonly("node_coord", &Mahyco::MahycoInitGeometricValuesExecutionContext::get_m_node_coord)
     .def_property_readonly("node_coord_0", &Mahyco::MahycoInitGeometricValuesExecutionContext::get_m_node_coord_0)
@@ -298,7 +349,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeGeometricValuesAuxExecutionContext, std::shared_ptr<Mahyco::MahycoComputeGeometricValuesAuxExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeGeometricValuesAuxExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_INITGEOMETRICVALUES_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEGEOMETRICVALUESAUX_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeGeometricValuesAuxExecutionContext, std::shared_ptr<Mahyco::MahycoComputeGeometricValuesAuxExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeGeometricValuesAuxExecutionContext")
     .def_property_readonly("fracvol", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_fracvol)
     .def_property_readonly("velocity", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_velocity)
     .def_property_readonly("cell_cqs", &Mahyco::MahycoComputeGeometricValuesAuxExecutionContext::get_m_cell_cqs)
@@ -317,7 +370,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdateVelocityWithoutLagrangeExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityWithoutLagrangeExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateVelocityWithoutLagrangeExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEGEOMETRICVALUESAUX_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEVELOCITYWITHOUTLAGRANGE_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdateVelocityWithoutLagrangeExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityWithoutLagrangeExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdateVelocityWithoutLagrangeExecutionContext")
     .def_property_readonly("velocity_n", &Mahyco::MahycoUpdateVelocityWithoutLagrangeExecutionContext::get_m_velocity_n)
     .def_property_readonly("velocity", &Mahyco::MahycoUpdateVelocityWithoutLagrangeExecutionContext::get_m_velocity)
     .def("__str__", [](Mahyco::MahycoUpdateVelocityWithoutLagrangeExecutionContext &self)
@@ -332,7 +387,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdateVelocityBackwardExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityBackwardExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateVelocityBackwardExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEVELOCITYWITHOUTLAGRANGE_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEVELOCITYBACKWARD_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdateVelocityBackwardExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityBackwardExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdateVelocityBackwardExecutionContext")
     .def_property_readonly("pressure_n", &Mahyco::MahycoUpdateVelocityBackwardExecutionContext::get_m_pressure_n)
     .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoUpdateVelocityBackwardExecutionContext::get_m_pseudo_viscosity_n)
     .def_property_readonly("cell_cqs_n", &Mahyco::MahycoUpdateVelocityBackwardExecutionContext::get_m_cell_cqs_n)
@@ -349,7 +406,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdateVelocityForwardExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityForwardExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateVelocityForwardExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEVELOCITYBACKWARD_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEVELOCITYFORWARD_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdateVelocityForwardExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateVelocityForwardExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdateVelocityForwardExecutionContext")
     .def_property_readonly("pressure", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_pressure)
     .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_pseudo_viscosity)
     .def_property_readonly("cell_cqs", &Mahyco::MahycoUpdateVelocityForwardExecutionContext::get_m_cell_cqs)
@@ -366,7 +425,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdateForceAndVelocityExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateForceAndVelocityExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateForceAndVelocityExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEVELOCITYFORWARD_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEFORCEANDVELOCITY_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdateForceAndVelocityExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateForceAndVelocityExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdateForceAndVelocityExecutionContext")
     .def_property_readonly("dt", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_dt)
     .def_property_readonly("node_mass", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_node_mass)
     .def_property_readonly("force", &Mahyco::MahycoUpdateForceAndVelocityExecutionContext::get_m_force)
@@ -387,7 +448,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdateEnergyAndPressurebyNewtonExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateEnergyAndPressurebyNewtonExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateEnergyAndPressurebyNewtonExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEFORCEANDVELOCITY_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEENERGYANDPRESSUREBYNEWTON_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdateEnergyAndPressurebyNewtonExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateEnergyAndPressurebyNewtonExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdateEnergyAndPressurebyNewtonExecutionContext")
     .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoUpdateEnergyAndPressurebyNewtonExecutionContext::get_m_pseudo_viscosity)
     .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoUpdateEnergyAndPressurebyNewtonExecutionContext::get_m_pseudo_viscosity_n)
     .def_property_readonly("pseudo_viscosity_nmoins1", &Mahyco::MahycoUpdateEnergyAndPressurebyNewtonExecutionContext::get_m_pseudo_viscosity_nmoins1)
@@ -417,7 +480,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoUpdateEnergyAndPressureforGPExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateEnergyAndPressureforGPExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoUpdateEnergyAndPressureforGPExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEENERGYANDPRESSUREBYNEWTON_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEENERGYANDPRESSUREFORGP_DISABLED)
+  pybind11::class_<Mahyco::MahycoUpdateEnergyAndPressureforGPExecutionContext, std::shared_ptr<Mahyco::MahycoUpdateEnergyAndPressureforGPExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoUpdateEnergyAndPressureforGPExecutionContext")
     .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoUpdateEnergyAndPressureforGPExecutionContext::get_m_pseudo_viscosity)
     .def_property_readonly("pseudo_viscosity_n", &Mahyco::MahycoUpdateEnergyAndPressureforGPExecutionContext::get_m_pseudo_viscosity_n)
     .def_property_readonly("pseudo_viscosity_nmoins1", &Mahyco::MahycoUpdateEnergyAndPressureforGPExecutionContext::get_m_pseudo_viscosity_nmoins1)
@@ -445,7 +510,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeAveragePressureExecutionContext, std::shared_ptr<Mahyco::MahycoComputeAveragePressureExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeAveragePressureExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_UPDATEENERGYANDPRESSUREFORGP_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEAVERAGEPRESSURE_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeAveragePressureExecutionContext, std::shared_ptr<Mahyco::MahycoComputeAveragePressureExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeAveragePressureExecutionContext")
     .def_property_readonly("fracvol", &Mahyco::MahycoComputeAveragePressureExecutionContext::get_m_fracvol)
     .def_property_readonly("pressure", &Mahyco::MahycoComputeAveragePressureExecutionContext::get_m_pressure)
     .def_property_readonly("sound_speed", &Mahyco::MahycoComputeAveragePressureExecutionContext::get_m_sound_speed)
@@ -461,7 +528,9 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeVariablesForRemapExecutionContext, std::shared_ptr<Mahyco::MahycoComputeVariablesForRemapExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeVariablesForRemapExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEAVERAGEPRESSURE_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAP_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeVariablesForRemapExecutionContext, std::shared_ptr<Mahyco::MahycoComputeVariablesForRemapExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeVariablesForRemapExecutionContext")
     .def_property_readonly("cell_volume", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_cell_volume)
     .def_property_readonly("density", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_density)
     .def_property_readonly("internal_energy", &Mahyco::MahycoComputeVariablesForRemapExecutionContext::get_m_internal_energy)
@@ -485,7 +554,34 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext, std::shared_ptr<Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext>, SciHook::SciHookExecutionContext>(m, "MahycoComputeFaceQuantitesForRemapExecutionContext")
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAP_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAP_PBORN0_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext, std::shared_ptr<Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeVariablesForRemap_PBorn0ExecutionContext")
+    .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_pseudo_viscosity)
+    .def_property_readonly("density", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_density)
+    .def_property_readonly("cell_volume", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_cell_volume)
+    .def_property_readonly("internal_energy", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_internal_energy)
+    .def_property_readonly("node_mass", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_node_mass)
+    .def_property_readonly("velocity", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_velocity)
+    .def_property_readonly("u_lagrange", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_u_lagrange)
+    .def_property_readonly("u_dual_lagrange", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_u_dual_lagrange)
+    .def_property_readonly("phi_lagrange", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_phi_lagrange)
+    .def_property_readonly("phi_dual_lagrange", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_phi_dual_lagrange)
+    .def("__str__", [](Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    })
+    .def("__repr__", [](Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext &self)
+    {
+      std::ostringstream oss;
+      oss << "[" << self.name << "]";
+      return oss.str();
+    });
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAP_PBORN0_DISABLED)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEFACEQUANTITESFORREMAP_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext, std::shared_ptr<Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeFaceQuantitesForRemapExecutionContext")
     .def_property_readonly("cell_coord", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_cell_coord)
     .def_property_readonly("node_coord", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_node_coord)
     .def_property_readonly("face_normal", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_face_normal)
@@ -506,10 +602,16 @@ PYBIND11_EMBEDDED_MODULE(mahyco_mahyco, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEFACEQUANTITESFORREMAP_DISABLED)
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_DISABLED)
 }
-#endif
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 }  // namespace Mahyco
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#endif  // MAHYCO___MAHYCOMODULEBINDINGS_H

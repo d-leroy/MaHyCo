@@ -46,24 +46,24 @@ class IEquationOfState
  public:  // ***** METHODES ABSTRAITES
   /*!
   Cette méthode est implémentée dans :
-  \li StiffenedGasServiceBase::initEOS
   \li PerfectGasServiceBase::initEOS
+  \li StiffenedGasServiceBase::initEOS
    Initialise l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et l'énergie interne. 
   */
   virtual void initEOS(::Arcane::Materials::IMeshEnvironment* env) = 0;
   /*!
   Cette méthode est implémentée dans :
-  \li StiffenedGasServiceBase::applyEOS
   \li PerfectGasServiceBase::applyEOS
+  \li StiffenedGasServiceBase::applyEOS
    Applique l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et la pression. 
   */
   virtual void applyEOS(::Arcane::Materials::IMeshEnvironment* env) = 0;
   /*!
   Cette méthode est implémentée dans :
-  \li StiffenedGasServiceBase::applyOneCellEOS
   \li PerfectGasServiceBase::applyOneCellEOS
+  \li StiffenedGasServiceBase::applyOneCellEOS
    Applique l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et la pression pour une cellule
   */

@@ -54,7 +54,7 @@ class Material
 
  public:  // ***** ACCESSEURS
   String getName() override { return m_name; }
-  void setName(String value) { m_name = value; }
+  void setName(String value) { m_name = value ; }
 
  protected:  // ***** ATTRIBUTS
   String m_name;

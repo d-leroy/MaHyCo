@@ -69,12 +69,12 @@
     </eos-model> 
   </environment>
    
-   <cas-model name="SOD">
-   <cas-test>39</cas-test>
+   <cas-model name="Sod">
+   <cas-test>bi-sod-sph</cas-test>
    </cas-model>
-   <remap name="RemapADI">
+   <remap-service name="RemapADI">
     <ordre-projection>1</ordre-projection>
-    </remap>
+    </remap-service>
    
     <pseudo-centree>0</pseudo-centree>
     <schema-csts>0</schema-csts>

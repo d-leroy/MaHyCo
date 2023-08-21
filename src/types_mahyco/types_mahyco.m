@@ -49,6 +49,6 @@ legacy IGeometryMng file "arcane/geometry/IGeometryMng.h" namespace "Arcane::Num
 legacy IMeshEnvironment file "arcane/materials/IMeshEnvironment.h" namespace "Arcane::Materials";
 legacy SingletonIAccEnv file "accenv/SingletonIAccEnv.h" namespace "";
 legacy ICartesianMesh file "cartesian/interface/ICartesianMesh.h" namespace "CartesianInterface";
-legacy RealArrayView file "" namespace "";
+legacy RealArrayView file "arcane/utils/UtilsTypes.h" namespace "Arcane";
 // TODO: template types
 // legacy DtCellInfoVoid file "types_mahyco/IDtCellInfo.h" namespace "";

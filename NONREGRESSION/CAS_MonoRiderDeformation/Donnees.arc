@@ -68,13 +68,13 @@
     </eos-model> 
   </environment>
    
-   <cas-model name="RIDER">
-   <cas-test>28</cas-test>
+   <cas-model name="Rider">
+   <cas-test>mono-rider-deformation</cas-test>
    </cas-model>
    
-   <remap name="RemapADI">
+   <remap-service name="RemapADI">
    <ordre-projection>2</ordre-projection>
-   </remap>
+   </remap-service>
     <sans-lagrange>true</sans-lagrange>
     <pseudo-centree>0</pseudo-centree>
     <schema-csts>0</schema-csts>

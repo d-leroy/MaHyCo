@@ -1,3 +1,9 @@
+#ifndef EOS_PERFECTGAS___PERFECTGASSERVICEBINDINGS_H
+#define EOS_PERFECTGAS___PERFECTGASSERVICEBINDINGS_H
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 #include "arcane/ArcaneTypes.h"
 #include "arcane/ItemTypes.h"
 #include "arcane/Item.h"
@@ -10,11 +16,9 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
-#include "eos/__IEquationOfState.h"
-#include "eos/perfectgas/__PerfectGasServiceVars.h"
-#include "eos/perfectgas/__PerfectGasServiceContexts.h"
 #include "scihook/scihookdefs.h"
-#include "eos/perfectgas/PerfectGas_axl.h"
+#include "eos/perfectgas/__PerfectGasServiceContexts.h"
+#include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -26,10 +30,12 @@ namespace EosPerfectgas {
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED)
-PYBIND11_EMBEDDED_MODULE(eosperfectgas_perfectgas, m)
+void bind_eos_perfectgas_perfectgas(py::module __attribute__((unused)) &m)
 {
-  pybind11::class_<EosPerfectgas::PerfectGasInitEOSExecutionContext, std::shared_ptr<EosPerfectgas::PerfectGasInitEOSExecutionContext>, SciHook::SciHookExecutionContext>(m, "PerfectGasInitEOSExecutionContext")
+  #if not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_DISABLED)
+  auto sub_eos_perfectgas_perfectgas = m.def_submodule("eos_perfectgas_perfectgas", "Bindings for PerfectGas");
+  #if not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_INITEOS_DISABLED)
+  pybind11::class_<EosPerfectgas::PerfectGasInitEOSExecutionContext, std::shared_ptr<EosPerfectgas::PerfectGasInitEOSExecutionContext>, SciHook::SciHookExecutionContext>(sub_eos_perfectgas_perfectgas, "PerfectGasInitEOSExecutionContext")
     .def_property_readonly("env", &EosPerfectgas::PerfectGasInitEOSExecutionContext::get_env)
     .def_property_readonly("pressure", &EosPerfectgas::PerfectGasInitEOSExecutionContext::get_m_pressure)
     .def_property_readonly("density", &EosPerfectgas::PerfectGasInitEOSExecutionContext::get_m_density)
@@ -47,7 +53,9 @@ PYBIND11_EMBEDDED_MODULE(eosperfectgas_perfectgas, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<EosPerfectgas::PerfectGasApplyEOSExecutionContext, std::shared_ptr<EosPerfectgas::PerfectGasApplyEOSExecutionContext>, SciHook::SciHookExecutionContext>(m, "PerfectGasApplyEOSExecutionContext")
+  #endif // not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_INITEOS_DISABLED)
+  #if not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_DISABLED)
+  pybind11::class_<EosPerfectgas::PerfectGasApplyEOSExecutionContext, std::shared_ptr<EosPerfectgas::PerfectGasApplyEOSExecutionContext>, SciHook::SciHookExecutionContext>(sub_eos_perfectgas_perfectgas, "PerfectGasApplyEOSExecutionContext")
     .def_property_readonly("env", &EosPerfectgas::PerfectGasApplyEOSExecutionContext::get_env)
     .def_property_readonly("density", &EosPerfectgas::PerfectGasApplyEOSExecutionContext::get_m_density)
     .def_property_readonly("internal_energy", &EosPerfectgas::PerfectGasApplyEOSExecutionContext::get_m_internal_energy)
@@ -66,7 +74,9 @@ PYBIND11_EMBEDDED_MODULE(eosperfectgas_perfectgas, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<EosPerfectgas::PerfectGasApplyOneCellEOSExecutionContext, std::shared_ptr<EosPerfectgas::PerfectGasApplyOneCellEOSExecutionContext>, SciHook::SciHookExecutionContext>(m, "PerfectGasApplyOneCellEOSExecutionContext")
+  #endif // not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_DISABLED)
+  #if not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_APPLYONECELLEOS_DISABLED)
+  pybind11::class_<EosPerfectgas::PerfectGasApplyOneCellEOSExecutionContext, std::shared_ptr<EosPerfectgas::PerfectGasApplyOneCellEOSExecutionContext>, SciHook::SciHookExecutionContext>(sub_eos_perfectgas_perfectgas, "PerfectGasApplyOneCellEOSExecutionContext")
     .def_property_readonly("env", &EosPerfectgas::PerfectGasApplyOneCellEOSExecutionContext::get_env)
     .def_property_readonly("ev", &EosPerfectgas::PerfectGasApplyOneCellEOSExecutionContext::get_ev)
     .def_property_readonly("density", &EosPerfectgas::PerfectGasApplyOneCellEOSExecutionContext::get_m_density)
@@ -86,10 +96,16 @@ PYBIND11_EMBEDDED_MODULE(eosperfectgas_perfectgas, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
+  #endif // not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_APPLYONECELLEOS_DISABLED)
+  #endif // not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_DISABLED)
 }
-#endif
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 }  // namespace EosPerfectgas
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#endif  // EOS_PERFECTGAS___PERFECTGASSERVICEBINDINGS_H

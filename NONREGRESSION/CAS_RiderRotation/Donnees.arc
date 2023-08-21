@@ -68,12 +68,12 @@
     </eos-model> 
   </environment>
   
-   <cas-model name="RIDER">
-   <cas-test>34</cas-test>
+   <cas-model name="Rider">
+   <cas-test>rider-rotation</cas-test>
    </cas-model>
-   <remap name="RemapADI">
+   <remap-service name="RemapADI">
     <ordre-projection>2</ordre-projection>
-    </remap>
+    </remap-service>
    
 
     <sans-lagrange>true</sans-lagrange>

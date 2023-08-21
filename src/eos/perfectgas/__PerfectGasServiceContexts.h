@@ -16,11 +16,15 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
+#include "eos/perfectgas/__PerfectGasServiceVars.h"
 #include "arcane/materials/IMeshEnvironment.h"
+#include "scihook/scihookdefs.h"
 #include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+
+#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED)
 
 using namespace Arcane;
 using namespace Arcane::Materials;
@@ -39,7 +43,7 @@ struct PerfectGasInitEOSExecutionContext final : SciHook::SciHookExecutionContex
   , env(env)
   , vars(vars)
   {}
-  
+
   ::Arcane::Materials::IMeshEnvironment* env;
   const PerfectGasInitEOSVars *vars;
 
@@ -74,7 +78,7 @@ struct PerfectGasApplyEOSExecutionContext final : SciHook::SciHookExecutionConte
   , env(env)
   , vars(vars)
   {}
-  
+
   ::Arcane::Materials::IMeshEnvironment* env;
   const PerfectGasApplyEOSVars *vars;
 
@@ -115,7 +119,7 @@ struct PerfectGasApplyOneCellEOSExecutionContext final : SciHook::SciHookExecuti
   , ev(ev)
   , vars(vars)
   {}
-  
+
   const ::Arcane::Materials::IMeshEnvironment* env;
   const EnvCell ev;
   const PerfectGasApplyOneCellEOSVars *vars;
@@ -149,13 +153,8 @@ struct PerfectGasApplyOneCellEOSExecutionContext final : SciHook::SciHookExecuti
   }
 };
 
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
 }  // namespace EosPerfectgas
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
+#endif // defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_DISABLED)
 
 #endif  // EOS_PERFECTGAS___PERFECTGASSERVICECONTEXTS_H

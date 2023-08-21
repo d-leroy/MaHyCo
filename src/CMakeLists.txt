@@ -57,7 +57,7 @@ install(TARGETS Mahyco EXPORT ${MAHYCO_EXPORT_TARGET})
 configure_file(Mahyco.config ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 install(FILES Mahyco.config DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-add_subdirectory(casTest)
+add_subdirectory(cas_test)
 
 # Equation of State
 add_subdirectory(eos)
@@ -82,7 +82,7 @@ arcane_accelerator_add_source_files(MahycoAnnexe.cc)
 arcane_accelerator_add_source_files(PrepareRemap.cc)
 arcane_accelerator_add_to_target(Mahyco)
 
-target_link_libraries(Mahyco PRIVATE mahyco_config casTest Remap cartesian eos accenv msgpass)
+target_link_libraries(Mahyco PRIVATE mahyco_config cas_test Remap cartesian eos accenv msgpass)
 if (SCIHOOK_ENABLED)
   target_link_libraries(Mahyco PRIVATE ${SCIHOOK_LIB} pybind11::embed)
 endif()

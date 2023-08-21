@@ -38,6 +38,7 @@ class IRemap
   virtual Integer getOrdreProjection() = 0;
   /*!  Définition de la valeur limite des petites fractions et autres  */
   virtual Real getThreshold() = 0;
+  virtual Real getArithmeticThreshold() = 0;
   /*!  projection type Euler (retour sur maillage initial)  */
   virtual bool getIsEulerScheme() = 0;
   /*!  Conservation de l energie totale lors de la projection  */

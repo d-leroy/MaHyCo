@@ -16,11 +16,15 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
+#include "eos/stiffenedgas/__StiffenedGasServiceVars.h"
 #include "arcane/materials/IMeshEnvironment.h"
+#include "scihook/scihookdefs.h"
 #include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+
+#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED)
 
 using namespace Arcane;
 using namespace Arcane::Materials;
@@ -39,7 +43,7 @@ struct StiffenedGasInitEOSExecutionContext final : SciHook::SciHookExecutionCont
   , env(env)
   , vars(vars)
   {}
-  
+
   ::Arcane::Materials::IMeshEnvironment* env;
   const StiffenedGasInitEOSVars *vars;
 
@@ -74,7 +78,7 @@ struct StiffenedGasApplyEOSExecutionContext final : SciHook::SciHookExecutionCon
   , env(env)
   , vars(vars)
   {}
-  
+
   ::Arcane::Materials::IMeshEnvironment* env;
   const StiffenedGasApplyEOSVars *vars;
 
@@ -115,7 +119,7 @@ struct StiffenedGasApplyOneCellEOSExecutionContext final : SciHook::SciHookExecu
   , ev(ev)
   , vars(vars)
   {}
-  
+
   const ::Arcane::Materials::IMeshEnvironment* env;
   const EnvCell ev;
   const StiffenedGasApplyOneCellEOSVars *vars;
@@ -149,13 +153,8 @@ struct StiffenedGasApplyOneCellEOSExecutionContext final : SciHook::SciHookExecu
   }
 };
 
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
 }  // namespace EosStiffenedgas
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
+#endif // defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_DISABLED)
 
 #endif  // EOS_STIFFENEDGAS___STIFFENEDGASSERVICECONTEXTS_H

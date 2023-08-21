@@ -16,10 +16,14 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
+#include "mahyco/__MahycoModuleVars.h"
+#include "scihook/scihookdefs.h"
 #include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+
+#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED)
 
 using namespace Arcane;
 using namespace Arcane::Materials;
@@ -36,7 +40,7 @@ struct MahycoAllocCqsExecutionContext final : SciHook::SciHookExecutionContext
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoAllocCqsVars *vars;
 
   const pybind11::object get_m_cell_cqs() const {
@@ -56,7 +60,7 @@ struct MahycoInitHydroVarExecutionContext final : SciHook::SciHookExecutionConte
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoInitHydroVarVars *vars;
 
   const pybind11::object get_m_cell_cqs() const {
@@ -96,7 +100,7 @@ struct MahycoHydroStartInitEnvAndMatExecutionContext final : SciHook::SciHookExe
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoHydroStartInitEnvAndMatVars *vars;
 
   const pybind11::object get_m_materiau() const {
@@ -124,7 +128,7 @@ struct MahycoPrepareFaceGroupForBcExecutionContext final : SciHook::SciHookExecu
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoPrepareFaceGroupForBcVars *vars;
 
   const pybind11::object get_m_node_coord() const {
@@ -144,7 +148,7 @@ struct MahycoComputeCellMassExecutionContext final : SciHook::SciHookExecutionCo
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoComputeCellMassVars *vars;
 
   const pybind11::object get_m_density() const {
@@ -172,7 +176,7 @@ struct MahycoComputeNodeMassExecutionContext final : SciHook::SciHookExecutionCo
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoComputeNodeMassVars *vars;
 
   const pybind11::object get_m_cell_mass() const {
@@ -192,7 +196,7 @@ struct MahycoContinueForIterationDtExecutionContext final : SciHook::SciHookExec
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoContinueForIterationDtVars *vars;
 
   const pybind11::object get_m_old_deltat() const {
@@ -208,7 +212,7 @@ struct MahycoSaveValuesAtNExecutionContext final : SciHook::SciHookExecutionCont
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoSaveValuesAtNVars *vars;
 
   const pybind11::object get_m_old_deltat() const {
@@ -292,7 +296,7 @@ struct MahycoUpdateVelocityExecutionContext final : SciHook::SciHookExecutionCon
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoUpdateVelocityVars *vars;
 
   const pybind11::object get_m_pressure_n() const {
@@ -324,7 +328,7 @@ struct MahycoApplyBoundaryConditionExecutionContext final : SciHook::SciHookExec
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoApplyBoundaryConditionVars *vars;
 
   const pybind11::object get_m_velocity() const {
@@ -340,7 +344,7 @@ struct MahycoUpdatePositionExecutionContext final : SciHook::SciHookExecutionCon
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoUpdatePositionVars *vars;
 
   const pybind11::object get_m_velocity() const {
@@ -364,7 +368,7 @@ struct MahycoUpdateDensityExecutionContext final : SciHook::SciHookExecutionCont
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoUpdateDensityVars *vars;
 
   const pybind11::object get_m_cell_mass() const {
@@ -400,7 +404,7 @@ struct MahycoComputeArtificialViscosityExecutionContext final : SciHook::SciHook
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoComputeArtificialViscosityVars *vars;
 
   const pybind11::object get_m_div_u() const {
@@ -428,6 +432,50 @@ struct MahycoComputeArtificialViscosityExecutionContext final : SciHook::SciHook
   }
 };
 
+//! Classe de contexte d'exécution pour remap
+struct MahycoRemapExecutionContext final : SciHook::SciHookExecutionContext
+{
+  MahycoRemapExecutionContext(std::string execution_context_name,
+      MahycoRemapVars *vars)
+  : SciHookExecutionContext(execution_context_name)
+  , vars(vars)
+  {}
+
+  const MahycoRemapVars *vars;
+
+  const pybind11::object get_m_fracvol() const {
+    return pybind11::cast(vars->m_fracvol);
+  }
+
+  const pybind11::object get_m_materiau() const {
+    return pybind11::cast(vars->m_materiau);
+  }
+
+  const pybind11::object get_m_pseudo_viscosity_n() const {
+    return pybind11::cast(vars->m_pseudo_viscosity_n);
+  }
+
+  const pybind11::object get_m_pressure_n() const {
+    return pybind11::cast(vars->m_pressure_n);
+  }
+
+  const pybind11::object get_m_cell_volume_n() const {
+    return pybind11::cast(vars->m_cell_volume_n);
+  }
+
+  const pybind11::object get_m_density_n() const {
+    return pybind11::cast(vars->m_density_n);
+  }
+
+  const pybind11::object get_m_internal_energy_n() const {
+    return pybind11::cast(vars->m_internal_energy_n);
+  }
+
+  const pybind11::object get_m_tau_density() const {
+    return pybind11::cast(vars->m_tau_density);
+  }
+};
+
 //! Classe de contexte d'exécution pour computeDeltaT
 struct MahycoComputeDeltaTExecutionContext final : SciHook::SciHookExecutionContext
 {
@@ -436,7 +484,7 @@ struct MahycoComputeDeltaTExecutionContext final : SciHook::SciHookExecutionCont
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoComputeDeltaTVars *vars;
 
   const pybind11::object get_m_old_deltat() const {
@@ -452,7 +500,7 @@ struct MahycoInitGeometricValuesExecutionContext final : SciHook::SciHookExecuti
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoInitGeometricValuesVars *vars;
 
   const pybind11::object get_m_cell_coord() const {
@@ -488,7 +536,7 @@ struct MahycoComputeGeometricValuesAuxExecutionContext final : SciHook::SciHookE
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoComputeGeometricValuesAuxVars *vars;
 
   const pybind11::object get_m_fracvol() const {
@@ -524,7 +572,7 @@ struct MahycoUpdateVelocityWithoutLagrangeExecutionContext final : SciHook::SciH
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoUpdateVelocityWithoutLagrangeVars *vars;
 
   const pybind11::object get_m_velocity_n() const {
@@ -544,7 +592,7 @@ struct MahycoUpdateVelocityBackwardExecutionContext final : SciHook::SciHookExec
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoUpdateVelocityBackwardVars *vars;
 
   const pybind11::object get_m_pressure_n() const {
@@ -572,7 +620,7 @@ struct MahycoUpdateVelocityForwardExecutionContext final : SciHook::SciHookExecu
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoUpdateVelocityForwardVars *vars;
 
   const pybind11::object get_m_pressure() const {
@@ -602,7 +650,7 @@ struct MahycoUpdateForceAndVelocityExecutionContext final : SciHook::SciHookExec
   , dt(dt)
   , vars(vars)
   {}
-  
+
   const Real dt;
   const MahycoUpdateForceAndVelocityVars *vars;
 
@@ -647,7 +695,7 @@ struct MahycoUpdateEnergyAndPressurebyNewtonExecutionContext final : SciHook::Sc
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoUpdateEnergyAndPressurebyNewtonVars *vars;
 
   const pybind11::object get_m_pseudo_viscosity() const {
@@ -727,7 +775,7 @@ struct MahycoUpdateEnergyAndPressureforGPExecutionContext final : SciHook::SciHo
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoUpdateEnergyAndPressureforGPVars *vars;
 
   const pybind11::object get_m_pseudo_viscosity() const {
@@ -799,7 +847,7 @@ struct MahycoComputeAveragePressureExecutionContext final : SciHook::SciHookExec
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoComputeAveragePressureVars *vars;
 
   const pybind11::object get_m_fracvol() const {
@@ -823,7 +871,7 @@ struct MahycoComputeVariablesForRemapExecutionContext final : SciHook::SciHookEx
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoComputeVariablesForRemapVars *vars;
 
   const pybind11::object get_m_cell_volume() const {
@@ -871,6 +919,58 @@ struct MahycoComputeVariablesForRemapExecutionContext final : SciHook::SciHookEx
   }
 };
 
+//! Classe de contexte d'exécution pour computeVariablesForRemap_PBorn0
+struct MahycoComputeVariablesForRemap_PBorn0ExecutionContext final : SciHook::SciHookExecutionContext
+{
+  MahycoComputeVariablesForRemap_PBorn0ExecutionContext(std::string execution_context_name,
+      MahycoComputeVariablesForRemap_PBorn0Vars *vars)
+  : SciHookExecutionContext(execution_context_name)
+  , vars(vars)
+  {}
+
+  const MahycoComputeVariablesForRemap_PBorn0Vars *vars;
+
+  const pybind11::object get_m_pseudo_viscosity() const {
+    return pybind11::cast(vars->m_pseudo_viscosity);
+  }
+
+  const pybind11::object get_m_density() const {
+    return pybind11::cast(vars->m_density);
+  }
+
+  const pybind11::object get_m_cell_volume() const {
+    return pybind11::cast(vars->m_cell_volume);
+  }
+
+  const pybind11::object get_m_internal_energy() const {
+    return pybind11::cast(vars->m_internal_energy);
+  }
+
+  const pybind11::object get_m_node_mass() const {
+    return pybind11::cast(vars->m_node_mass);
+  }
+
+  const pybind11::object get_m_velocity() const {
+    return pybind11::cast(vars->m_velocity);
+  }
+
+  const pybind11::object get_m_u_lagrange() const {
+    return pybind11::cast(vars->m_u_lagrange);
+  }
+
+  const pybind11::object get_m_u_dual_lagrange() const {
+    return pybind11::cast(vars->m_u_dual_lagrange);
+  }
+
+  const pybind11::object get_m_phi_lagrange() const {
+    return pybind11::cast(vars->m_phi_lagrange);
+  }
+
+  const pybind11::object get_m_phi_dual_lagrange() const {
+    return pybind11::cast(vars->m_phi_dual_lagrange);
+  }
+};
+
 //! Classe de contexte d'exécution pour computeFaceQuantitesForRemap
 struct MahycoComputeFaceQuantitesForRemapExecutionContext final : SciHook::SciHookExecutionContext
 {
@@ -879,7 +979,7 @@ struct MahycoComputeFaceQuantitesForRemapExecutionContext final : SciHook::SciHo
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
-  
+
   const MahycoComputeFaceQuantitesForRemapVars *vars;
 
   const pybind11::object get_m_cell_coord() const {
@@ -915,13 +1015,8 @@ struct MahycoComputeFaceQuantitesForRemapExecutionContext final : SciHook::SciHo
   }
 };
 
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
 }  // namespace Mahyco
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
+#endif // defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_MAHYCO_DISABLED)
 
 #endif  // MAHYCO___MAHYCOMODULECONTEXTS_H

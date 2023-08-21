@@ -8,6 +8,7 @@
     <simple name="threshold" type="real" default="1.e-10">
       <description> Définition de la valeur limite des petites fractions et autres </description>
     </simple>
+    <simple name="arithmetic-threshold" type="real" default="1.e-300"/>
     <simple name="is-euler-scheme" type="bool" default="true">
       <description> projection type Euler (retour sur maillage initial) </description>
     </simple>

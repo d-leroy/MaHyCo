@@ -11,6 +11,7 @@
 #include "arcane/ItemVectorView.h"
 #include "arcane/VariableTypes.h"
 #include "arcane/utils/Array.h"
+#include "cas_test/__Test.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -34,7 +35,7 @@ class IInitialisations
  public:  // ***** ACCESSEURS ABSTRAITS
   virtual const String getImplName() const = 0;
   /*!  Numéro du cas test  */
-  virtual Integer getCasTest() = 0;
+  virtual Test getCasTest() = 0;
   /*!  Option de retour arriere  */
   virtual bool getReverseOption() = 0;
   virtual bool hasReverseOption() const = 0;
@@ -44,33 +45,33 @@ class IInitialisations
  public:  // ***** METHODES ABSTRAITES
   /*!
   Cette méthode est implémentée dans :
-  \li SedovServiceBase::initMatMono
   \li OtherServiceBase::initMatMono
   \li RiderServiceBase::initMatMono
+  \li SedovServiceBase::initMatMono
   \li SodServiceBase::initMatMono
   */
   virtual void initMatMono(const Integer dim) = 0;
   /*!
   Cette méthode est implémentée dans :
-  \li SedovServiceBase::initVarMono
   \li OtherServiceBase::initVarMono
   \li RiderServiceBase::initVarMono
+  \li SedovServiceBase::initVarMono
   \li SodServiceBase::initVarMono
   */
   virtual void initVarMono(const Integer dim) = 0;
   /*!
   Cette méthode est implémentée dans :
-  \li SedovServiceBase::initMat
   \li OtherServiceBase::initMat
   \li RiderServiceBase::initMat
+  \li SedovServiceBase::initMat
   \li SodServiceBase::initMat
   */
   virtual void initMat(const Integer dim) = 0;
   /*!
   Cette méthode est implémentée dans :
-  \li SedovServiceBase::initVar
   \li OtherServiceBase::initVar
   \li RiderServiceBase::initVar
+  \li SedovServiceBase::initVar
   \li SodServiceBase::initVar
   */
   virtual void initVar(const Integer dim) = 0;

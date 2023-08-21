@@ -194,7 +194,7 @@ module Mahyco
     cas_test.Initialisations CasModel;
 
     /*! Service de projection */
-    remap.Remap remap;
+    remap.Remap remapService = "RemapADI";
 
     /*! Impose le tri cartésien des faces (valable que si le maillage est lui-même cartésien) */
     Bool CartesianSortFaces = "true";
@@ -249,11 +249,9 @@ module Mahyco
     /*! Condition aux limites */
     opt types_mahyco.BoundaryCondition[*] BoundaryCondition;
 
-    types_mahyco.IGeometryMng geometry;
+    types_mahyco.IGeometryMng geometry = "Euclidian3Geometry";
 
-    Int Dimension;
-
-    types_mahyco.ICartesianMesh CartesianMesh;
+    Arcane.Builtins.ArcaneBuiltins arc;
 
     def void initGeometricValues()
         in cell_coord,
@@ -334,6 +332,10 @@ module Mahyco
         out internal_energy,
         inout pressure;
 
+    // <entry-point method-name="computePressionMoyenne" name="ComputePressionMoyenne" where="compute-loop" property="none" />
+    // @ComputeLoop
+    // ComputePressionMoyenne;
+
     def void computeAveragePressure()
         in fracvol,
         inout pressure,
@@ -345,6 +347,18 @@ module Mahyco
         in internal_energy,
         in pseudo_viscosity,
         in fracvol,
+        in node_mass,
+        in velocity,
+        inout u_lagrange,
+        out u_dual_lagrange,
+        out phi_lagrange,
+        out phi_dual_lagrange;
+    
+    def void computeVariablesForRemap_PBorn0()
+        in pseudo_viscosity,
+        in density,
+        in cell_volume,
+        in internal_energy,
         in node_mass,
         in velocity,
         inout u_lagrange,
@@ -435,7 +449,17 @@ module Mahyco
         in density,
         in cell_volume,
         in mass_fraction,
-        inout cell_mass;
+        inout cell_mass
+        { 
+            for (c in arc.allCells()) {
+                cell_mass{c} = density{c} * cell_volume{c};
+            }
+            for (e in arc.allEnvs()) {
+                for (c in arc.envCellsOfEnv(e)) {
+                    cell_mass{c} = mass_fraction{c} * cell_mass{arc.cellOfEnvCell(c)};
+                }
+            }
+        }
 
     @StartInit
     computeNodeMass
@@ -525,13 +549,20 @@ module Mahyco
         call updateEnergyAndPressureforGP,
         call computeAveragePressure;
 
-    // <entry-point method-name="computePressionMoyenne" name="ComputePressionMoyenne" where="compute-loop" property="none" />
-    // @ComputeLoop
-    // ComputePressionMoyenne;
-
     // <entry-point method-name="remap" name="Remap" where="compute-loop" property="none" />
     @ComputeLoop
-    remap;
+    remap
+        in fracvol,
+        out materiau,
+        out pseudo_viscosity_n,
+        out pressure_n,
+        out cell_volume_n,
+        out density_n,
+        out internal_energy_n,
+        out tau_density
+        call computeVariablesForRemap,
+        call computeFaceQuantitesForRemap,
+        call computeAveragePressure;
 
     @ComputeLoop
     computeDeltaT

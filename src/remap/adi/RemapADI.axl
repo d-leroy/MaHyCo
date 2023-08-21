@@ -1,38 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?><service name="RemapADI" version="1.0" namespace-name="RemapAdi" type="caseoption">
   <interface name="::Remap::IRemap"/>
   <variables>
-    <variable field-name="sens_projection" name="SensProjection" data-type="integer" item-kind="none" dim="0" dump="true" need-sync="false" restore="false" execution-depend="false"/>
-    <variable field-name="u_lagrange" name="ULagrange" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> U LAGRANGE </description>
+    <variable field-name="phi_dual_lagrange" name="PhiDualLagrange" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> PHI DUAL LAGRANGE </description>
     </variable>
     <variable field-name="u_dual_lagrange" name="UDualLagrange" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
       <description> U DUAL LAGRANGE </description>
     </variable>
+    <variable field-name="grad_phi" name="GradPhi" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="grad_phi_face" name="GradPhiFace" data-type="real" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
     <variable field-name="phi_lagrange" name="PhiLagrange" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
       <description> PHI LAGRANGE </description>
     </variable>
-    <variable field-name="phi_dual_lagrange" name="PhiDualLagrange" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> PHI DUAL LAGRANGE </description>
+    <variable field-name="h_cell_lagrange" name="HCellLagrange" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="node_coord" name="NodeCoord" data-type="real3" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> NODE COORD </description>
     </variable>
     <variable field-name="dual_grad_phi" name="DualGradPhi" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
       <description> GRAD PHI DUAL LAGRANGE pour les vitesses </description>
     </variable>
-    <variable field-name="grad_phi" name="GradPhi" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="phi_face" name="PhiFace" data-type="real" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="grad_phi_face" name="GradPhiFace" data-type="real" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="delta_phi_face_ar" name="DeltaPhiFaceAr" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="delta_phi_face_av" name="DeltaPhiFaceAv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="face_normal" name="FaceNormal" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> FACE NORMAL </description>
+    </variable>
+    <variable field-name="cell_coord" name="CellCoord" data-type="real3" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> CELL COORD </description>
+    </variable>
+    <variable field-name="face_coord" name="FaceCoord" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> FACE COORD </description>
+    </variable>
+    <variable field-name="is_dir_face" name="IsDirFace" data-type="bool" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="deltax_lagrange" name="DeltaxLagrange" data-type="real" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="outer_face_normal" name="OuterFaceNormal" data-type="real3" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> U REMAP2 </description>
+    </variable>
+    <variable field-name="face_normal_velocity" name="FaceNormalVelocity" data-type="real" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> FACE NORMAL VELOCITY </description>
+    </variable>
+    <variable field-name="face_length_lagrange" name="FaceLengthLagrange" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> FACE LENGHT </description>
+    </variable>
     <variable field-name="dual_phi_flux" name="DualPhiFlux" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="front_flux_mass_env" name="FrontFluxMassEnv" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="back_flux_mass_env" name="BackFluxMassEnv" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="back_flux_contrib_env" name="BackFluxContribEnv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="front_flux_contrib_env" name="FrontFluxContribEnv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="delta_phi_face_av" name="DeltaPhiFaceAv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="delta_phi_face_ar" name="DeltaPhiFaceAr" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
     <variable field-name="est_mixte" name="EstMixte" data-type="integer" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
       <description> MIXTE </description>
     </variable>
     <variable field-name="est_pure" name="EstPure" data-type="integer" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
       <description> PURE </description>
     </variable>
+    <variable field-name="phi_face" name="PhiFace" data-type="real" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="u_lagrange" name="ULagrange" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> U LAGRANGE </description>
+    </variable>
+    <variable field-name="back_flux_contrib_env" name="BackFluxContribEnv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="front_flux_contrib_env" name="FrontFluxContribEnv" data-type="real" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="back_flux_mass" name="BackFluxMass" data-type="real" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="front_flux_mass" name="FrontFluxMass" data-type="real" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="back_flux_mass_env" name="BackFluxMassEnv" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="front_flux_mass_env" name="FrontFluxMassEnv" data-type="real" item-kind="node" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
+    <variable field-name="sens_projection" name="SensProjection" data-type="integer" item-kind="none" dim="0" dump="true" need-sync="false" restore="false" execution-depend="false"/>
     <variable field-name="euler_volume" name="EulerVolume" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
       <description> CELL VOLUME EULER </description>
     </variable>
@@ -64,32 +90,6 @@
     <variable field-name="internal_energy" name="InternalEnergy" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
       <description> INTERNAL ENERGY </description>
     </variable>
-    <variable field-name="h_cell_lagrange" name="HCellLagrange" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="node_coord" name="NodeCoord" data-type="real3" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> NODE COORD </description>
-    </variable>
-    <variable field-name="face_normal" name="FaceNormal" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> FACE NORMAL </description>
-    </variable>
-    <variable field-name="cell_coord" name="CellCoord" data-type="real3" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> CELL COORD </description>
-    </variable>
-    <variable field-name="face_coord" name="FaceCoord" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> FACE COORD </description>
-    </variable>
-    <variable field-name="is_dir_face" name="IsDirFace" data-type="bool" item-kind="face" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="deltax_lagrange" name="DeltaxLagrange" data-type="real" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="outer_face_normal" name="OuterFaceNormal" data-type="real3" item-kind="cell" dim="1" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> U REMAP2 </description>
-    </variable>
-    <variable field-name="face_normal_velocity" name="FaceNormalVelocity" data-type="real" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> FACE NORMAL VELOCITY </description>
-    </variable>
-    <variable field-name="face_length_lagrange" name="FaceLengthLagrange" data-type="real3" item-kind="face" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
-      <description> FACE LENGHT </description>
-    </variable>
-    <variable field-name="back_flux_mass" name="BackFluxMass" data-type="real" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
-    <variable field-name="front_flux_mass" name="FrontFluxMass" data-type="real" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false"/>
   </variables>
   <options>
     <simple name="ordre-projection" type="integer" default="2">
@@ -98,6 +98,7 @@
     <simple name="threshold" type="real" default="1.e-10">
       <description> Définition de la valeur limite des petites fractions et autres </description>
     </simple>
+    <simple name="arithmetic-threshold" type="real" default="1.e-300"/>
     <simple name="is-euler-scheme" type="bool" default="true">
       <description> projection type Euler (retour sur maillage initial) </description>
     </simple>

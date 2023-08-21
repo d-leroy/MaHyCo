@@ -26,6 +26,7 @@ interface Remap {
     Int OrdreProjection="2";
     /*! Définition de la valeur limite des petites fractions et autres */
     Real Threshold="1.e-10";
+    Real ArithmeticThreshold = "1.e-300";
     /*! projection type Euler (retour sur maillage initial) */
     Bool IsEulerScheme="true";
     /*! Conservation de l energie totale lors de la projection */

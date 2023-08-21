@@ -67,12 +67,12 @@
       <limit-tension>0.01</limit-tension> -->
     </eos-model> 
   </environment>
-   <cas-model name="RIDER">
-   <cas-test>32</cas-test>
+   <cas-model name="Rider">
+   <cas-test>rider-ty</cas-test>
    </cas-model>
-   <remap name="RemapADI">
+   <remap-service name="RemapADI">
     <ordre-projection>2</ordre-projection>
-   </remap>
+   </remap-service>
    
     <sans-lagrange>true</sans-lagrange>
     <pseudo-centree>0</pseudo-centree>

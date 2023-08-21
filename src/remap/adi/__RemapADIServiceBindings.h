@@ -1,3 +1,9 @@
+#ifndef REMAP_ADI___REMAPADISERVICEBINDINGS_H
+#define REMAP_ADI___REMAPADISERVICEBINDINGS_H
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 #include "arcane/ArcaneTypes.h"
 #include "arcane/ItemTypes.h"
 #include "arcane/Item.h"
@@ -10,12 +16,9 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
-#include "remap/__IRemap.h"
-#include "remap/adi/__RemapADIServiceVars.h"
-#include "remap/adi/__RemapADIServiceContexts.h"
-#include "types_mahyco/__Limiteur.h"
 #include "scihook/scihookdefs.h"
-#include "remap/adi/RemapADI_axl.h"
+#include "remap/adi/__RemapADIServiceContexts.h"
+#include "SciHook.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -27,10 +30,12 @@ namespace RemapAdi {
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_DISABLED)
-PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
+void bind_remap_adi_remapadi(py::module __attribute__((unused)) &m)
 {
-  pybind11::class_<RemapAdi::RemapADISynchronizeDualUremapExecutionContext, std::shared_ptr<RemapAdi::RemapADISynchronizeDualUremapExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADISynchronizeDualUremapExecutionContext")
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED)
+  auto sub_remap_adi_remapadi = m.def_submodule("remap_adi_remapadi", "Bindings for RemapADI");
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_SYNCHRONIZEDUALUREMAP_DISABLED)
+  pybind11::class_<RemapAdi::RemapADISynchronizeDualUremapExecutionContext, std::shared_ptr<RemapAdi::RemapADISynchronizeDualUremapExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADISynchronizeDualUremapExecutionContext")
     .def_property_readonly("phi_dual_lagrange", &RemapAdi::RemapADISynchronizeDualUremapExecutionContext::get_m_phi_dual_lagrange)
     .def_property_readonly("u_dual_lagrange", &RemapAdi::RemapADISynchronizeDualUremapExecutionContext::get_m_u_dual_lagrange)
     .def("__str__", [](RemapAdi::RemapADISynchronizeDualUremapExecutionContext &self)
@@ -45,7 +50,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeAndLimitGradPhiExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_SYNCHRONIZEDUALUREMAP_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEANDLIMITGRADPHI_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeAndLimitGradPhiExecutionContext")
     .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_projectionLimiterId)
     .def_property_readonly("frontFace", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_frontFace)
     .def_property_readonly("backFace", &RemapAdi::RemapADIComputeAndLimitGradPhiExecutionContext::get_backFace)
@@ -69,7 +76,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeDualGradPhiExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeDualGradPhiExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeDualGradPhiExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEANDLIMITGRADPHI_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEDUALGRADPHI_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeDualGradPhiExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeDualGradPhiExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeDualGradPhiExecutionContext")
     .def_property_readonly("inode", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_inode)
     .def_property_readonly("frontfrontnode", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_frontfrontnode)
     .def_property_readonly("frontnode", &RemapAdi::RemapADIComputeDualGradPhiExecutionContext::get_frontnode)
@@ -90,7 +99,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeAndLimitGradPhiDualExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEDUALGRADPHI_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEANDLIMITGRADPHIDUAL_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeAndLimitGradPhiDualExecutionContext")
     .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_projectionLimiterId)
     .def_property_readonly("inode", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_inode)
     .def_property_readonly("frontnode", &RemapAdi::RemapADIComputeAndLimitGradPhiDualExecutionContext::get_frontnode)
@@ -114,7 +125,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIFluxLimiterExecutionContext, std::shared_ptr<RemapAdi::RemapADIFluxLimiterExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIFluxLimiterExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEANDLIMITGRADPHIDUAL_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_FLUXLIMITER_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIFluxLimiterExecutionContext, std::shared_ptr<RemapAdi::RemapADIFluxLimiterExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIFluxLimiterExecutionContext")
     .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIFluxLimiterExecutionContext::get_projectionLimiterId)
     .def_property_readonly("r", &RemapAdi::RemapADIFluxLimiterExecutionContext::get_r)
     .def("__str__", [](RemapAdi::RemapADIFluxLimiterExecutionContext &self)
@@ -129,7 +142,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIFluxLimiterGExecutionContext, std::shared_ptr<RemapAdi::RemapADIFluxLimiterGExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIFluxLimiterGExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_FLUXLIMITER_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_FLUXLIMITERG_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIFluxLimiterGExecutionContext, std::shared_ptr<RemapAdi::RemapADIFluxLimiterGExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIFluxLimiterGExecutionContext")
     .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_projectionLimiterId)
     .def_property_readonly("gradplus", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_gradplus)
     .def_property_readonly("gradmoins", &RemapAdi::RemapADIFluxLimiterGExecutionContext::get_gradmoins)
@@ -151,7 +166,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeFluxPPExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeFluxPPExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeFluxPPExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_FLUXLIMITERG_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEFLUXPP_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeFluxPPExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeFluxPPExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeFluxPPExecutionContext")
     .def_property_readonly("cell", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_cell)
     .def_property_readonly("frontcell", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_frontcell)
     .def_property_readonly("backcell", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_backcell)
@@ -162,8 +179,8 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
     .def_property_readonly("projectionPenteBorneDebarFix", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_projectionPenteBorneDebarFix)
     .def_property_readonly("dual_normal_velocity", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_dual_normal_velocity)
     .def_property_readonly("calcul_flux_dual", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_calcul_flux_dual)
-    .def_property_readonly("Flux", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_Flux)
-    .def_property_readonly("Flux_dual", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_Flux_dual)
+    .def_property_readonly("flux", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_flux)
+    .def_property_readonly("flux_dual", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_flux_dual)
     .def_property_readonly("nbmat", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_nbmat)
     .def_property_readonly("nb_vars", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_nb_vars)
     .def_property_readonly("h_cell_lagrange", &RemapAdi::RemapADIComputeFluxPPExecutionContext::get_m_h_cell_lagrange)
@@ -181,7 +198,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeY0ExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeY0ExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeY0ExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEFLUXPP_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEY0_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeY0ExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeY0ExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeY0ExecutionContext")
     .def_property_readonly("projectionLimiterId", &RemapAdi::RemapADIComputeY0ExecutionContext::get_projectionLimiterId)
     .def_property_readonly("y0", &RemapAdi::RemapADIComputeY0ExecutionContext::get_y0)
     .def_property_readonly("yplus", &RemapAdi::RemapADIComputeY0ExecutionContext::get_yplus)
@@ -202,7 +221,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputexgxdExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputexgxdExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputexgxdExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEY0_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEXGXD_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputexgxdExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputexgxdExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputexgxdExecutionContext")
     .def_property_readonly("y0", &RemapAdi::RemapADIComputexgxdExecutionContext::get_y0)
     .def_property_readonly("yplus", &RemapAdi::RemapADIComputexgxdExecutionContext::get_yplus)
     .def_property_readonly("ymoins", &RemapAdi::RemapADIComputexgxdExecutionContext::get_ymoins)
@@ -222,7 +243,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeygydExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeygydExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeygydExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEXGXD_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEYGYD_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeygydExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeygydExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeygydExecutionContext")
     .def_property_readonly("y0", &RemapAdi::RemapADIComputeygydExecutionContext::get_y0)
     .def_property_readonly("yplus", &RemapAdi::RemapADIComputeygydExecutionContext::get_yplus)
     .def_property_readonly("ymoins", &RemapAdi::RemapADIComputeygydExecutionContext::get_ymoins)
@@ -243,7 +266,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIINTYExecutionContext, std::shared_ptr<RemapAdi::RemapADIINTYExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIINTYExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEYGYD_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_INTY_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIINTYExecutionContext, std::shared_ptr<RemapAdi::RemapADIINTYExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIINTYExecutionContext")
     .def_property_readonly("X", &RemapAdi::RemapADIINTYExecutionContext::get_X)
     .def_property_readonly("x0", &RemapAdi::RemapADIINTYExecutionContext::get_x0)
     .def_property_readonly("y0", &RemapAdi::RemapADIINTYExecutionContext::get_y0)
@@ -261,7 +286,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeFluxPPPureExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeFluxPPPureExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeFluxPPPureExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_INTY_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEFLUXPPPURE_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeFluxPPPureExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeFluxPPPureExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeFluxPPPureExecutionContext")
     .def_property_readonly("cell", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_cell)
     .def_property_readonly("frontcell", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_frontcell)
     .def_property_readonly("backcell", &RemapAdi::RemapADIComputeFluxPPPureExecutionContext::get_backcell)
@@ -291,7 +318,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeGradPhiFaceExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeGradPhiFaceExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeGradPhiFaceExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEFLUXPPPURE_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEGRADPHIFACE_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeGradPhiFaceExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeGradPhiFaceExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeGradPhiFaceExecutionContext")
     .def_property_readonly("idir", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_idir)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_nb_vars_to_project)
     .def_property_readonly("nb_env", &RemapAdi::RemapADIComputeGradPhiFaceExecutionContext::get_nb_env)
@@ -315,7 +344,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeGradPhiCellExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeGradPhiCellExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeGradPhiCellExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEGRADPHIFACE_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEGRADPHICELL_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeGradPhiCellExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeGradPhiCellExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeGradPhiCellExecutionContext")
     .def_property_readonly("idir", &RemapAdi::RemapADIComputeGradPhiCellExecutionContext::get_idir)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIComputeGradPhiCellExecutionContext::get_nb_vars_to_project)
     .def_property_readonly("nb_env", &RemapAdi::RemapADIComputeGradPhiCellExecutionContext::get_nb_env)
@@ -341,24 +372,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeDualGradPhi_LimCExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeDualGradPhi_LimCExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeDualGradPhi_LimCExecutionContext")
-    .def_property_readonly("idir", &RemapAdi::RemapADIComputeDualGradPhi_LimCExecutionContext::get_idir)
-    .def_property_readonly("phi_dual_lagrange", &RemapAdi::RemapADIComputeDualGradPhi_LimCExecutionContext::get_m_phi_dual_lagrange)
-    .def_property_readonly("node_coord", &RemapAdi::RemapADIComputeDualGradPhi_LimCExecutionContext::get_m_node_coord)
-    .def_property_readonly("dual_grad_phi", &RemapAdi::RemapADIComputeDualGradPhi_LimCExecutionContext::get_m_dual_grad_phi)
-    .def("__str__", [](RemapAdi::RemapADIComputeDualGradPhi_LimCExecutionContext &self)
-    {
-      std::ostringstream oss;
-      oss << "[" << self.name << "]";
-      return oss.str();
-    })
-    .def("__repr__", [](RemapAdi::RemapADIComputeDualGradPhi_LimCExecutionContext &self)
-    {
-      std::ostringstream oss;
-      oss << "[" << self.name << "]";
-      return oss.str();
-    });
-  pybind11::class_<RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEGRADPHICELL_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext")
     .def_property_readonly("idir", &RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext::get_idir)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext::get_nb_vars_to_project)
     .def_property_readonly("nb_env", &RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext::get_nb_env)
@@ -387,7 +403,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext")
     .def_property_readonly("idir", &RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext::get_idir)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext::get_nb_vars_to_project)
     .def_property_readonly("deltax_lagrange", &RemapAdi::RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext::get_m_deltax_lagrange)
@@ -410,13 +428,16 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeUremapExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeUremapExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeUremapExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUREMAP_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeUremapExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeUremapExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeUremapExecutionContext")
     .def_property_readonly("idir", &RemapAdi::RemapADIComputeUremapExecutionContext::get_idir)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIComputeUremapExecutionContext::get_nb_vars_to_project)
     .def_property_readonly("nb_env", &RemapAdi::RemapADIComputeUremapExecutionContext::get_nb_env)
     .def_property_readonly("face_normal", &RemapAdi::RemapADIComputeUremapExecutionContext::get_m_face_normal)
     .def_property_readonly("face_length_lagrange", &RemapAdi::RemapADIComputeUremapExecutionContext::get_m_face_length_lagrange)
     .def_property_readonly("outer_face_normal", &RemapAdi::RemapADIComputeUremapExecutionContext::get_m_outer_face_normal)
+    .def_property_readonly("face_normal_velocity", &RemapAdi::RemapADIComputeUremapExecutionContext::get_m_face_normal_velocity)
     .def_property_readonly("phi_face", &RemapAdi::RemapADIComputeUremapExecutionContext::get_m_phi_face)
     .def_property_readonly("dual_phi_flux", &RemapAdi::RemapADIComputeUremapExecutionContext::get_m_dual_phi_flux)
     .def_property_readonly("est_mixte", &RemapAdi::RemapADIComputeUremapExecutionContext::get_m_est_mixte)
@@ -435,7 +456,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeUremap_PBorn0ExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeUremap_PBorn0ExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeUremap_PBorn0ExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUREMAP_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUREMAP_PBORN0_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeUremap_PBorn0ExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeUremap_PBorn0ExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeUremap_PBorn0ExecutionContext")
     .def_property_readonly("idir", &RemapAdi::RemapADIComputeUremap_PBorn0ExecutionContext::get_idir)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIComputeUremap_PBorn0ExecutionContext::get_nb_vars_to_project)
     .def_property_readonly("nb_env", &RemapAdi::RemapADIComputeUremap_PBorn0ExecutionContext::get_nb_env)
@@ -461,7 +484,11 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeDualUremapExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeDualUremapExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeDualUremapExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUREMAP_PBORN0_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEDUALUREMAP_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeDualUremapExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeDualUremapExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeDualUremapExecutionContext")
+    .def_property_readonly("idir", &RemapAdi::RemapADIComputeDualUremapExecutionContext::get_idir)
+    .def_property_readonly("nb_env", &RemapAdi::RemapADIComputeDualUremapExecutionContext::get_nb_env)
     .def_property_readonly("dual_phi_flux", &RemapAdi::RemapADIComputeDualUremapExecutionContext::get_m_dual_phi_flux)
     .def_property_readonly("node_coord", &RemapAdi::RemapADIComputeDualUremapExecutionContext::get_m_node_coord)
     .def_property_readonly("dual_grad_phi", &RemapAdi::RemapADIComputeDualUremapExecutionContext::get_m_dual_grad_phi)
@@ -485,7 +512,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIComputeRemapFluxExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeRemapFluxExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIComputeRemapFluxExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEDUALUREMAP_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEREMAPFLUX_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIComputeRemapFluxExecutionContext, std::shared_ptr<RemapAdi::RemapADIComputeRemapFluxExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIComputeRemapFluxExecutionContext")
     .def_property_readonly("projectionOrder", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_projectionOrder)
     .def_property_readonly("projectionAvecPlateauPente", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_projectionAvecPlateauPente)
     .def_property_readonly("face_normal_velocity", &RemapAdi::RemapADIComputeRemapFluxExecutionContext::get_face_normal_velocity)
@@ -507,7 +536,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIAppliRemapExecutionContext, std::shared_ptr<RemapAdi::RemapADIAppliRemapExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIAppliRemapExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEREMAPFLUX_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_APPLIREMAP_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIAppliRemapExecutionContext, std::shared_ptr<RemapAdi::RemapADIAppliRemapExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIAppliRemapExecutionContext")
     .def_property_readonly("dimension", &RemapAdi::RemapADIAppliRemapExecutionContext::get_dimension)
     .def_property_readonly("withDualProjection", &RemapAdi::RemapADIAppliRemapExecutionContext::get_withDualProjection)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIAppliRemapExecutionContext::get_nb_vars_to_project)
@@ -525,7 +556,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIResizeRemapVariablesExecutionContext, std::shared_ptr<RemapAdi::RemapADIResizeRemapVariablesExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIResizeRemapVariablesExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_APPLIREMAP_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_RESIZEREMAPVARIABLES_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIResizeRemapVariablesExecutionContext, std::shared_ptr<RemapAdi::RemapADIResizeRemapVariablesExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIResizeRemapVariablesExecutionContext")
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIResizeRemapVariablesExecutionContext::get_nb_vars_to_project)
     .def_property_readonly("nb_env", &RemapAdi::RemapADIResizeRemapVariablesExecutionContext::get_nb_env)
     .def_property_readonly("u_lagrange", &RemapAdi::RemapADIResizeRemapVariablesExecutionContext::get_m_u_lagrange)
@@ -555,7 +588,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADISynchronizeUremapExecutionContext, std::shared_ptr<RemapAdi::RemapADISynchronizeUremapExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADISynchronizeUremapExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_RESIZEREMAPVARIABLES_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_SYNCHRONIZEUREMAP_DISABLED)
+  pybind11::class_<RemapAdi::RemapADISynchronizeUremapExecutionContext, std::shared_ptr<RemapAdi::RemapADISynchronizeUremapExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADISynchronizeUremapExecutionContext")
     .def_property_readonly("phi_lagrange", &RemapAdi::RemapADISynchronizeUremapExecutionContext::get_m_phi_lagrange)
     .def_property_readonly("u_lagrange", &RemapAdi::RemapADISynchronizeUremapExecutionContext::get_m_u_lagrange)
     .def_property_readonly("dual_phi_flux", &RemapAdi::RemapADISynchronizeUremapExecutionContext::get_m_dual_phi_flux)
@@ -573,7 +608,9 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  pybind11::class_<RemapAdi::RemapADIRemapVariablesExecutionContext, std::shared_ptr<RemapAdi::RemapADIRemapVariablesExecutionContext>, SciHook::SciHookExecutionContext>(m, "RemapADIRemapVariablesExecutionContext")
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_SYNCHRONIZEUREMAP_DISABLED)
+  #if not defined(SCIHOOK_REMAP_ADI_REMAPADI_REMAPVARIABLES_DISABLED)
+  pybind11::class_<RemapAdi::RemapADIRemapVariablesExecutionContext, std::shared_ptr<RemapAdi::RemapADIRemapVariablesExecutionContext>, SciHook::SciHookExecutionContext>(sub_remap_adi_remapadi, "RemapADIRemapVariablesExecutionContext")
     .def_property_readonly("dimension", &RemapAdi::RemapADIRemapVariablesExecutionContext::get_dimension)
     .def_property_readonly("withDualProjection", &RemapAdi::RemapADIRemapVariablesExecutionContext::get_withDualProjection)
     .def_property_readonly("nb_vars_to_project", &RemapAdi::RemapADIRemapVariablesExecutionContext::get_nb_vars_to_project)
@@ -605,10 +642,16 @@ PYBIND11_EMBEDDED_MODULE(remapadi_remapadi, m)
       oss << "[" << self.name << "]";
       return oss.str();
     });
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_REMAPVARIABLES_DISABLED)
+  #endif // not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED)
 }
-#endif
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 }  // namespace RemapAdi
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+#endif  // REMAP_ADI___REMAPADISERVICEBINDINGS_H

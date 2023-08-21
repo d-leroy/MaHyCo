@@ -49,10 +49,10 @@ checkOptions(MahycoCheckOptionsVars& vars)
   info() <<  " Mes mailles frantomes : " << allCells().size() - ownCells().size();
 
   info() << " Check donnees ";
-  if ((getRemap()->getOrdreProjection() == 3) && (mesh()->ghostLayerMng()->nbGhostLayer() != 3) && (m_parallel_mng->isParallel() == true)) {
+  if ((getRemapService()->getOrdreProjection() == 3) && (mesh()->ghostLayerMng()->nbGhostLayer() != 3) && (m_parallel_mng->isParallel() == true)) {
     info() << " mode parallele : " << m_parallel_mng->isParallel();
     info() << " nombre de couches de mailles fantomes : " << mesh()->ghostLayerMng()->nbGhostLayer();
-    info() << " incompatible avec la projection d'ordre " << getRemap()->getOrdreProjection();
+    info() << " incompatible avec la projection d'ordre " << getRemapService()->getOrdreProjection();
     info() << " ----------------------------- fin du calcul à la fin de l'init ---------------------------------------------";
     subDomain()->timeLoopMng()->stopComputeLoop(true);
   }
@@ -418,7 +418,7 @@ saveValuesAtN(MahycoSaveValuesAtNVars& vars)
 #endif
 
   bool copy_velocity = !getSansLagrange();
-  bool copy_node_coord = getWithProjection() && getRemap()->getIsEulerScheme();
+  bool copy_node_coord = getWithProjection() && getRemapService()->getIsEulerScheme();
 
   auto queue_node = m_acc_env->newQueue(); // queue asynchrone, pendant ce temps exécution sur queue_cell et menv_queue[*]
   queue_node.setAsync(true);
@@ -430,7 +430,7 @@ saveValuesAtN(MahycoSaveValuesAtNVars& vars)
     auto in_velocity = ax::viewIn(command, vars.m_velocity);
     auto out_velocity_n = ax::viewOut(command, vars.m_velocity_n);
 
-    // if (getWithProjection() && getRemap()->isEuler()) m_node_coord.copy(m_node_coord_0)
+    // if (getWithProjection() && getRemapService()->isEuler()) m_node_coord.copy(m_node_coord_0)
     auto in_node_coord_0 = ax::viewIn(command, vars.m_node_coord_0);
     auto out_node_coord = ax::viewOut(command, vars.m_node_coord);
 
@@ -2089,14 +2089,15 @@ computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars)
   PROF_ACC_BEGIN(__FUNCTION__);
   debug() << " Entree dans computeVariablesForRemap()";
  
-  if (options()->remap()->hasProjectionPenteBorne() == 0)
+  if (getRemapService()->getProjectionPenteBorne() == 0)
   {
     // Spécialisation
-    computeVariablesForRemap_PBorn0();
+    Mahyco::MahycoModuleBase<MahycoModule>::computeVariablesForRemap_PBorn0();
     PROF_ACC_END;
     return;
   }
 
+  auto mm = getMeshMaterialMng();
   Integer nb_total_env = mm->environments().size();
   Integer index_env;
   
@@ -2126,7 +2127,7 @@ computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars)
 //       if (cell.localId() == 754) info() << cell.localId() << " pseudo avant proj " << m_pseudo_viscosity[ev] 
 //            << " ul " << m_u_lagrange[cell][3 * nb_total_env + 4] << " " << index_env;
       
-      if (options()->remap()->hasProjectionPenteBorne() == 1) {     
+      if (getRemapService()->getProjectionPenteBorne() == 1) {     
         // Cell cell = ev.globalCell();
         vars.m_phi_lagrange[cell][index_env]  = vars.m_fracvol[ev];
         vars.m_phi_lagrange[cell][nb_total_env + index_env] = vars.m_density[ev];
@@ -2171,6 +2172,163 @@ computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars)
      vars.m_phi_dual_lagrange[inode][4] = 0.5 * vars.m_velocity[inode].squareNormL2();
   }
  
+  PROF_ACC_END;
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+/**
+ * ******************************************************************************
+ * \file computeVariablesForRemap_PBorn0()
+ * \brief Spécialisation de computeVariablesForRemap
+ *        pour options()->projectionPenteBorne == 0
+ * \param 
+ * \return m_u_lagrange, m_u_dual_lagrange, m_phi_lagrange, m_phi_dual_lagrange
+ *******************************************************************************
+ */
+void MahycoModule::
+computeVariablesForRemap_PBorn0(MahycoComputeVariablesForRemap_PBorn0Vars& vars)
+{
+  PROF_ACC_BEGIN(__FUNCTION__);
+  debug() << " Entree dans computeVariablesForRemap_PBorn0()";
+  
+  auto mm = getMeshMaterialMng();
+  Integer nb_total_env = mm->environments().size();
+  Integer nb_vars_to_project = m_nb_vars_to_project;
+      
+  
+  auto queue = m_acc_env->newQueue();
+  
+  // Traitement des mailles pures via les tableaux .globalVariable()
+  {
+    auto command = makeCommand(queue);
+    
+    auto in_env_id           = ax::viewIn(command, m_acc_env->multiEnvMng()->envId());
+    auto in_pseudo_viscosity = ax::viewIn(command, vars.m_pseudo_viscosity.globalVariable());
+    auto in_density          = ax::viewIn(command, vars.m_density.globalVariable()); 
+    auto in_cell_volume      = ax::viewIn(command, vars.m_cell_volume.globalVariable());
+    auto in_internal_energy  = ax::viewIn(command, vars.m_internal_energy.globalVariable());
+    
+    auto out_u_lagrange = ax::viewOut(command, vars.m_u_lagrange);
+    
+    command << RUNCOMMAND_ENUMERATE(Cell,cid,allCells()) {
+      for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
+        out_u_lagrange[cid][ivar] = 0;
+      }
+      Integer env_id = in_env_id[cid]; // id de l'env si maille pure, <0 sinon
+      if (env_id>=0) { // vrai ssi cid maille pure
+        // volumes matériels (partiels)
+        out_u_lagrange[cid][env_id] = in_cell_volume[cid];
+        // masses matériels (partiels)
+        out_u_lagrange[cid][nb_total_env + env_id] = in_cell_volume[cid] * in_density[cid];
+        // energies matériels (partiels)
+        out_u_lagrange[cid][2 * nb_total_env + env_id] = in_cell_volume[cid] * in_density[cid] * in_internal_energy[cid];
+        // Quantites de mouvement centrees
+        out_u_lagrange[cid][3 * nb_total_env + 0] = 0.;
+        out_u_lagrange[cid][3 * nb_total_env + 1] = 0.;
+        out_u_lagrange[cid][3 * nb_total_env + 2] = 0.;
+        // energie cinetique centree
+        out_u_lagrange[cid][3 * nb_total_env + 3] = 0.;
+        // Pseudo partiel pour la quantité de mouvement
+        out_u_lagrange[cid][3 * nb_total_env + 4] = in_cell_volume[cid] * in_pseudo_viscosity[cid];
+      }
+    }; // non-bloquant
+  }
+  
+  // Traitement des mailles mixtes
+  {
+    Integer index_env_gpu = 0;
+    ENUMERATE_ENV(ienv,mm) {
+      IMeshEnvironment* env = *ienv;
+      
+      // Les kernels sont lancés environnement par environnement les uns après les autres
+      auto command = makeCommand(queue);
+      
+      Span<const Integer> in_global_cell      (envView(m_acc_env->multiEnvMng()->globalCell(), env));
+      Span<const Real>    in_pseudo_viscosity (envView(vars.m_pseudo_viscosity, env));
+      Span<const Real>    in_cell_volume      (envView(vars.m_cell_volume, env));
+      Span<const Real>    in_density          (envView(vars.m_density, env)); 
+      Span<const Real>    in_internal_energy  (envView(vars.m_internal_energy, env));
+      
+      auto out_u_lagrange   = ax::viewOut(command, vars.m_u_lagrange);
+      
+      // Pour les mailles impures (mixtes), liste des indices valides 
+      Span<const Int32> in_imp_idx(env->impureEnvItems().valueIndexes());
+      Integer nb_imp = in_imp_idx.size();
+      
+      command << RUNCOMMAND_LOOP1(iter, nb_imp) {
+      	auto imix = in_imp_idx[iter()[0]]; // iter()[0] \in [0,nb_imp[
+        CellLocalId cid(in_global_cell[imix]); // on récupère l'identifiant de la maille globale
+
+        // volumes matériels (partiels)
+        out_u_lagrange[cid][index_env_gpu] = in_cell_volume[imix];
+        // masses matériels (partiels)
+        out_u_lagrange[cid][nb_total_env + index_env_gpu] = in_cell_volume[imix] * in_density[imix];
+        // energies matériels (partiels)
+        out_u_lagrange[cid][2 * nb_total_env + index_env_gpu] = in_cell_volume[imix] * in_density[imix] * in_internal_energy[imix];
+        // Quantites de mouvement centrees
+        out_u_lagrange[cid][3 * nb_total_env + 0] = 0.;
+        out_u_lagrange[cid][3 * nb_total_env + 1] = 0.;
+        out_u_lagrange[cid][3 * nb_total_env + 2] = 0.;
+        // energie cinetique centree
+        out_u_lagrange[cid][3 * nb_total_env + 3] = 0.;
+        // Pseudo partiel pour la quantité de mouvement
+        out_u_lagrange[cid][3 * nb_total_env + 4] = in_cell_volume[imix] * in_pseudo_viscosity[imix];
+
+      }; // bloquant
+      index_env_gpu++;
+    }
+  }
+  
+  {
+    auto command = makeCommand(queue);
+    
+    auto in_cell_volume   = ax::viewIn (command, vars.m_cell_volume.globalVariable());
+    auto in_u_lagrange    = ax::viewIn (command, vars.m_u_lagrange);
+    auto out_phi_lagrange = ax::viewOut(command, vars.m_phi_lagrange);
+    
+    command << RUNCOMMAND_ENUMERATE(Cell,cid,allCells()) {
+      for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
+        out_phi_lagrange[cid][ivar] = in_u_lagrange[cid][ivar] / in_cell_volume[cid];
+      }      
+    };
+  }
+
+  {
+    auto command = makeCommand(queue);
+    
+    auto in_node_mass = ax::viewIn(command, vars.m_node_mass);
+    auto in_velocity = ax::viewIn(command, vars.m_velocity);
+    
+    auto out_u_dual_lagrange = ax::viewOut(command, vars.m_u_dual_lagrange);
+    auto out_phi_dual_lagrange = ax::viewOut(command, vars.m_phi_dual_lagrange);
+    
+    command << RUNCOMMAND_ENUMERATE(Node,nid,allNodes()) {
+      // variables duales
+      // quantité de mouvement
+      out_u_dual_lagrange[nid][0] = in_node_mass[nid] * in_velocity[nid].x;
+      out_u_dual_lagrange[nid][1] = in_node_mass[nid] * in_velocity[nid].y;
+      out_u_dual_lagrange[nid][2] = in_node_mass[nid] * in_velocity[nid].z;
+      // masse nodale    
+      out_u_dual_lagrange[nid][3] = in_node_mass[nid];
+      // projection de l'energie cinétique
+      //     if (options->projectionConservative == 1)
+      out_u_dual_lagrange[nid][4] = 0.5 * in_node_mass[nid] * in_velocity[nid].squareNormL2();
+      
+      //         if (limiteurs->projectionAvecPlateauPente == 1) {   
+      // *** variables Phi
+      out_phi_dual_lagrange[nid][0] = in_velocity[nid].x;
+      out_phi_dual_lagrange[nid][1] = in_velocity[nid].y;
+      out_phi_dual_lagrange[nid][2] = in_velocity[nid].z;
+      // masse nodale
+      out_phi_dual_lagrange[nid][3] = in_node_mass[nid];
+      // Phi energie cinétique
+      //     if (options->projectionConservative == 1)
+      out_phi_dual_lagrange[nid][4] = 0.5 * in_velocity[nid].squareNormL2();
+    };
+  }
+  
   PROF_ACC_END;
 }
 
@@ -2288,6 +2446,137 @@ computeFaceQuantitesForRemap(MahycoComputeFaceQuantitesForRemapVars& vars)
   PROF_ACC_END;
 }
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+/**
+ *******************************************************************************
+ * \file Remap()
+ * \brief Point d'entree Remap
+ * appelle pour préparer les variables : 
+ *    computeVariablesForRemap() et computeFaceQuantitesForRemap()
+ * appelle pour la projection proprement dite
+ * 
+ **/
+void MahycoModule::
+remap(MahycoRemapVars& vars)
+{
+  if (options()->withProjection) {
+    PROF_ACC_BEGIN(__FUNCTION__);
+    debug() << " Entree dans remap()";
+    
+    auto mm = getMeshMaterialMng();
+    Integer withDualProjection = 0;
+    // passage des vitesse de n+1/2 à n+1 pour la projection
+    if (options()->schemaCsts()) Mahyco::MahycoModuleBase<MahycoModule>::updateVelocityForward();
+    if (!options()->sansLagrange) withDualProjection = 1;
+    
+    Mahyco::MahycoModuleBase<MahycoModule>::computeVariablesForRemap();
+    Mahyco::MahycoModuleBase<MahycoModule>::computeFaceQuantitesForRemap();
+    
+    getRemapService()->appliRemap(m_dimension, withDualProjection, m_nb_vars_to_project, m_nb_env);
+    
+    // reinitialisaiton des variables (à l'instant N) pour eviter des variables non initialisees
+    // pour les nouveaux envirronements crees dans les mailles mixtes par la projection
+#if 0
+    vars.m_pseudo_viscosity_n.fill(0.0);
+    vars.m_internal_energy_n.fill(0.0);
+    vars.m_cell_volume_n.fill(0.0);
+    vars.m_pressure_n.fill(0.0);
+    vars.m_density_n.fill(0.0);
+    vars.m_tau_density.fill(0.0);
+
+    vars.m_materiau.fill(0.0);
+    for (Integer index_env=0; index_env < m_nb_env ; index_env++) {
+        IMeshEnvironment* ienv = mm->environments()[index_env];
+        // calcul de la fraction de matiere 
+        ENUMERATE_ENVCELL(ienvcell,ienv){
+          EnvCell ev = *ienvcell;
+          Cell cell = ev.globalCell();
+          vars.m_materiau[cell] += index_env * vars.m_fracvol[ev];
+        }
+    }
+#else
+  auto queue = m_acc_env->newQueue();
+  {
+    auto command = makeCommand(queue);
+    
+    auto in_env_id              = ax::viewIn(command, m_acc_env->multiEnvMng()->envId());
+    auto in_fracvol_g           = ax::viewIn(command, vars.m_fracvol.globalVariable());
+
+    auto out_materiau           = ax::viewOut(command, vars.m_materiau);
+    auto out_pseudo_viscosity_n = ax::viewOut(command, vars.m_pseudo_viscosity_n.globalVariable());
+    auto out_pressure_n         = ax::viewOut(command, vars.m_pressure_n.globalVariable());
+    auto out_cell_volume_n      = ax::viewOut(command, vars.m_cell_volume_n.globalVariable());
+    auto out_density_n          = ax::viewOut(command, vars.m_density_n.globalVariable());
+    auto out_internal_energy_n  = ax::viewOut(command, vars.m_internal_energy_n.globalVariable());
+    auto out_tau_density        = ax::viewOut(command, vars.m_tau_density.globalVariable());
+
+    command << RUNCOMMAND_ENUMERATE(Cell, cid, allCells()){
+      out_pseudo_viscosity_n[cid] = 0.;
+      out_pressure_n        [cid] = 0.;
+      out_cell_volume_n     [cid] = 0.;
+      out_density_n         [cid] = 0.;
+      out_internal_energy_n [cid] = 0.;
+      out_tau_density       [cid] = 0.;
+
+      Integer env_id = in_env_id[cid]; // id de l'env si maille pure, <0 sinon
+      out_materiau[cid] = 0; // init pour la moyenne sur les mailles mixtes
+      if (env_id>=0) {
+        out_materiau[cid] = env_id*in_fracvol_g[cid]; // in_fracvol_g[cid] == 1 normalement
+      }
+    }; 
+  }
+
+  ENUMERATE_ENV(ienv,mm){
+    IMeshEnvironment* env = *ienv;
+
+    auto command = makeCommand(queue);
+    Integer env_id = env->id();
+
+    // Pour les mailles impures (mixtes), liste des indices valides 
+    Span<const Int32> in_imp_idx(env->impureEnvItems().valueIndexes());
+    Integer nb_imp = in_imp_idx.size();
+
+    Span<const Real>    in_fracvol    (envView(m_fracvol, env));
+    Span<const Integer> in_global_cell(envView(m_acc_env->multiEnvMng()->globalCell(), env));
+
+    Span<Real> out_pseudo_viscosity_n (envView(vars.m_pseudo_viscosity_n, env));
+    Span<Real> out_pressure_n         (envView(vars.m_pressure_n, env));
+    Span<Real> out_cell_volume_n      (envView(vars.m_cell_volume_n, env));
+    Span<Real> out_density_n          (envView(vars.m_density_n, env));
+    Span<Real> out_internal_energy_n  (envView(vars.m_internal_energy_n, env));
+    Span<Real> out_tau_density        (envView(vars.m_tau_density, env));
+
+    auto out_materiau           = ax::viewOut(command, vars.m_materiau);
+
+    command << RUNCOMMAND_LOOP1(iter, nb_imp) {
+      auto imix = in_imp_idx[iter()[0]]; // iter()[0] \in [0,nb_imp[
+
+      out_pseudo_viscosity_n[imix] = 0.;
+      out_pressure_n        [imix] = 0.;
+      out_cell_volume_n     [imix] = 0.;
+      out_density_n         [imix] = 0.;
+      out_internal_energy_n [imix] = 0.;
+      out_tau_density       [imix] = 0.;
+
+      CellLocalId cid(in_global_cell[imix]); // on récupère l'identifiant de la maille globale
+      out_materiau[cid] += env_id*in_fracvol[imix];
+    }; 
+  }
+#endif
+   
+    if (!options()->sansLagrange) {
+      for (Integer index_env=0; index_env < m_nb_env ; index_env++) {
+        IMeshEnvironment* ienv = mm->environments()[index_env];
+        // Calcul de la pression et de la vitesse du son
+        options()->environment[index_env].eosModel()->applyEOS(ienv);
+      }
+      Mahyco::MahycoModuleBase<MahycoModule>::computeAveragePressure();
+   }
+    PROF_ACC_END;
+  }
+}
 
 /*---------------------------------------------------------------------------*/
 /* TODO: modaniser? isoler dans Utils ou Aux? */

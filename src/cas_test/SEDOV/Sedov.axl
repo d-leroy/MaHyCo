@@ -1,10 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?><service name="Sedov" version="1.0" namespace-name="Cas_testSEDOV" type="caseoption">
   <interface name="::Cas_test::IInitialisations"/>
-  <variables/>
+  <variables>
+    <variable field-name="materiau" name="Materiau" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> Materiau </description>
+    </variable>
+    <variable field-name="node_coord" name="NodeCoord" data-type="real3" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> NODE COORD </description>
+    </variable>
+    <variable field-name="cell_volume" name="CellVolume" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> CELL VOLUME </description>
+    </variable>
+    <variable field-name="density" name="Density" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> DENSITY </description>
+    </variable>
+    <variable field-name="pressure" name="Pressure" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> PRESSURE </description>
+    </variable>
+    <variable field-name="fracvol" name="FracVol" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> FRACVOL </description>
+    </variable>
+    <variable field-name="mass_fraction" name="MassFraction" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> MASS FRACTION </description>
+    </variable>
+    <variable field-name="velocity" name="Velocity" data-type="real3" item-kind="node" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false">
+      <description> VELOCITY </description>
+    </variable>
+    <variable field-name="internal_energy" name="InternalEnergy" data-type="real" item-kind="cell" dim="0" dump="true" need-sync="true" restore="false" execution-depend="false" material="true">
+      <description> INTERNAL ENERGY </description>
+    </variable>
+  </variables>
   <options>
-    <simple name="cas-test" type="integer">
+    <enumeration name="cas-test" type="::Cas_test::Test">
       <description> Numéro du cas test </description>
-    </simple>
+      <enumvalue genvalue="::Cas_test::Test::UnitTestCase" name="unit-test-case"/>
+      <enumvalue genvalue="::Cas_test::Test::Sedov" name="sedov"/>
+      <enumvalue genvalue="::Cas_test::Test::TriplePoint" name="triple-point"/>
+      <enumvalue genvalue="::Cas_test::Test::SodCaseX" name="sod-case-x"/>
+      <enumvalue genvalue="::Cas_test::Test::SodCaseY" name="sod-case-y"/>
+      <enumvalue genvalue="::Cas_test::Test::SodCaseZ" name="sod-case-z"/>
+      <enumvalue genvalue="::Cas_test::Test::NohTestCase" name="noh-test-case"/>
+      <enumvalue genvalue="::Cas_test::Test::AdvectionX" name="advection-x"/>
+      <enumvalue genvalue="::Cas_test::Test::AdvectionY" name="advection-y"/>
+      <enumvalue genvalue="::Cas_test::Test::AdvectionVitX" name="advection-vit-x"/>
+      <enumvalue genvalue="::Cas_test::Test::AdvectionVitY" name="advection-vit-y"/>
+      <enumvalue genvalue="::Cas_test::Test::BiSedov" name="bi-sedov"/>
+      <enumvalue genvalue="::Cas_test::Test::BiTriplePoint" name="bi-triple-point"/>
+      <enumvalue genvalue="::Cas_test::Test::BiSodCaseX" name="bi-sod-case-x"/>
+      <enumvalue genvalue="::Cas_test::Test::BiSodCaseY" name="bi-sod-case-y"/>
+      <enumvalue genvalue="::Cas_test::Test::BiSodCaseZ" name="bi-sod-case-z"/>
+      <enumvalue genvalue="::Cas_test::Test::BiShockBubble" name="bi-shock-bubble"/>
+      <enumvalue genvalue="::Cas_test::Test::BiNohTestCase" name="bi-noh-test-case"/>
+      <enumvalue genvalue="::Cas_test::Test::BiAdvectionX" name="bi-advection-x"/>
+      <enumvalue genvalue="::Cas_test::Test::BiAdvectionY" name="bi-advection-y"/>
+      <enumvalue genvalue="::Cas_test::Test::BiAdvectionVitX" name="bi-advection-vit-x"/>
+      <enumvalue genvalue="::Cas_test::Test::BiAdvectionVitY" name="bi-advection-vit-y"/>
+      <enumvalue genvalue="::Cas_test::Test::BiImplosion" name="bi-implosion"/>
+      <enumvalue genvalue="::Cas_test::Test::MonoRiderTx" name="mono-rider-tx"/>
+      <enumvalue genvalue="::Cas_test::Test::MonoRiderTy" name="mono-rider-ty"/>
+      <enumvalue genvalue="::Cas_test::Test::MonoRiderT45" name="mono-rider-t45"/>
+      <enumvalue genvalue="::Cas_test::Test::MonoRiderRotation" name="mono-rider-rotation"/>
+      <enumvalue genvalue="::Cas_test::Test::MonoRiderVortex" name="mono-rider-vortex"/>
+      <enumvalue genvalue="::Cas_test::Test::MonoRiderDeformation" name="mono-rider-deformation"/>
+      <enumvalue genvalue="::Cas_test::Test::MonoRiderVortexTimeReverse" name="mono-rider-vortex-time-reverse"/>
+      <enumvalue genvalue="::Cas_test::Test::MonoRiderDeformationTimeReverse" name="mono-rider-deformation-time-reverse"/>
+      <enumvalue genvalue="::Cas_test::Test::RiderTx" name="rider-tx"/>
+      <enumvalue genvalue="::Cas_test::Test::RiderTy" name="rider-ty"/>
+      <enumvalue genvalue="::Cas_test::Test::RiderT45" name="rider-t45"/>
+      <enumvalue genvalue="::Cas_test::Test::RiderRotation" name="rider-rotation"/>
+      <enumvalue genvalue="::Cas_test::Test::RiderVortex" name="rider-vortex"/>
+      <enumvalue genvalue="::Cas_test::Test::RiderDeformation" name="rider-deformation"/>
+      <enumvalue genvalue="::Cas_test::Test::RiderVortexTimeReverse" name="rider-vortex-time-reverse"/>
+      <enumvalue genvalue="::Cas_test::Test::RiderDeformationTimeReverse" name="rider-deformation-time-reverse"/>
+      <enumvalue genvalue="::Cas_test::Test::BiSodSph" name="bi-sod-sph"/>
+    </enumeration>
     <simple name="reverse-option" type="bool" default="false" optional="true">
       <description> Option de retour arriere </description>
     </simple>

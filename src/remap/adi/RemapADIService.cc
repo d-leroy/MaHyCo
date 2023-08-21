@@ -29,6 +29,19 @@ RemapADIService::
 void RemapADIService::
 synchronizeDualUremap(RemapADISynchronizeDualUremapVars& vars)
 {
+    debug() << " Entree dans synchronizeUremap()";
+#if 0
+    vars.m_phi_dual_lagrange.synchronize();
+    vars.m_u_dual_lagrange.synchronize();
+#else
+    MeshVariableSynchronizerList mvsl(m_acc_env->vsyncMng());
+
+    mvsl.add(vars.m_phi_dual_lagrange);
+    mvsl.add(vars.m_u_dual_lagrange);
+
+    auto queue_synchronize = m_acc_env->refQueueAsync();
+    m_acc_env->vsyncMng()->synchronize(mvsl, queue_synchronize);
+#endif
 }
 
 /*---------------------------------------------------------------------------*/
@@ -320,11 +333,13 @@ computeGradPhiCell(RemapADIComputeGradPhiCellVars& vars, const Integer idir, con
         vars.m_est_mixte[cell] == 0 && vars.m_est_mixte[frontcell] == 0 && vars.m_est_mixte[backcell] == 0 &&
         vars.m_est_pure[cell] == vars.m_est_pure[frontcell] && vars.m_est_pure[cell] == vars.m_est_pure[backcell] );
       
-      int limiter = options()->projectionLimiteurId;
-      if ((options()->getProjectionLimiteurPureId() == 1) && voisinage_pure)
+      Types_mahyco::Limiteur limiter = options()->projectionLimiteurId;
+      if ((options()->getProjectionLimiteurPureId() == Types_mahyco::Limiteur::SuperBee) && voisinage_pure)
+      {
         limiter = options()->projectionLimiteurPureId;
+      }
       // calcul de m_grad_phi[cell] 
-      computeAndLimitGradPhi(limiter, frontFace, backFace, cell, frontcell, backcell, nb_vars_to_project);
+      RemapAdi::RemapADIServiceBase<RemapADIService>::computeAndLimitGradPhi(limiter, frontFace, backFace, cell, frontcell, backcell, nb_vars_to_project);
       
 
       if (options()->projectionPenteBorne == 1) {
@@ -340,18 +355,21 @@ computeGradPhiCell(RemapADIComputeGradPhiCellVars& vars, const Integer idir, con
         RealUniqueArray delta_phi_face(nb_vars_to_project);
         RealUniqueArray dual_phi_flux(nb_vars_to_project);
        
+        RealArrayView delta_phi_face_view(delta_phi_face);
+        RealArrayView dual_phi_flux_view(dual_phi_flux);
+
         // calcul de m_delta_phi_face_ar et m_dual_phi_flux
         if (voisinage_pure)
-            computeFluxPPPure(cell, frontcell, backcell, Flux_sortant_ar, 
+            RemapAdi::RemapADIServiceBase<RemapADIService>::computeFluxPPPure(cell, frontcell, backcell, Flux_sortant_ar, 
                             deltat, 0, options()->threshold, 
                             options()->projectionPenteBorneDebarFix, flux_dual,
-                            calcul_flux_dual, delta_phi_face, dual_phi_flux,
+                            calcul_flux_dual, &delta_phi_face_view, &dual_phi_flux_view,
                             nb_env, nb_vars_to_project);
         else
-            computeFluxPP(cell, frontcell, backcell, Flux_sortant_ar, 
+            RemapAdi::RemapADIServiceBase<RemapADIService>::computeFluxPP(cell, frontcell, backcell, Flux_sortant_ar, 
                             deltat, 0, options()->threshold, 
                             options()->projectionPenteBorneDebarFix, flux_dual,
-                            calcul_flux_dual, delta_phi_face, dual_phi_flux,
+                            calcul_flux_dual, &delta_phi_face_view, &dual_phi_flux_view,
                             nb_env, nb_vars_to_project);
             
         for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {    
@@ -362,16 +380,16 @@ computeGradPhiCell(RemapADIComputeGradPhiCellVars& vars, const Integer idir, con
         }
         // calcul de m_delta_phi_face_av
         if (voisinage_pure)
-            computeFluxPPPure(cell, frontcell, backcell, Flux_sortant_av, 
+            RemapAdi::RemapADIServiceBase<RemapADIService>::computeFluxPPPure(cell, frontcell, backcell, Flux_sortant_av, 
                             deltat, 1, options()->threshold, 
                             options()->projectionPenteBorneDebarFix, flux_dual,
-                            calcul_flux_dual, delta_phi_face, dual_phi_flux,
+                            calcul_flux_dual, &delta_phi_face_view, &dual_phi_flux_view,
                             nb_env, nb_vars_to_project);
         else
-            computeFluxPP(cell, frontcell, backcell, Flux_sortant_av, 
+            RemapAdi::RemapADIServiceBase<RemapADIService>::computeFluxPP(cell, frontcell, backcell, Flux_sortant_av, 
                             deltat, 1, options()->threshold, 
                             options()->projectionPenteBorneDebarFix, flux_dual,
-                            calcul_flux_dual, delta_phi_face, dual_phi_flux,
+                            calcul_flux_dual, &delta_phi_face_view, &dual_phi_flux_view,
                             nb_env, nb_vars_to_project);
             
         for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {    
@@ -399,9 +417,6 @@ computeGradPhiCell(RemapADIComputeGradPhiCellVars& vars, const Integer idir, con
 template<typename LimType>
 void RemapADIService::
 computeGradPhiCell_PBorn0_LimC(Integer idir, Integer nb_vars_to_project) {
-  PROF_ACC_BEGIN(__FUNCTION__);
-  debug() << " Entree dans computeGradPhiCell_PBorn0_LimC()";
-
   Cartesian::FactCartDirectionMng fact_cart(mesh());
 
   auto queue = m_acc_env->newQueue();
@@ -464,16 +479,6 @@ computeGradPhiCell_PBorn0_LimC(Integer idir, Integer nb_vars_to_project) {
       }
     };
   }
-
-  PROF_ACC_END;
-}
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-void RemapADIService::
-computeDualGradPhi_LimC(RemapADIComputeDualGradPhi_LimCVars& vars, const Integer idir)
-{
 }
 
 /*---------------------------------------------------------------------------*/
@@ -482,6 +487,117 @@ computeDualGradPhi_LimC(RemapADIComputeDualGradPhi_LimCVars& vars, const Integer
 void RemapADIService::
 computeUpwindFaceQuantitiesForProjection(RemapADIComputeUpwindFaceQuantitiesForProjectionVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env)
 {
+  #if 0
+  info() << "options()->ordreProjection : " << options()->ordreProjection;
+  info() << "options()->projectionPenteBorne : " << options()->projectionPenteBorne;
+#endif
+  if (options()->ordreProjection <= 2 &&
+      options()->projectionPenteBorne == 0)
+  {
+    // Spécialisation
+    RemapADIServiceBase<RemapADIService>::computeUpwindFaceQuantitiesForProjection_PBorn0_O2(idir, nb_vars_to_project);
+    return;
+  }
+  
+  debug() << " Entree dans computeUpwindFaceQuantitiesForProjection()";
+  Real deltat = m_global_deltat();
+  CellDirectionMng cdm(m_cartesian_mesh->cellDirection(idir));
+  FaceDirectionMng fdm(m_cartesian_mesh->faceDirection(idir));
+  vars.m_phi_face.fill(0.0);
+  Integer order2 = options()->ordreProjection - 1;
+  ENUMERATE_FACE(iface, fdm.innerFaces()) {
+      Face face = *iface;
+      DirFace dir_face = fdm[face];
+      Cell cellb = dir_face.previousCell();
+      Cell cellf = dir_face.nextCell();
+      
+      // phiFace1 correspond
+      // à la valeur de phi(x) à la face pour l'ordre 2 sans plateau pente
+      // à la valeur du flux (integration de phi(x)) pour l'ordre 2 avec
+      // Plateau-Pente à la valeur du flux (integration de phi(x)) pour
+      // l'ordre 3
+      if (options()->ordreProjection <= 2) {
+        if (options()->projectionPenteBorne == 0) {
+          if (vars.m_face_normal_velocity[face] * vars.m_deltax_lagrange[face] > 0.0) {
+              // phi_cb + (dot((x_f - x_cb), face_normal) * grad_phi_cb)   
+            for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++)
+              vars.m_phi_face[face][ivar] = vars.m_phi_lagrange[cellb][ivar]
+                    + order2 * math::dot((vars.m_face_coord[face] - vars.m_cell_coord[cellb]),
+                    vars.m_face_normal[face]) * vars.m_grad_phi[cellb][ivar];
+          } else {
+            for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++)
+              vars.m_phi_face[face][ivar] = vars.m_phi_lagrange[cellf][ivar]
+                    + order2 * math::dot((vars.m_face_coord[face] - vars.m_cell_coord[cellf]),
+                    vars.m_face_normal[face]) * vars.m_grad_phi[cellf][ivar];
+          }
+        } else {
+          for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
+            vars.m_phi_face[face][ivar] = (vars.m_delta_phi_face_av[cellb][ivar] - vars.m_delta_phi_face_ar[cellf][ivar]);
+          }
+        }
+     } else if (options()->ordreProjection == 3) {
+        Cell cellbb = cellb;
+        Cell cellbbb = cellb;
+        Cell cellff = cellf;
+        Cell cellfff = cellf;
+        DirCell ccb(cdm.cell(cellb));
+        if (ccb.previous().localId() != -1) {
+          cellbb = ccb.previous();
+          cellbbb = cellbb;
+          DirCell ccbb(cdm.cell(cellbb));
+          if (ccbb.previous().localId() != -1) {
+            cellbbb = ccbb.previous();
+          }
+        }
+        DirCell ccf(cdm.cell(cellf));
+        if (ccf.next().localId() != -1) {
+          cellff = ccf.next();
+          cellfff = cellff;
+          DirCell ccff(cdm.cell(cellff));
+          if (ccff.next().localId() != -1) {
+            cellfff = ccff.next();   
+          }
+        }
+        Real vdt  = vars.m_face_normal_velocity[face] * deltat;
+        for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
+            vars.m_phi_face[face][ivar] = ComputeFluxOrdre3(
+                vars.m_phi_lagrange[cellbbb][ivar],
+                vars.m_phi_lagrange[cellbb][ivar],
+                vars.m_phi_lagrange[cellb][ivar],
+                vars.m_phi_lagrange[cellf][ivar],
+                vars.m_phi_lagrange[cellff][ivar],
+                vars.m_phi_lagrange[cellfff][ivar],
+                vars.m_h_cell_lagrange[cellbbb],
+                vars.m_h_cell_lagrange[cellbb],
+                vars.m_h_cell_lagrange[cellb],
+                vars.m_h_cell_lagrange[cellf],
+                vars.m_h_cell_lagrange[cellff],
+                vars.m_h_cell_lagrange[cellfff],
+                vdt);
+        }
+        bool voisinage_pure = (vars.m_est_mixte[cellb] == 0 && vars.m_est_mixte[cellf] == 0 && 
+        vars.m_est_pure[cellb] == vars.m_est_pure[cellf]);
+        int nbmat = nb_env;
+        if (!voisinage_pure) {
+          // comme dans le pente borne, on evite le pb de debar sur les maille a voisinage mixte
+          // pinfo() << " voisinage mixte " << cellb.localId() << " et " << cellf.localId();
+          for (int imat = 0; imat < nbmat; imat++) {
+            if (vdt>0. && vars.m_phi_lagrange[cellb][imat]!=0. && vars.m_phi_lagrange[cellb][nbmat+imat]!=0.) {
+             vars.m_phi_face[face][nbmat+imat] = (vars.m_phi_lagrange[cellb][nbmat+imat]/vars.m_phi_lagrange[cellb][imat])
+                *vars.m_phi_face[face][imat];
+             vars.m_phi_face[face][2*nbmat+imat] = (vars.m_phi_lagrange[cellb][2*nbmat+imat]/vars.m_phi_lagrange[cellb][nbmat+imat])
+                *vars.m_phi_face[face][nbmat+imat];
+            } else if (vdt<0. && vars.m_phi_lagrange[cellf][imat]!=0. && vars.m_phi_lagrange[cellf][nbmat+imat]!=0.) {
+             vars.m_phi_face[face][nbmat+imat] = (vars.m_phi_lagrange[cellf][nbmat+imat]/vars.m_phi_lagrange[cellf][imat])
+                *vars.m_phi_face[face][imat];
+             vars.m_phi_face[face][2*nbmat+imat] = (vars.m_phi_lagrange[cellf][2*nbmat+imat]/vars.m_phi_lagrange[cellf][nbmat+imat])
+                *vars.m_phi_face[face][nbmat+imat];
+            }
+          }
+        }
+     }
+  }
+  vars.m_phi_face.synchronize();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -490,6 +606,66 @@ computeUpwindFaceQuantitiesForProjection(RemapADIComputeUpwindFaceQuantitiesForP
 void RemapADIService::
 computeUpwindFaceQuantitiesForProjection_PBorn0_O2(RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars& vars, const Integer idir, const Integer nb_vars_to_project)
 {
+  Cartesian::FactCartDirectionMng fact_cart(mesh());
+
+  auto ref_queue = m_acc_env->refQueueAsync();
+  // Init 0, pour simplifier sur toutes les faces
+  {
+    auto command = makeCommand(ref_queue.get());
+
+    auto out_phi_face = ax::viewOut(command, vars.m_phi_face);
+
+    command << RUNCOMMAND_ENUMERATE(Face, fid, allFaces()) {
+      for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++)
+        out_phi_face[fid][ivar] = 0.;
+    };
+  }
+  // Puis on calcule m_grad_phi que que les faces intérieures dans la direction idir
+  {
+    Integer order2 = options()->ordreProjection - 1;
+    
+    auto command = makeCommand(ref_queue.get());
+
+    auto cart_fdm = fact_cart.faceDirection(idir);
+    auto f2cid_stm = cart_fdm.face2CellIdStencil();
+    auto face_group = cart_fdm.innerFaces();
+
+    auto in_deltax_lagrange      = ax::viewIn(command, vars.m_deltax_lagrange);
+    auto in_face_normal_velocity = ax::viewIn(command, vars.m_face_normal_velocity);
+    auto in_phi_lagrange         = ax::viewIn(command, vars.m_phi_lagrange);
+    auto in_face_coord           = ax::viewIn(command, vars.m_face_coord);
+    auto in_face_normal          = ax::viewIn(command, vars.m_face_normal);
+    auto in_cell_coord           = ax::viewIn(command, vars.m_cell_coord);
+    auto in_grad_phi             = ax::viewIn(command, vars.m_grad_phi);
+
+    auto out_phi_face = ax::viewOut(command, vars.m_phi_face);
+    
+    command << RUNCOMMAND_LOOP(iter, face_group.loopRanges()) {
+      auto [fid, idx] = f2cid_stm.idIdx(iter); // id face + (i,j,k) face
+
+      // Acces mailles gauche/droite
+      auto f2cid = f2cid_stm.face(fid, idx);
+      CellLocalId bCid(f2cid.previousCell());
+      CellLocalId fCid(f2cid.nextCell());
+
+      // Maille upwind
+      CellLocalId upwCid = (in_face_normal_velocity[fid] * in_deltax_lagrange[fid] > 0.0 ? bCid : fCid);
+
+      // Independemment de ivar, on calcule dot((x_f - x_cb), face_normal)
+      Real dot_xf = math::dot((in_face_coord[fid] - in_cell_coord[upwCid]), in_face_normal[fid]);
+
+      // phi_cb + (dot((x_f - x_cb), face_normal) * grad_phi_cb)   
+      for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) 
+        out_phi_face[fid][ivar] = in_phi_lagrange[upwCid][ivar] + order2 * dot_xf * in_grad_phi[upwCid][ivar];
+    };
+  }
+
+#if 0
+  vars.m_phi_face.synchronize(); // INUTILE ?
+#else
+  // ref_queue va être synchronisée dans globalSynchronize
+  m_acc_env->vsyncMng()->globalSynchronize(ref_queue, vars.m_phi_face);
+#endif
 }
 
 /*---------------------------------------------------------------------------*/
@@ -498,6 +674,139 @@ computeUpwindFaceQuantitiesForProjection_PBorn0_O2(RemapADIComputeUpwindFaceQuan
 void RemapADIService::
 computeUremap(RemapADIComputeUremapVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env)
 {
+  if (options()->projectionPenteBorne == 0)
+  {
+    // Spécialisation
+    RemapADIServiceBase<RemapADIService>::computeUremap_PBorn0(idir, nb_vars_to_project, nb_env);
+    return;
+  }
+  
+  
+  Real3 dirproj = {0.5 * (1-idir) * (2-idir),
+                 1.0 * idir * (2 -idir), 
+                 -0.5 * idir * (1 - idir)};
+  int nbmat = nb_env;
+  Real deltat = m_global_deltat();
+  Real flux;    
+  vars.m_dual_phi_flux.fill(0.);
+  ENUMERATE_CELL(icell,allCells()) {
+    Cell cell = * icell;
+    RealUniqueArray flux_face(nb_vars_to_project);
+    flux_face.fill(0.);
+    ENUMERATE_FACE(iface, cell.faces()){
+      const Face& face = *iface;
+      Integer i = iface.index(); 
+      if (std::fabs(math::dot(vars.m_face_normal[face], dirproj)) >= 1.0E-10) {
+        Real face_normal_velocity(vars.m_face_normal_velocity[face]);
+        Real face_length(vars.m_face_length_lagrange[face][idir]);
+        Real3 outer_face_normal(vars.m_outer_face_normal[cell][i]);
+        Real outer_face_normal_dir = math::dot(outer_face_normal, dirproj);
+        if (options()->projectionPenteBorne == 0) {
+          for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {  
+              flux = outer_face_normal_dir * face_normal_velocity * face_length * deltat * vars.m_phi_face[face][ivar];
+              flux_face[ivar] += flux;
+              vars.m_dual_phi_flux[cell][ivar] += 0.5 * flux * outer_face_normal[idir];
+          }
+        } else {
+          for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
+              flux = outer_face_normal_dir * face_length * vars.m_phi_face[face][ivar];
+              flux_face[ivar] += flux;
+              vars.m_dual_phi_flux[cell][ivar] += 0.5 * flux * outer_face_normal[idir];
+          }
+        }
+      }
+    }
+
+    for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
+      // flux dual comme demi somme des flux des deux faces contributives dans la direction idir
+//       m_dual_phi_flux[cell][ivar] = 0.5* flux_face[ivar]; 
+      vars.m_u_lagrange[cell][ivar] -= flux_face[ivar];
+    }
+    // diagnostics et controle
+    for (int imat = 0; imat < nbmat; imat++) {
+      if (vars.m_u_lagrange[cell][nbmat + imat] < 0.) {
+        if (abs(vars.m_u_lagrange[cell][nbmat + imat]) > 1.e2 * options()->threshold)
+          info() << " cell " << cell.localId()
+                  << " proj 1 --masse tres faiblement negative   "
+                  << " soit " << vars.m_u_lagrange[cell][nbmat + imat]
+                  << " et volume " << vars.m_u_lagrange[cell][imat];
+        vars.m_u_lagrange[cell][nbmat + imat] = 0.;
+      }
+      if (vars.m_u_lagrange[cell][2 * nbmat + imat] < 0.) {
+        if (abs(vars.m_u_lagrange[cell][nbmat + imat]) > 1.e2 * options()->threshold)
+          info() << " cell " << cell.localId()
+                  << " --energie tres faiblement negative "
+                  << " cell " << vars.m_u_lagrange[cell][2 * nbmat + imat];
+        vars.m_u_lagrange[cell][2 * nbmat + imat] = 0.;
+      }
+    }
+    // Calcul du volume de la maille apres 
+    double somme_volume = 0.;
+    for (int imat = 0; imat < nbmat; imat++) {
+      somme_volume += vars.m_u_lagrange[cell][imat];
+    }
+    if (options()->projectionPenteBorne == 1) {
+      // option ou on ne regarde pas la variation de rho, V et e
+      // phi = (f1, f2, rho1*f1, rho2*f2, Vx, Vy, e1, e2
+      // ce qui permet d'ecrire le flux telque
+      // Flux = (dv1 = f1dv, dv2=f2*dv, dm1=rho1*df1, dm2=rho2*df2, d(mVx) =
+      // Vx*(dm1+dm2), d(mVy) = Vy*(dm1+dm2), d(m1e1) = e1*dm1,  d(m2e2) =
+      // e2*dm2 dans computeFluxPP
+      // Phi volume
+      double somme_masse = 0.;
+      for (int imat = 0; imat < nbmat; imat++) {
+        vars.m_phi_lagrange[cell][imat] = vars.m_u_lagrange[cell][imat] / somme_volume;
+      // Phi masse
+      if (vars.m_u_lagrange[cell][imat] != 0.)
+        vars.m_phi_lagrange[cell][nbmat + imat] =
+              vars.m_u_lagrange[cell][nbmat + imat] / vars.m_u_lagrange[cell][imat];
+      else
+        vars.m_phi_lagrange[cell][nbmat + imat] = 0.;
+      somme_masse += vars.m_u_lagrange[cell][nbmat + imat];
+      }
+      if (somme_masse!=0) {
+        // Phi Vitesse
+        vars.m_phi_lagrange[cell][3 * nbmat] =
+              vars.m_u_lagrange[cell][3 * nbmat] / somme_masse;
+        vars.m_phi_lagrange[cell][3 * nbmat + 1] =
+              vars.m_u_lagrange[cell][3 * nbmat + 1] / somme_masse;
+      }
+      // Phi energie
+      for (int imat = 0; imat < nbmat; imat++) {
+      if (vars.m_u_lagrange[cell][nbmat + imat] != 0.)
+          vars.m_phi_lagrange[cell][2 * nbmat + imat] =
+              vars.m_u_lagrange[cell][2 * nbmat + imat] /
+              vars.m_u_lagrange[cell][nbmat + imat];
+      else
+          vars.m_phi_lagrange[cell][2 * nbmat + imat] = 0.;
+      }
+      // Phi energie cinétique
+      if (options()->conservationEnergieTotale == 1)
+        vars.m_phi_lagrange[cell][3 * nbmat + 2] =
+          vars.m_u_lagrange[cell][3 * nbmat + 2] / somme_masse;
+
+    } else {
+        // somme_volume doit etre égale à m_cell_volume[cell]
+      for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
+        vars.m_phi_lagrange[cell][ivar] = vars.m_u_lagrange[cell][ivar] / somme_volume;
+      }
+    }
+    // Mises à jour de l'indicateur mailles mixtes
+    Integer imatcell(0);
+    Integer imatpure(-1);
+    for (int imat = 0; imat < nbmat; imat++)
+      if (vars.m_phi_lagrange[cell][imat] > 0.) {
+        imatcell++;
+        imatpure = imat;
+      }
+    if (imatcell > 1) {
+      vars.m_est_mixte[cell] = 1;
+      vars.m_est_pure[cell] = -1;
+    } else {
+      vars.m_est_mixte[cell] = 0;
+      vars.m_est_pure[cell] = imatpure;
+    }
+  }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -506,14 +815,108 @@ computeUremap(RemapADIComputeUremapVars& vars, const Integer idir, const Integer
 void RemapADIService::
 computeUremap_PBorn0(RemapADIComputeUremap_PBorn0Vars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env)
 {
-}
-
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
-
-void RemapADIService::
-computeDualUremap(RemapADIComputeDualUremapVars& vars)
-{
+//  Real threshold = options()->threshold;
+  int nbmat = nb_env;
+  Real deltat = m_global_deltat();
+          
+  for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {  
+  
+    auto queue = m_acc_env->newQueue();
+    queue.setAsync(true);
+    auto command = makeCommand(queue);
+    
+    auto cfc = m_acc_env->connectivityView().cellFace();
+    
+    auto in_face_normal          = ax::viewIn(command, vars.m_face_normal         );
+    auto in_face_normal_velocity = ax::viewIn(command, vars.m_face_normal_velocity);
+    auto in_face_length_lagrange = ax::viewIn(command, vars.m_face_length_lagrange);
+    auto in_outer_face_normal    = ax::viewIn(command, vars.m_outer_face_normal   );
+    auto in_phi_face             = ax::viewIn(command, vars.m_phi_face            );
+    
+    auto out_dual_phi_flux = ax::viewInOut(command, vars.m_dual_phi_flux );
+    auto out_u_lagrange    = ax::viewInOut(command, vars.m_u_lagrange    );
+    
+    command << RUNCOMMAND_ENUMERATE(Cell, cid, allCells()) {
+      
+      out_dual_phi_flux[cid][ivar] = 0.;
+      
+      Real flux = 0.;
+      Real flux_face = 0.;
+      
+      // On a besoin de la variable index car m_outer_face_normal a été rempli suivant 
+      // le parcours ENUMERATE_CELL(cell,allCells()) -> ENUMERATE_FACE(face,cell.faces())
+      // m_outer_face_normal[cell][face.index()] = ...
+      // Sur GPU, on a gardé le meme pattern cell -> cell.faces(), ainsi pour accéder à 
+      // m_outer_face_normal[cell][face.index()], il suffit d'un int que l'on incrémente
+      // au fur et à mesure du parcours faces(cell). (pas besoin de face_index_in_cells finalement)
+      Integer index = 0;
+      for( FaceLocalId fid : cfc.faces(cid) ) {
+        Real in_face_normal_face_idir = in_face_normal[fid][idir];
+        if (std::fabs(in_face_normal_face_idir) >= 1.0E-10) {
+          Real face_normal_velocity(in_face_normal_velocity[fid]);
+          Real face_length(in_face_length_lagrange[fid][idir]);
+          Real3 outer_face_normal(in_outer_face_normal[cid][index]);
+          Real outer_face_normal_dir = outer_face_normal[idir];
+          flux = outer_face_normal_dir * face_normal_velocity * face_length * deltat * in_phi_face[fid][ivar];
+          flux_face += flux;
+          out_dual_phi_flux[cid][ivar] += 0.5 * flux * outer_face_normal[idir];
+        }
+        ++index;
+      }
+      out_u_lagrange[cid][ivar] = out_u_lagrange[cid][ivar] - flux_face;
+    }; 
+  }
+  
+  // On fait les diagnostics et controles 
+  {
+    auto queue = m_acc_env->newQueue();
+    auto command = makeCommand(queue);
+    
+    auto out_est_mixte = ax::viewOut(command, vars.m_est_mixte);
+    auto out_est_pure  = ax::viewOut(command, vars.m_est_pure);
+    
+    auto inout_u_lagrange   = ax::viewInOut(command, vars.m_u_lagrange);
+    auto inout_phi_lagrange = ax::viewInOut(command, vars.m_phi_lagrange);
+    
+    command << RUNCOMMAND_ENUMERATE(Cell, cid, allCells()) {
+      for (int imat = 0; imat < nbmat; imat++) {
+        if (inout_u_lagrange[cid][nbmat + imat] < 0.) {
+          inout_u_lagrange[cid][nbmat + imat] = 0.;
+        }
+        if (inout_u_lagrange[cid][2*nbmat + imat] < 0.) {
+          inout_u_lagrange[cid][2*nbmat + imat] = 0.;
+        }
+      }
+      
+      // Calcul du volume de la maille apres 
+      double somme_volume = 0.;
+      for (int imat = 0; imat < nbmat; imat++) {
+        somme_volume += inout_u_lagrange[cid][imat];
+      }
+      
+      // somme_volume doit etre égale à m_cell_volume[cell]
+      for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
+        inout_phi_lagrange[cid][ivar] = inout_u_lagrange[cid][ivar] / somme_volume;
+      }
+      
+      // Mises à jour de l'indicateur mailles mixtes   
+      Integer imatcell(0);
+      Integer imatpure(-1);  
+      for (int imat = 0; imat < nbmat; imat++) {
+        if (inout_phi_lagrange[cid][imat] > 0.) {
+          imatcell++;
+          imatpure = imat;
+        }  
+        if (imatcell > 1) {
+          out_est_mixte[cid] = 1;
+          out_est_pure[cid] = -1;
+        } else {
+          out_est_mixte[cid] = 0;
+          out_est_pure[cid] = imatpure;
+        }
+      }
+    };
+  }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -522,6 +925,43 @@ computeDualUremap(RemapADIComputeDualUremapVars& vars)
 void RemapADIService::
 appliRemap(RemapADIAppliRemapVars& vars, const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env)
 {
+  RemapAdi::RemapADIServiceBase<RemapADIService>::synchronizeUremap();  
+  RemapAdi::RemapADIServiceBase<RemapADIService>::synchronizeDualUremap();
+  
+  Integer idir(-1);
+  m_cartesian_mesh = CartesianInterface::ICartesianMesh::getReference(mesh());
+  
+  for( Integer i=0; i< mesh()->dimension(); ++i){
+    
+    idir = (i + m_sens_projection())%(mesh()->dimension());
+    // cas 2D : epaisseur de une maillage dans la direciton de projection
+    if (m_cartesian_mesh->cellDirection(idir).globalNbCell() == 1) continue;
+    
+    // calcul des gradients des quantites à projeter aux faces 
+    RemapAdi::RemapADIServiceBase<RemapADIService>::computeGradPhiFace(idir, nb_vars_to_project, nb_env);
+    // calcul des gradients des quantites à projeter aux cellules
+    // (avec limiteur ordinaire) 
+    // et pour le pente borne, calcul des flux aux faces des cellules
+    RemapAdi::RemapADIServiceBase<RemapADIService>::computeGradPhiCell(idir, nb_vars_to_project, nb_env);
+    // calcul de m_phi_face
+    // qui contient la valeur reconstruite à l'ordre 1, 2 ou 3 des variables projetees 
+    // et qui contient les flux des variables projetees avec l'option pente-borne
+    RemapAdi::RemapADIServiceBase<RemapADIService>::computeUpwindFaceQuantitiesForProjection(idir, nb_vars_to_project, nb_env);
+    
+    
+    RemapAdi::RemapADIServiceBase<RemapADIService>::computeUremap(idir, nb_vars_to_project, nb_env);
+    RemapAdi::RemapADIServiceBase<RemapADIService>::synchronizeUremap();
+    
+    if (withDualProjection) {
+      RemapAdi::RemapADIServiceBase<RemapADIService>::computeDualUremap(idir, nb_env);
+      RemapAdi::RemapADIServiceBase<RemapADIService>::synchronizeDualUremap();
+    }
+  }
+  m_sens_projection = m_sens_projection()+1;
+  m_sens_projection = m_sens_projection()%(mesh()->dimension());
+  
+  // recuperation des quantités aux cells et aux envcell
+  RemapAdi::RemapADIServiceBase<RemapADIService>::remapVariables(dimension,  withDualProjection,  nb_vars_to_project,  nb_env);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -530,6 +970,21 @@ appliRemap(RemapADIAppliRemapVars& vars, const Integer dimension, const Integer 
 void RemapADIService::
 resizeRemapVariables(RemapADIResizeRemapVariablesVars& vars, const Integer nb_vars_to_project, const Integer nb_env)
 {
+  vars.m_u_lagrange.resize(nb_vars_to_project);
+  vars.m_u_dual_lagrange.resize(nb_vars_to_project);
+  vars.m_phi_lagrange.resize(nb_vars_to_project);
+  vars.m_phi_dual_lagrange.resize(nb_vars_to_project);
+  vars.m_dual_grad_phi.resize(nb_vars_to_project);
+  vars.m_grad_phi.resize(nb_vars_to_project);
+  vars.m_phi_face.resize(nb_vars_to_project);
+  vars.m_grad_phi_face.resize(nb_vars_to_project);
+  vars.m_delta_phi_face_ar.resize(nb_vars_to_project);
+  vars.m_delta_phi_face_av.resize(nb_vars_to_project);
+  vars.m_dual_phi_flux.resize(nb_vars_to_project);
+  vars.m_front_flux_mass_env.resize(nb_env);
+  vars.m_back_flux_mass_env.resize(nb_env);
+  vars.m_back_flux_contrib_env.resize(nb_env);
+  vars.m_front_flux_contrib_env.resize(nb_env);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -538,14 +993,24 @@ resizeRemapVariables(RemapADIResizeRemapVariablesVars& vars, const Integer nb_va
 void RemapADIService::
 synchronizeUremap(RemapADISynchronizeUremapVars& vars)
 {
-}
+#if 0
+    vars.m_phi_lagrange.synchronize(); // INUTILE ?
+    vars.m_u_lagrange.synchronize();
+    vars.m_dual_phi_flux.synchronize();
+    vars.m_est_mixte.synchronize();
+    vars.m_est_pure.synchronize();
+#else
+    MeshVariableSynchronizerList mvsl(m_acc_env->vsyncMng());
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
+    mvsl.add(vars.m_phi_lagrange); // INUTILE ?
+    mvsl.add(vars.m_u_lagrange);
+    mvsl.add(vars.m_dual_phi_flux);
+    mvsl.add(vars.m_est_mixte);
+    mvsl.add(vars.m_est_pure);
 
-void RemapADIService::
-remapVariables(RemapADIRemapVariablesVars& vars, const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env)
-{
+    auto queue_synchronize = m_acc_env->refQueueAsync();
+    m_acc_env->vsyncMng()->synchronize(mvsl, queue_synchronize);
+#endif
 }
 
 /*---------------------------------------------------------------------------*/

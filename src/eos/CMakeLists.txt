@@ -1,7 +1,6 @@
 add_library(PerfectGas
 perfectgas/PerfectGasService.cc
 perfectgas/PerfectGasService.h
-perfectgas/__PerfectGasServiceBindings.cc
 __IEquationOfState.h)
 
 target_include_directories(PerfectGas PRIVATE .. ${CMAKE_BINARY_DIR}/src)
@@ -16,7 +15,6 @@ install(TARGETS PerfectGas EXPORT ${MAHYCO_EXPORT_TARGET})
 add_library(StiffenedGas
   stiffenedgas/StiffenedGasService.cc
   stiffenedgas/StiffenedGasService.h
-  stiffenedgas/__StiffenedGasServiceBindings.cc
   __IEquationOfState.h)
 
 target_include_directories(StiffenedGas PRIVATE .. ${CMAKE_BINARY_DIR}/src)

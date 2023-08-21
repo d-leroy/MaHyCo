@@ -68,14 +68,14 @@
     </eos-model> 
   </environment>
    
-   <cas-model name="RIDER">
-   <cas-test>38</cas-test>
+   <cas-model name="Rider">
+   <cas-test>rider-deformation-time-reverse</cas-test>
    <reverse-option>true</reverse-option>
    <parametre>1.</parametre>
    </cas-model>
-   <remap name="RemapADI">
+   <remap-service name="RemapADI">
     <ordre-projection>2</ordre-projection>
-   </remap>
+   </remap-service>
    
     
    

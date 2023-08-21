@@ -70,15 +70,15 @@
   </environment>
    
   
-   <cas-model name="SEDOV">
-   <cas-test>1</cas-test>
+   <cas-model name="Sedov">
+   <cas-test>sedov</cas-test>
    </cas-model>
-   <remap name="RemapADI">
+   <remap-service name="RemapADI">
     <!-- <is-euler-scheme>true</is-euler-scheme>
     <volum-criteria>0.8</volum-criteria>
     <nb-iteration-winslow>10</nb-iteration-winslow> -->
     <ordre-projection>2</ordre-projection>
-   </remap>
+   </remap-service>
     <schema-csts>0</schema-csts>
     <pseudo-centree>0</pseudo-centree>
      <deltat-init>0.00001</deltat-init>
