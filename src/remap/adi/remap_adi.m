@@ -117,7 +117,7 @@ service caseoption RemapADI implements remap.Remap {
         inout mahyco.est_mixte, inout mahyco.est_pure;
         // call computeGradPhiCell_PBorn0_LimC;
 
-    // TODO: templated function?
+    // TODO: templated function? at least import legacy function, that can be template functions
     // def void computeGradPhiCell_PBorn0_LimC(in Int idir, in Int nb_vars_to_project)
     //     in remap.grad_phi_face,
     //     out remap.grad_phi, out remap.delta_phi_face_ar, out remap.delta_phi_face_av;

@@ -9,5 +9,5 @@ service caseoption RemapALE implements remap.Remap {
     /*! Nombre d'itération de lissage du maillage */
     Int NbIterationWinslow="3";
     /*!  identifiant de la methode de projection duale */
-    Int ProjectionDual="0";    
+    Int ProjectionDual="0";
 }
