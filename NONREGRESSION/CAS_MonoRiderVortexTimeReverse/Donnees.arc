@@ -71,7 +71,7 @@
    <cas-model name="Rider">
    <cas-test>mono-rider-vortex-time-reverse</cas-test>
    <reverse-option>true</reverse-option>
-   <parametre>.25</parametre>
+   <parameter>.25</parameter>
    </cas-model>
    <remap-service name="RemapADI">
     <ordre-projection>2</ordre-projection>

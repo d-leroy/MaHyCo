@@ -71,7 +71,7 @@
    <cas-model name="Rider">
    <cas-test>rider-deformation-time-reverse</cas-test>
    <reverse-option>true</reverse-option>
-   <parametre>1.</parametre>
+   <parameter>1.</parameter>
    </cas-model>
    <remap-service name="RemapADI">
     <ordre-projection>2</ordre-projection>
