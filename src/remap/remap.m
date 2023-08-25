@@ -23,24 +23,24 @@ var Int cell_status { Cell } @axlname("CellStatus");
 
 interface Remap {
     /*! Définition de la valeur limite des petites fractions et autres */
-    Int OrdreProjection="2";
+    Int ordre_projection="2";
     /*! Définition de la valeur limite des petites fractions et autres */
-    Real Threshold="1.e-10";
-    Real ArithmeticThreshold = "1.e-300";
+    Real threshold="1.e-10";
+    Real arithmetic_threshold = "1.e-300";
     /*! projection type Euler (retour sur maillage initial) */
-    Bool IsEulerScheme="true";
+    Bool is_euler_scheme="true";
     /*! Conservation de l energie totale lors de la projection */
-    Bool ConservationEnergieTotale="false";
+    Bool conservation_energie_totale="false";
     /*! projection pente borne en volume dans les mailles mixtes et en masse dans les mailles pures */
-    Bool ProjectionPenteBorneMixte="false";
+    Bool projection_pente_borne_mixte="false";
     /*! identifiant du limiteur pour les mailles mixtes */
-    types_mahyco.Limiteur ProjectionLimiteurId="minmod";
+    types_mahyco.Limiteur projection_limiteur_id="minmod";
     /*! identifiant du limiteur pour les mailles pures */
-    types_mahyco.Limiteur ProjectionLimiteurPureId="minmod";
+    types_mahyco.Limiteur projection_limiteur_pure_id="minmod";
     /*! projection avec l'algorithme pente-borne */
-    Bool ProjectionPenteBorne="false";
+    Bool projection_pente_borne="false";
     /*! projection avec l'algorithme pente-borne en evitant l'artefact de debar avec la valeur moyenne (1) ou valeur aux mailles (2) */
-    Int ProjectionPenteBorneDebarFix="0";
+    Int projection_pente_borne_debar_fix="0";
     
     /*!
      * main du remap

@@ -919,16 +919,16 @@ struct MahycoComputeVariablesForRemapExecutionContext final : SciHook::SciHookEx
   }
 };
 
-//! Classe de contexte d'exécution pour computeVariablesForRemap_PBorn0
-struct MahycoComputeVariablesForRemap_PBorn0ExecutionContext final : SciHook::SciHookExecutionContext
+//! Classe de contexte d'exécution pour computeVariablesForRemapPBorn0
+struct MahycoComputeVariablesForRemapPBorn0ExecutionContext final : SciHook::SciHookExecutionContext
 {
-  MahycoComputeVariablesForRemap_PBorn0ExecutionContext(std::string execution_context_name,
-      MahycoComputeVariablesForRemap_PBorn0Vars *vars)
+  MahycoComputeVariablesForRemapPBorn0ExecutionContext(std::string execution_context_name,
+      MahycoComputeVariablesForRemapPBorn0Vars *vars)
   : SciHookExecutionContext(execution_context_name)
   , vars(vars)
   {}
 
-  const MahycoComputeVariablesForRemap_PBorn0Vars *vars;
+  const MahycoComputeVariablesForRemapPBorn0Vars *vars;
 
   const pybind11::object get_m_pseudo_viscosity() const {
     return pybind11::cast(vars->m_pseudo_viscosity);

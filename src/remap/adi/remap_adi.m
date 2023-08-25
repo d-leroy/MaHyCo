@@ -2,7 +2,7 @@ package remap.adi;
 
 service caseoption RemapADI implements remap.Remap {
     /*!  identifiant de la methode de calcul du flux de masse duale */
-    Int CalculFluxMasse="0";
+    Int calcul_flux_masse="0";
 
     override remap.Remap.appliRemap
         in remap.sens_projection
@@ -75,7 +75,7 @@ service caseoption RemapADI implements remap.Remap {
         call computeY0,
         call computexgxd,
         call computeygyd,
-        call INTY;
+        call intY;
     
     def Real computeY0(in types_mahyco.Limiteur projectionLimiterId, in Real y0, in Real yplus, in Real ymoins,
                        in Real h0, in Real hplus, in Real hmoins, in Int type);
@@ -86,7 +86,7 @@ service caseoption RemapADI implements remap.Remap {
     def Real computeygyd(in Real y0, in Real yplus, in Real ymoins, in Real h0,
                          in Real y0plus, in Real y0moins, in Real grady,in Int type);
     
-    def Real INTY(in Real X,in Real x0,in Real y0, in Real x1, in Real y1);
+    def Real intY(in Real X,in Real x0,in Real y0, in Real x1, in Real y1);
 
     def void computeFluxPPPure(in Cell cell, in Cell frontcell, in Cell backcell, 
                                in Real face_normal_velocity, in Real deltat_n,
@@ -103,7 +103,7 @@ service caseoption RemapADI implements remap.Remap {
         call computeY0,
         call computexgxd,
         call computeygyd,
-        call INTY;
+        call intY;
 
     def void computeGradPhiFace(in Int idir, in Int nb_vars_to_project, in Int nb_env)
         in mahyco.face_normal, in mahyco.cell_coord, in mahyco.phi_lagrange, in mahyco.face_coord,
@@ -132,9 +132,9 @@ service caseoption RemapADI implements remap.Remap {
         in remap.delta_phi_face_av, in remap.delta_phi_face_ar, in remap.h_cell_lagrange, in mahyco.est_mixte,
         in mahyco.est_pure,
         inout remap.phi_face
-        call computeUpwindFaceQuantitiesForProjection_PBorn0_O2;
+        call computeUpwindFaceQuantitiesForProjectionPBorn0O2;
     
-    def void computeUpwindFaceQuantitiesForProjection_PBorn0_O2(in Int idir, in Int nb_vars_to_project)
+    def void computeUpwindFaceQuantitiesForProjectionPBorn0O2(in Int idir, in Int nb_vars_to_project)
         in remap.deltax_lagrange, in mahyco.face_normal_velocity, in mahyco.phi_lagrange,
         in mahyco.face_coord, in mahyco.face_normal, in mahyco.cell_coord, in remap.grad_phi,
         out remap.phi_face;
@@ -144,9 +144,9 @@ service caseoption RemapADI implements remap.Remap {
         in mahyco.face_normal_velocity,in remap.phi_face,
         out remap.dual_phi_flux, out mahyco.est_mixte, out mahyco.est_pure,
         inout mahyco.u_lagrange, inout mahyco.phi_lagrange
-        call computeUremap_PBorn0;
+        call computeUremapPBorn0;
     
-    def void computeUremap_PBorn0(in Int idir, in Int nb_vars_to_project, in Int nb_env)
+    def void computeUremapPBorn0(in Int idir, in Int nb_vars_to_project, in Int nb_env)
         in mahyco.face_normal, in mahyco.face_normal_velocity, in mahyco.face_length_lagrange,
         in mahyco.outer_face_normal, in remap.phi_face,
         out remap.dual_phi_flux, out mahyco.est_mixte, out mahyco.est_pure,

@@ -238,9 +238,9 @@
       <description> Condition aux limites </description>
       <enumeration name="type" type="::Types_mahyco::BoundaryConditionType">
         <description> Type de condition aux limites </description>
-        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vx" name="Vx"/>
-        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vy" name="Vy"/>
-        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vz" name="Vz"/>
+        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vx" name="vx"/>
+        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vy" name="vy"/>
+        <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Vz" name="vz"/>
         <enumvalue genvalue="::Types_mahyco::BoundaryConditionType::Unknown" name="unknown"/>
       </enumeration>
       <simple name="surface" type="string">

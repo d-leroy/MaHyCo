@@ -14,7 +14,6 @@
 #include "remap/__IRemap.h"
 #include "remap/ale/__RemapALEServiceVars.h"
 #include "remap/ale/RemapALE_axl.h"
-#include "remap/ale/__RemapALEServiceSciHookMacros.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -33,13 +32,10 @@ template<class T>
 class RemapALEServiceBase
 : public ArcaneRemapALEObject
 {
- SCIHOOK_DECLARE_REMAP_ALE_REMAPALE_EVENTS
-
  public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
   explicit RemapALEServiceBase(const ServiceBuildInfo& bi)
   : ArcaneRemapALEObject(bi)
   {
-    SCIHOOK_INITIALIZE_REMAP_ALE_REMAPALE_EVENTS
   }
 
   virtual ~RemapALEServiceBase()

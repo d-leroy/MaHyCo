@@ -1289,10 +1289,10 @@ struct MahycoComputeVariablesForRemapVars final
   VariableNodeArrayReal& m_phi_dual_lagrange;
 };
 
-//! Classe de variable pour computeVariablesForRemap_PBorn0
-struct MahycoComputeVariablesForRemap_PBorn0Vars final
+//! Classe de variable pour computeVariablesForRemapPBorn0
+struct MahycoComputeVariablesForRemapPBorn0Vars final
 {
-  MahycoComputeVariablesForRemap_PBorn0Vars(const MaterialVariableCellReal& pseudo_viscosity,
+  MahycoComputeVariablesForRemapPBorn0Vars(const MaterialVariableCellReal& pseudo_viscosity,
       const MaterialVariableCellReal& density,
       const MaterialVariableCellReal& cell_volume,
       const MaterialVariableCellReal& internal_energy,

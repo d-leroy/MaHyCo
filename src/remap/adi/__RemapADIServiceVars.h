@@ -183,10 +183,10 @@ struct RemapADIComputeygydVars final
   {}
 };
 
-//! Classe de variable pour INTY
-struct RemapADIINTYVars final
+//! Classe de variable pour intY
+struct RemapADIIntYVars final
 {
-  RemapADIINTYVars()
+  RemapADIIntYVars()
   {}
 };
 
@@ -439,10 +439,10 @@ struct RemapADIComputeUpwindFaceQuantitiesForProjectionVars final
   VariableFaceArrayReal& m_phi_face;
 };
 
-//! Classe de variable pour computeUpwindFaceQuantitiesForProjection_PBorn0_O2
-struct RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars final
+//! Classe de variable pour computeUpwindFaceQuantitiesForProjectionPBorn0O2
+struct RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2Vars final
 {
-  RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars(const VariableFaceReal& deltax_lagrange,
+  RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2Vars(const VariableFaceReal& deltax_lagrange,
       const VariableFaceReal& face_normal_velocity,
       const VariableCellArrayReal& phi_lagrange,
       const VariableFaceReal3& face_coord,
@@ -574,10 +574,10 @@ struct RemapADIComputeUremapVars final
   VariableCellArrayReal& m_phi_lagrange;
 };
 
-//! Classe de variable pour computeUremap_PBorn0
-struct RemapADIComputeUremap_PBorn0Vars final
+//! Classe de variable pour computeUremapPBorn0
+struct RemapADIComputeUremapPBorn0Vars final
 {
-  RemapADIComputeUremap_PBorn0Vars(const VariableFaceReal3& face_normal,
+  RemapADIComputeUremapPBorn0Vars(const VariableFaceReal3& face_normal,
       const VariableFaceReal& face_normal_velocity,
       const VariableFaceReal3& face_length_lagrange,
       const VariableCellArrayReal3& outer_face_normal,

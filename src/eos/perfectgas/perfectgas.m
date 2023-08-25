@@ -4,7 +4,7 @@ service caseoption PerfectGas implements eos.EquationOfState {
     /*!
      * Définition de la tension limite
      */
-    opt Real LimitTension = "0.0";
+    opt Real limit_tension = "0.0";
     
     override eos.EquationOfState.initEOS
         in mahyco.pressure, in mahyco.density,

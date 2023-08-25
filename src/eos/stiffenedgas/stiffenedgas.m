@@ -3,7 +3,7 @@ package eos.stiffenedgas;
 service caseoption StiffenedGas implements eos.EquationOfState {
 
     /*! Définition de la tension limite */
-    opt Real TensionLimitCst = "0.01";
+    opt Real tension_limit_cst = "0.01";
 
     override eos.EquationOfState.initEOS
         in mahyco.pressure, in mahyco.density,

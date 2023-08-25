@@ -106,13 +106,13 @@ class RemapADIService
   Real computeY0(RemapADIComputeY0Vars& vars, const Types_mahyco::Limiteur projectionLimiterId, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real hplus, const Real hmoins, const Integer type) override;
   Real computexgxd(RemapADIComputexgxdVars& vars, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real y0plus, const Real y0moins, const Integer type) override;
   Real computeygyd(RemapADIComputeygydVars& vars, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real y0plus, const Real y0moins, const Real grady, const Integer type) override;
-  Real INTY(RemapADIINTYVars& vars, const Real X, const Real x0, const Real y0, const Real x1, const Real y1) override;
+  Real intY(RemapADIIntYVars& vars, const Real X, const Real x0, const Real y0, const Real x1, const Real y1) override;
   void computeGradPhiFace(RemapADIComputeGradPhiFaceVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
   void computeGradPhiCell(RemapADIComputeGradPhiCellVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
   void computeUpwindFaceQuantitiesForProjection(RemapADIComputeUpwindFaceQuantitiesForProjectionVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
-  void computeUpwindFaceQuantitiesForProjection_PBorn0_O2(RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars& vars, const Integer idir, const Integer nb_vars_to_project) override;
+  void computeUpwindFaceQuantitiesForProjectionPBorn0O2(RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2Vars& vars, const Integer idir, const Integer nb_vars_to_project) override;
   void computeUremap(RemapADIComputeUremapVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
-  void computeUremap_PBorn0(RemapADIComputeUremap_PBorn0Vars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
+  void computeUremapPBorn0(RemapADIComputeUremapPBorn0Vars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) override;
   void computeDualUremap(RemapADIComputeDualUremapVars& vars, const Integer idir, const Integer nb_env) override;
   Real computeRemapFlux(RemapADIComputeRemapFluxVars& vars, const Integer projectionOrder, const Integer projectionAvecPlateauPente, const Real face_normal_velocity, const Real3 face_normal, const Real face_length, const Real phi_face, const Real3 outer_face_normal, const Real3 exy, const Real deltat_n) override;
   void appliRemap(RemapADIAppliRemapVars& vars, const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env) override;

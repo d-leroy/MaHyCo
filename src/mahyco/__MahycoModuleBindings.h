@@ -555,31 +555,31 @@ void bind_mahyco_mahyco(py::module __attribute__((unused)) &m)
       return oss.str();
     });
   #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAP_DISABLED)
-  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAP_PBORN0_DISABLED)
-  pybind11::class_<Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext, std::shared_ptr<Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeVariablesForRemap_PBorn0ExecutionContext")
-    .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_pseudo_viscosity)
-    .def_property_readonly("density", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_density)
-    .def_property_readonly("cell_volume", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_cell_volume)
-    .def_property_readonly("internal_energy", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_internal_energy)
-    .def_property_readonly("node_mass", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_node_mass)
-    .def_property_readonly("velocity", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_velocity)
-    .def_property_readonly("u_lagrange", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_u_lagrange)
-    .def_property_readonly("u_dual_lagrange", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_u_dual_lagrange)
-    .def_property_readonly("phi_lagrange", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_phi_lagrange)
-    .def_property_readonly("phi_dual_lagrange", &Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext::get_m_phi_dual_lagrange)
-    .def("__str__", [](Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext &self)
+  #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAPPBORN0_DISABLED)
+  pybind11::class_<Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext, std::shared_ptr<Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeVariablesForRemapPBorn0ExecutionContext")
+    .def_property_readonly("pseudo_viscosity", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_pseudo_viscosity)
+    .def_property_readonly("density", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_density)
+    .def_property_readonly("cell_volume", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_cell_volume)
+    .def_property_readonly("internal_energy", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_internal_energy)
+    .def_property_readonly("node_mass", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_node_mass)
+    .def_property_readonly("velocity", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_velocity)
+    .def_property_readonly("u_lagrange", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_u_lagrange)
+    .def_property_readonly("u_dual_lagrange", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_u_dual_lagrange)
+    .def_property_readonly("phi_lagrange", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_phi_lagrange)
+    .def_property_readonly("phi_dual_lagrange", &Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext::get_m_phi_dual_lagrange)
+    .def("__str__", [](Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";
       return oss.str();
     })
-    .def("__repr__", [](Mahyco::MahycoComputeVariablesForRemap_PBorn0ExecutionContext &self)
+    .def("__repr__", [](Mahyco::MahycoComputeVariablesForRemapPBorn0ExecutionContext &self)
     {
       std::ostringstream oss;
       oss << "[" << self.name << "]";
       return oss.str();
     });
-  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAP_PBORN0_DISABLED)
+  #endif // not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEVARIABLESFORREMAPPBORN0_DISABLED)
   #if not defined(SCIHOOK_MAHYCO_MAHYCO_COMPUTEFACEQUANTITESFORREMAP_DISABLED)
   pybind11::class_<Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext, std::shared_ptr<Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext>, SciHook::SciHookExecutionContext>(sub_mahyco_mahyco, "MahycoComputeFaceQuantitesForRemapExecutionContext")
     .def_property_readonly("cell_coord", &Mahyco::MahycoComputeFaceQuantitesForRemapExecutionContext::get_m_cell_coord)

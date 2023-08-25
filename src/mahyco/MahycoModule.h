@@ -218,7 +218,7 @@ class MahycoModule
   void updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars) override;
   void computeAveragePressure(MahycoComputeAveragePressureVars& vars) override;
   void computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars) override;
-  void computeVariablesForRemap_PBorn0(MahycoComputeVariablesForRemap_PBorn0Vars& vars) override;
+  void computeVariablesForRemapPBorn0(MahycoComputeVariablesForRemapPBorn0Vars& vars) override;
   void computeFaceQuantitesForRemap(MahycoComputeFaceQuantitesForRemapVars& vars) override;
 };
 

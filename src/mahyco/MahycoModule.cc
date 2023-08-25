@@ -2092,7 +2092,7 @@ computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars)
   if (getRemapService()->getProjectionPenteBorne() == 0)
   {
     // Spécialisation
-    Mahyco::MahycoModuleBase<MahycoModule>::computeVariablesForRemap_PBorn0();
+    Mahyco::MahycoModuleBase<MahycoModule>::computeVariablesForRemapPBorn0();
     PROF_ACC_END;
     return;
   }
@@ -2180,7 +2180,7 @@ computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars)
 
 /**
  * ******************************************************************************
- * \file computeVariablesForRemap_PBorn0()
+ * \file computeVariablesForRemapPBorn0()
  * \brief Spécialisation de computeVariablesForRemap
  *        pour options()->projectionPenteBorne == 0
  * \param 
@@ -2188,10 +2188,10 @@ computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars)
  *******************************************************************************
  */
 void MahycoModule::
-computeVariablesForRemap_PBorn0(MahycoComputeVariablesForRemap_PBorn0Vars& vars)
+computeVariablesForRemapPBorn0(MahycoComputeVariablesForRemapPBorn0Vars& vars)
 {
   PROF_ACC_BEGIN(__FUNCTION__);
-  debug() << " Entree dans computeVariablesForRemap_PBorn0()";
+  debug() << " Entree dans computeVariablesForRemapPBorn0()";
   
   auto mm = getMeshMaterialMng();
   Integer nb_total_env = mm->environments().size();

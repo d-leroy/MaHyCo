@@ -681,10 +681,10 @@ struct RemapADIComputeygydExecutionContext final : SciHook::SciHookExecutionCont
   }
 };
 
-//! Classe de contexte d'exécution pour INTY
-struct RemapADIINTYExecutionContext final : SciHook::SciHookExecutionContext
+//! Classe de contexte d'exécution pour intY
+struct RemapADIIntYExecutionContext final : SciHook::SciHookExecutionContext
 {
-  RemapADIINTYExecutionContext(std::string execution_context_name,
+  RemapADIIntYExecutionContext(std::string execution_context_name,
       const Real X,
       const Real x0,
       const Real y0,
@@ -1070,11 +1070,11 @@ struct RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext final : 
   }
 };
 
-//! Classe de contexte d'exécution pour computeUpwindFaceQuantitiesForProjection_PBorn0_O2
-struct RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext final : SciHook::SciHookExecutionContext
+//! Classe de contexte d'exécution pour computeUpwindFaceQuantitiesForProjectionPBorn0O2
+struct RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2ExecutionContext final : SciHook::SciHookExecutionContext
 {
-  RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext(std::string execution_context_name,
-      RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars *vars,
+  RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2ExecutionContext(std::string execution_context_name,
+      RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2Vars *vars,
       const Integer idir,
       const Integer nb_vars_to_project)
   : SciHookExecutionContext(execution_context_name)
@@ -1085,7 +1085,7 @@ struct RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContex
 
   const Integer idir;
   const Integer nb_vars_to_project;
-  const RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars *vars;
+  const RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2Vars *vars;
 
   const pybind11::object get_idir() const {
     return pybind11::cast(idir);
@@ -1201,11 +1201,11 @@ struct RemapADIComputeUremapExecutionContext final : SciHook::SciHookExecutionCo
   }
 };
 
-//! Classe de contexte d'exécution pour computeUremap_PBorn0
-struct RemapADIComputeUremap_PBorn0ExecutionContext final : SciHook::SciHookExecutionContext
+//! Classe de contexte d'exécution pour computeUremapPBorn0
+struct RemapADIComputeUremapPBorn0ExecutionContext final : SciHook::SciHookExecutionContext
 {
-  RemapADIComputeUremap_PBorn0ExecutionContext(std::string execution_context_name,
-      RemapADIComputeUremap_PBorn0Vars *vars,
+  RemapADIComputeUremapPBorn0ExecutionContext(std::string execution_context_name,
+      RemapADIComputeUremapPBorn0Vars *vars,
       const Integer idir,
       const Integer nb_vars_to_project,
       const Integer nb_env)
@@ -1219,7 +1219,7 @@ struct RemapADIComputeUremap_PBorn0ExecutionContext final : SciHook::SciHookExec
   const Integer idir;
   const Integer nb_vars_to_project;
   const Integer nb_env;
-  const RemapADIComputeUremap_PBorn0Vars *vars;
+  const RemapADIComputeUremapPBorn0Vars *vars;
 
   const pybind11::object get_idir() const {
     return pybind11::cast(idir);

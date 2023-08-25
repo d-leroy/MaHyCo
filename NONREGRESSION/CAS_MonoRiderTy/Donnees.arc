@@ -86,32 +86,32 @@
     
  <!--   <boundary-condition>
       <surface>XMIN</surface>
-      <type>Vx</type>
+      <type>vx</type>
       <value>0.</value>
     </boundary-condition>
     <boundary-condition>
       <surface>XMAX</surface>
-      <type>Vx</type>
+      <type>vx</type>
       <value>0.</value>
     </boundary-condition>
     <boundary-condition>
       <surface>YMIN</surface>
-      <type>Vy</type>
+      <type>vy</type>
       <value>0.</value>
     </boundary-condition>
     <boundary-condition>
       <surface>YMAX</surface>
-      <type>Vy</type>
+      <type>vy</type>
       <value>0.</value>
     </boundary-condition>
     <boundary-condition>
       <surface>ZMIN</surface>
-      <type>Vz</type>
+      <type>vz</type>
       <value>0.</value>
     </boundary-condition>
     <boundary-condition>
       <surface>ZMAX</surface>
-      <type>Vz</type>
+      <type>vz</type>
       <value>0.</value>
     </boundary-condition>-->
 		

@@ -46,9 +46,9 @@ enum Test {
 
 interface Initialisations {
     /*! Numéro du cas test */
-    Test casTest;
+    Test cas_test;
     /*! Option de retour arriere */
-    opt Bool reverseOption = "false";
+    opt Bool reverse_option = "false";
     /*! Parametre du cas test */
     Real parameter = "0.";
 

@@ -495,7 +495,7 @@ computeUpwindFaceQuantitiesForProjection(RemapADIComputeUpwindFaceQuantitiesForP
       options()->projectionPenteBorne == 0)
   {
     // Spécialisation
-    RemapADIServiceBase<RemapADIService>::computeUpwindFaceQuantitiesForProjection_PBorn0_O2(idir, nb_vars_to_project);
+    RemapADIServiceBase<RemapADIService>::computeUpwindFaceQuantitiesForProjectionPBorn0O2(idir, nb_vars_to_project);
     return;
   }
   
@@ -604,7 +604,7 @@ computeUpwindFaceQuantitiesForProjection(RemapADIComputeUpwindFaceQuantitiesForP
 /*---------------------------------------------------------------------------*/
 
 void RemapADIService::
-computeUpwindFaceQuantitiesForProjection_PBorn0_O2(RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars& vars, const Integer idir, const Integer nb_vars_to_project)
+computeUpwindFaceQuantitiesForProjectionPBorn0O2(RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2Vars& vars, const Integer idir, const Integer nb_vars_to_project)
 {
   Cartesian::FactCartDirectionMng fact_cart(mesh());
 
@@ -677,7 +677,7 @@ computeUremap(RemapADIComputeUremapVars& vars, const Integer idir, const Integer
   if (options()->projectionPenteBorne == 0)
   {
     // Spécialisation
-    RemapADIServiceBase<RemapADIService>::computeUremap_PBorn0(idir, nb_vars_to_project, nb_env);
+    RemapADIServiceBase<RemapADIService>::computeUremapPBorn0(idir, nb_vars_to_project, nb_env);
     return;
   }
   
@@ -813,7 +813,7 @@ computeUremap(RemapADIComputeUremapVars& vars, const Integer idir, const Integer
 /*---------------------------------------------------------------------------*/
 
 void RemapADIService::
-computeUremap_PBorn0(RemapADIComputeUremap_PBorn0Vars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env)
+computeUremapPBorn0(RemapADIComputeUremapPBorn0Vars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env)
 {
 //  Real threshold = options()->threshold;
   int nbmat = nb_env;

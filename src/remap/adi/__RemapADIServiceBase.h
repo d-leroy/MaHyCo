@@ -254,9 +254,9 @@ class RemapADIServiceBase
          RemapADIServiceBase_computeY0 [label="computeY0", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computeY0"];
          RemapADIServiceBase_computexgxd [label="computexgxd", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computexgxd"];
          RemapADIServiceBase_computeygyd [label="computeygyd", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computeygyd"];
-         RemapADIServiceBase_INTY [label="INTY", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::INTY"];
+         RemapADIServiceBase_intY [label="intY", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::intY"];
        }
-       computeFluxPP -> RemapADIServiceBase_INTY [lhead="clusterCalledFuncs", style="dashed", label=" call"];
+       computeFluxPP -> RemapADIServiceBase_intY [lhead="clusterCalledFuncs", style="dashed", label=" call"];
      }
    \enddot
    Cette méthode construit les variables et appelle RemapADIService::computeFluxPP.
@@ -308,13 +308,13 @@ class RemapADIServiceBase
   }
 
   /*!
-   Cette méthode construit les variables et appelle RemapADIService::INTY.
+   Cette méthode construit les variables et appelle RemapADIService::intY.
   */
-  Real INTY(const Real X, const Real x0, const Real y0, const Real x1, const Real y1)
+  Real intY(const Real X, const Real x0, const Real y0, const Real x1, const Real y1)
   {
-    RemapADIINTYVars vars;
+    RemapADIIntYVars vars;
     SCIHOOK_TRIGGER_INTY_BEFORE
-    auto result = this->INTY(vars, X, x0, y0, x1, y1);
+    auto result = this->intY(vars, X, x0, y0, x1, y1);
     SCIHOOK_TRIGGER_INTY_AFTER
     return result;
   }
@@ -340,9 +340,9 @@ class RemapADIServiceBase
          RemapADIServiceBase_computeY0 [label="computeY0", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computeY0"];
          RemapADIServiceBase_computexgxd [label="computexgxd", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computexgxd"];
          RemapADIServiceBase_computeygyd [label="computeygyd", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computeygyd"];
-         RemapADIServiceBase_INTY [label="INTY", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::INTY"];
+         RemapADIServiceBase_intY [label="intY", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::intY"];
        }
-       computeFluxPPPure -> RemapADIServiceBase_INTY [lhead="clusterCalledFuncs", style="dashed", label=" call"];
+       computeFluxPPPure -> RemapADIServiceBase_intY [lhead="clusterCalledFuncs", style="dashed", label=" call"];
      }
    \enddot
    Cette méthode construit les variables et appelle RemapADIService::computeFluxPPPure.
@@ -449,9 +449,9 @@ class RemapADIServiceBase
        {
          center="true";
          color="navy";
-         RemapADIServiceBase_computeUpwindFaceQuantitiesForProjection_PBorn0_O2 [label="computeUpwindFaceQuantitiesForProjection_PBorn0_O2", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computeUpwindFaceQuantitiesForProjection_PBorn0_O2"];
+         RemapADIServiceBase_computeUpwindFaceQuantitiesForProjectionPBorn0O2 [label="computeUpwindFaceQuantitiesForProjectionPBorn0O2", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computeUpwindFaceQuantitiesForProjectionPBorn0O2"];
        }
-       computeUpwindFaceQuantitiesForProjection -> RemapADIServiceBase_computeUpwindFaceQuantitiesForProjection_PBorn0_O2 [lhead="clusterCalledFuncs", style="dashed", label=" call"];
+       computeUpwindFaceQuantitiesForProjection -> RemapADIServiceBase_computeUpwindFaceQuantitiesForProjectionPBorn0O2 [lhead="clusterCalledFuncs", style="dashed", label=" call"];
      }
    \enddot
    Cette méthode construit les variables et appelle RemapADIService::computeUpwindFaceQuantitiesForProjection.
@@ -478,27 +478,27 @@ class RemapADIServiceBase
 
   /*!
    \dot
-     digraph computeUpwindFaceQuantitiesForProjection_PBorn0_O2Graph
+     digraph computeUpwindFaceQuantitiesForProjectionPBorn0O2Graph
      {
        compound="true";
        edge [arrowsize="0.5", fontsize="8"];
        node [shape="box", fontname="Arial", fontsize="10"];
        {
          rank=same;
-         computeUpwindFaceQuantitiesForProjection_PBorn0_O2 [style="rounded, filled", fillcolor="gray"];
+         computeUpwindFaceQuantitiesForProjectionPBorn0O2 [style="rounded, filled", fillcolor="gray"];
          inVars [shape="record", label="deltax_lagrange | face_normal_velocity | phi_lagrange | face_coord | face_normal | cell_coord | grad_phi"];
-         inVars -> computeUpwindFaceQuantitiesForProjection_PBorn0_O2;
+         inVars -> computeUpwindFaceQuantitiesForProjectionPBorn0O2;
          outVars [shape="record", label="phi_face"];
-         computeUpwindFaceQuantitiesForProjection_PBorn0_O2 -> outVars;
+         computeUpwindFaceQuantitiesForProjectionPBorn0O2 -> outVars;
        }
 
      }
    \enddot
-   Cette méthode construit les variables et appelle RemapADIService::computeUpwindFaceQuantitiesForProjection_PBorn0_O2.
+   Cette méthode construit les variables et appelle RemapADIService::computeUpwindFaceQuantitiesForProjectionPBorn0O2.
   */
-  void computeUpwindFaceQuantitiesForProjection_PBorn0_O2(const Integer idir, const Integer nb_vars_to_project)
+  void computeUpwindFaceQuantitiesForProjectionPBorn0O2(const Integer idir, const Integer nb_vars_to_project)
   {
-    RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars vars(m_deltax_lagrange
+    RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2Vars vars(m_deltax_lagrange
         , m_face_normal_velocity
         , m_phi_lagrange
         , m_face_coord
@@ -506,9 +506,9 @@ class RemapADIServiceBase
         , m_cell_coord
         , m_grad_phi
         , m_phi_face);
-    SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_BEFORE
-    this->computeUpwindFaceQuantitiesForProjection_PBorn0_O2(vars, idir, nb_vars_to_project);
-    SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_AFTER
+    SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_BEFORE
+    this->computeUpwindFaceQuantitiesForProjectionPBorn0O2(vars, idir, nb_vars_to_project);
+    SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_AFTER
   }
 
   /*!
@@ -531,9 +531,9 @@ class RemapADIServiceBase
        {
          center="true";
          color="navy";
-         RemapADIServiceBase_computeUremap_PBorn0 [label="computeUremap_PBorn0", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computeUremap_PBorn0"];
+         RemapADIServiceBase_computeUremapPBorn0 [label="computeUremapPBorn0", color="navy", fontcolor="navy", style="rounded", URL="\ref RemapAdi::RemapADIServiceBase::computeUremapPBorn0"];
        }
-       computeUremap -> RemapADIServiceBase_computeUremap_PBorn0 [lhead="clusterCalledFuncs", style="dashed", label=" call"];
+       computeUremap -> RemapADIServiceBase_computeUremapPBorn0 [lhead="clusterCalledFuncs", style="dashed", label=" call"];
      }
    \enddot
    Cette méthode construit les variables et appelle RemapADIService::computeUremap.
@@ -557,27 +557,27 @@ class RemapADIServiceBase
 
   /*!
    \dot
-     digraph computeUremap_PBorn0Graph
+     digraph computeUremapPBorn0Graph
      {
        compound="true";
        edge [arrowsize="0.5", fontsize="8"];
        node [shape="box", fontname="Arial", fontsize="10"];
        {
          rank=same;
-         computeUremap_PBorn0 [style="rounded, filled", fillcolor="gray"];
+         computeUremapPBorn0 [style="rounded, filled", fillcolor="gray"];
          inVars [shape="record", label="face_normal | face_normal_velocity | face_length_lagrange | outer_face_normal | phi_face | u_lagrange | phi_lagrange"];
-         inVars -> computeUremap_PBorn0;
+         inVars -> computeUremapPBorn0;
          outVars [shape="record", label="dual_phi_flux | est_mixte | est_pure | u_lagrange | phi_lagrange"];
-         computeUremap_PBorn0 -> outVars;
+         computeUremapPBorn0 -> outVars;
        }
 
      }
    \enddot
-   Cette méthode construit les variables et appelle RemapADIService::computeUremap_PBorn0.
+   Cette méthode construit les variables et appelle RemapADIService::computeUremapPBorn0.
   */
-  void computeUremap_PBorn0(const Integer idir, const Integer nb_vars_to_project, const Integer nb_env)
+  void computeUremapPBorn0(const Integer idir, const Integer nb_vars_to_project, const Integer nb_env)
   {
-    RemapADIComputeUremap_PBorn0Vars vars(m_face_normal
+    RemapADIComputeUremapPBorn0Vars vars(m_face_normal
         , m_face_normal_velocity
         , m_face_length_lagrange
         , m_outer_face_normal
@@ -587,9 +587,9 @@ class RemapADIServiceBase
         , m_est_pure
         , m_u_lagrange
         , m_phi_lagrange);
-    SCIHOOK_TRIGGER_COMPUTEUREMAP_PBORN0_BEFORE
-    this->computeUremap_PBorn0(vars, idir, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_COMPUTEUREMAP_PBORN0_AFTER
+    SCIHOOK_TRIGGER_COMPUTEUREMAPPBORN0_BEFORE
+    this->computeUremapPBorn0(vars, idir, nb_vars_to_project, nb_env);
+    SCIHOOK_TRIGGER_COMPUTEUREMAPPBORN0_AFTER
   }
 
   /*!
@@ -806,14 +806,14 @@ class RemapADIServiceBase
   virtual Real computeY0(RemapADIComputeY0Vars& vars, const ::Types_mahyco::Limiteur projectionLimiterId, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real hplus, const Real hmoins, const Integer type) = 0;
   virtual Real computexgxd(RemapADIComputexgxdVars& vars, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real y0plus, const Real y0moins, const Integer type) = 0;
   virtual Real computeygyd(RemapADIComputeygydVars& vars, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real y0plus, const Real y0moins, const Real grady, const Integer type) = 0;
-  virtual Real INTY(RemapADIINTYVars& vars, const Real X, const Real x0, const Real y0, const Real x1, const Real y1) = 0;
+  virtual Real intY(RemapADIIntYVars& vars, const Real X, const Real x0, const Real y0, const Real x1, const Real y1) = 0;
   virtual void computeFluxPPPure(RemapADIComputeFluxPPPureVars& vars, const Cell cell, const Cell frontcell, const Cell backcell, const Real face_normal_velocity, const Real deltat_n, const Integer type, const Real flux_threshold, const Integer projectionPenteBorneDebarFix, const Real dual_normal_velocity, const Integer calcul_flux_dual, ::Arcane::RealArrayView* Flux, ::Arcane::RealArrayView* Flux_dual, const Integer nbmat, const Integer nb_vars) = 0;
   virtual void computeGradPhiFace(RemapADIComputeGradPhiFaceVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) = 0;
   virtual void computeGradPhiCell(RemapADIComputeGradPhiCellVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) = 0;
   virtual void computeUpwindFaceQuantitiesForProjection(RemapADIComputeUpwindFaceQuantitiesForProjectionVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) = 0;
-  virtual void computeUpwindFaceQuantitiesForProjection_PBorn0_O2(RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2Vars& vars, const Integer idir, const Integer nb_vars_to_project) = 0;
+  virtual void computeUpwindFaceQuantitiesForProjectionPBorn0O2(RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2Vars& vars, const Integer idir, const Integer nb_vars_to_project) = 0;
   virtual void computeUremap(RemapADIComputeUremapVars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) = 0;
-  virtual void computeUremap_PBorn0(RemapADIComputeUremap_PBorn0Vars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) = 0;
+  virtual void computeUremapPBorn0(RemapADIComputeUremapPBorn0Vars& vars, const Integer idir, const Integer nb_vars_to_project, const Integer nb_env) = 0;
   virtual void computeDualUremap(RemapADIComputeDualUremapVars& vars, const Integer idir, const Integer nb_env) = 0;
   virtual Real computeRemapFlux(RemapADIComputeRemapFluxVars& vars, const Integer projectionOrder, const Integer projectionAvecPlateauPente, const Real face_normal_velocity, const Real3 face_normal, const Real face_length, const Real phi_face, const Real3 outer_face_normal, const Real3 exy, const Real deltat_n) = 0;
   virtual void appliRemap(RemapADIAppliRemapVars& vars, const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env) = 0;

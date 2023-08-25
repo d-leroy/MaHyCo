@@ -347,17 +347,17 @@ computeFluxPP(RemapADIComputeFluxPPVars& vars,
         // -h0/2. et -h0/2.+abs(face_normal_velocity)*deltat_n
     {
       // Flux1m : integrale -inf,  -h0/2.+partie_positive_v
-      flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2. + partie_positive_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+      flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2. + partie_positive_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
       // Flux1m : integrale -inf,  -h0/2.
-      flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+      flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
       // Flux2m : integrale -inf,  -h0/2.+partie_positive_v
-      flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2. + partie_positive_v, xg, yg, xd, yd);
+      flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2. + partie_positive_v, xg, yg, xd, yd);
       // Flux2 : integrale -inf,  -h0/2.
-      flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2., xg, yg, xd, yd);
+      flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2., xg, yg, xd, yd);
       // Flux3m : integrale -inf,  -h0/2.+partie_positive_v
-      flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2. + partie_positive_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+      flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2. + partie_positive_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
       // Flux3 : integrale -inf,  -h0/2.
-      flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+      flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
       // integrale positive
       Flux[ivar] = std::max(
           ((flux1m - flux1) + (flux2m - flux2) + (flux3m - flux3)), 0.);
@@ -370,17 +370,17 @@ computeFluxPP(RemapADIComputeFluxPPVars& vars,
       // et calcul du flux dual si calcul_flux_dual=1
       if (calcul_flux_dual == 1) {
       // Flux1m : integrale -inf, partie_positive_dual_v
-      flux1m = RemapADIServiceBase<RemapADIService>::INTY(partie_positive_dual_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+      flux1m = RemapADIServiceBase<RemapADIService>::intY(partie_positive_dual_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
       // Flux1m : integrale -inf,  0..
-      flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(0., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+      flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(0., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
       // Flux2m : integrale -inf, partie_positive_dual_v
-      flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(partie_positive_dual_v, xg, yg, xd, yd);
+      flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(partie_positive_dual_v, xg, yg, xd, yd);
       // Flux2 : integrale -inf, 0.
-      flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(0., xg, yg, xd, yd);
+      flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(0., xg, yg, xd, yd);
       // Flux3m : integrale -inf, partie_positive_dual_v
-      flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(partie_positive_dual_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+      flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(partie_positive_dual_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
       // Flux3 : integrale -inf, 0.
-      flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(0., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+      flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(0., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
       // integrale positive
       Flux_dual[ivar] = std::max(
           ((flux1m - flux1) + (flux2m - flux2) + (flux3m - flux3)), 0.);
@@ -394,19 +394,19 @@ computeFluxPP(RemapADIComputeFluxPPVars& vars,
         // flux devant ou au dessus de cCells, integration entre
         // h0/2.-abs(face_normal_velocity)*deltat_n et h0/2.
         // Flux1 : integrale -inf,  h0/2.-partie_positive_v
-        flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2. - partie_positive_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+        flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2. - partie_positive_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
         // Flux1m : integrale -inf,  -h0/2.
-        flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+        flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
         //
         // Flux2 : integrale -inf,  h0/2.-partie_positive_v
-        flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2. - partie_positive_v, xg, yg, xd, yd);
+        flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2. - partie_positive_v, xg, yg, xd, yd);
         // Flux2m : integrale -inf,  -h0/2.
-        flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2., xg, yg, xd, yd);
+        flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2., xg, yg, xd, yd);
         //
         // Flux3 : integrale -inf,  h0/2.-partie_positive_v
-        flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2. - partie_positive_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar] );
+        flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2. - partie_positive_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar] );
         // Flux3m : integrale -inf,  -h0/2.
-        flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar] );
+        flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar] );
         //
         // integrale positive
         Flux[ivar] = std::max(
@@ -638,7 +638,7 @@ computeygyd(RemapADIComputeygydVars& vars,
 
 /*!
  *******************************************************************************
- * \file INTY
+ * \file intY
  * \brief calcul de l'integrale de -infini à X de la fonction lineaire
  *    1_[x0,x1] ((x1 − x)y0 + (x − x0)y1)/(x1-x0)
  *    valant :
@@ -649,7 +649,7 @@ computeygyd(RemapADIComputeygydVars& vars,
  *******************************************************************************
  */
  Real RemapADIService::
- INTY(RemapADIINTYVars& vars,
+ intY(RemapADIIntYVars& vars,
         Real X,
         Real x0,
         Real y0,
@@ -758,19 +758,19 @@ computeFluxPPPure(RemapADIComputeFluxPPPureVars& vars,
                     // -h0/2. et -h0/2.+abs(face_normal_velocity)*deltat_n
     {
       // Flux1m : integrale -inf,  -h0/2.+partie_positive_v
-      flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2. + partie_positive_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+      flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2. + partie_positive_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
       // Flux1m : integrale -inf,  -h0/2.
-      flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+      flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
       //
       // Flux2m : integrale -inf,  -h0/2.+partie_positive_v
-      flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2. + partie_positive_v, xg, yg, xd, yd);
+      flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2. + partie_positive_v, xg, yg, xd, yd);
       // Flux2 : integrale -inf,  -h0/2.
-      flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2., xg, yg, xd, yd);
+      flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2., xg, yg, xd, yd);
       //
       // Flux3m : integrale -inf,  -h0/2.+partie_positive_v
-      flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2. + partie_positive_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+      flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2. + partie_positive_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
       // Flux3 : integrale -inf,  -h0/2.
-      flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(-h0 / 2., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+      flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(-h0 / 2., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
       //
       // integrale positive
       Flux[ivar] = std::max(
@@ -783,17 +783,17 @@ computeFluxPPPure(RemapADIComputeFluxPPPureVars& vars,
       // et calcul du flux dual si calcul_flux_dual=1
       if (calcul_flux_dual == 1) {
         // Flux1m : integrale -inf, partie_positive_dual_v
-        flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(partie_positive_dual_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+        flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(partie_positive_dual_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
         // Flux1m : integrale -inf,  0..
-        flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(0., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+        flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(0., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
         // Flux2m : integrale -inf, partie_positive_dual_v
-        flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(partie_positive_dual_v, xg, yg, xd, yd);
+        flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(partie_positive_dual_v, xg, yg, xd, yd);
         // Flux2 : integrale -inf, 0.
-        flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(0., xg, yg, xd, yd);
+        flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(0., xg, yg, xd, yd);
         // Flux3m : integrale -inf, partie_positive_dual_v
-        flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(partie_positive_dual_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+        flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(partie_positive_dual_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
         // Flux3 : integrale -inf, 0.
-        flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(0., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+        flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(0., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
         // integrale positive
         Flux_dual[ivar] = std::max(
             ((flux1m - flux1) + (flux2m - flux2) + (flux3m - flux3)), 0.);
@@ -807,18 +807,18 @@ computeFluxPPPure(RemapADIComputeFluxPPPureVars& vars,
       // flux devant ou au dessus de cCells, integration entre
       // h0/2.-abs(face_normal_velocity)*deltat_n et h0/2.
       // Flux1 : integrale -inf,  h0/2.-partie_positive_v
-      flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2. - partie_positive_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+      flux1 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2. - partie_positive_v, -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
       // Flux1m : integrale -inf,  -h0/2.
-      flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
+      flux1m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2., -h0 / 2., vars.m_phi_lagrange[backcell][ivar], xg, yg);
       // Flux2 : integrale -inf,  h0/2.-partie_positive_v
-      flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2. - partie_positive_v, xg, yg, xd, yd);
+      flux2 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2. - partie_positive_v, xg, yg, xd, yd);
       // Flux2m : integrale -inf,  -h0/2.
-      flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2., xg, yg, xd, yd);
+      flux2m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2., xg, yg, xd, yd);
       //
       // Flux3 : integrale -inf,  h0/2.-partie_positive_v
-      flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2. - partie_positive_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+      flux3 = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2. - partie_positive_v, xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
       // Flux3m : integrale -inf,  -h0/2.
-      flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::INTY(h0 / 2., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
+      flux3m = RemapAdi::RemapADIServiceBase<RemapADIService>::intY(h0 / 2., xd, yd, h0 / 2., vars.m_phi_lagrange[frontcell][ivar]);
       // integrale positive
       Flux[ivar] = std::max(
           ((flux1m - flux1) + (flux2m - flux2) + (flux3m - flux3)), 0.);

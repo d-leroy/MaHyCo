@@ -40,12 +40,12 @@ private:\
  size_t COMPUTEGRADPHICELL_AFTER;\
  size_t COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_BEFORE;\
  size_t COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_AFTER;\
- size_t COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_BEFORE;\
- size_t COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_AFTER;\
+ size_t COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_BEFORE;\
+ size_t COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_AFTER;\
  size_t COMPUTEUREMAP_BEFORE;\
  size_t COMPUTEUREMAP_AFTER;\
- size_t COMPUTEUREMAP_PBORN0_BEFORE;\
- size_t COMPUTEUREMAP_PBORN0_AFTER;\
+ size_t COMPUTEUREMAPPBORN0_BEFORE;\
+ size_t COMPUTEUREMAPPBORN0_AFTER;\
  size_t COMPUTEDUALUREMAP_BEFORE;\
  size_t COMPUTEDUALUREMAP_AFTER;\
  size_t COMPUTEREMAPFLUX_BEFORE;\
@@ -79,8 +79,8 @@ COMPUTEXGXD_BEFORE = SciHook::register_base_event("RemapADI.Computexgxd.Before")
 COMPUTEXGXD_AFTER = SciHook::register_base_event("RemapADI.Computexgxd.After");\
 COMPUTEYGYD_BEFORE = SciHook::register_base_event("RemapADI.Computeygyd.Before");\
 COMPUTEYGYD_AFTER = SciHook::register_base_event("RemapADI.Computeygyd.After");\
-INTY_BEFORE = SciHook::register_base_event("RemapADI.INTY.Before");\
-INTY_AFTER = SciHook::register_base_event("RemapADI.INTY.After");\
+INTY_BEFORE = SciHook::register_base_event("RemapADI.IntY.Before");\
+INTY_AFTER = SciHook::register_base_event("RemapADI.IntY.After");\
 COMPUTEFLUXPPPURE_BEFORE = SciHook::register_base_event("RemapADI.ComputeFluxPPPure.Before");\
 COMPUTEFLUXPPPURE_AFTER = SciHook::register_base_event("RemapADI.ComputeFluxPPPure.After");\
 COMPUTEGRADPHIFACE_BEFORE = SciHook::register_base_event("RemapADI.ComputeGradPhiFace.Before");\
@@ -89,12 +89,12 @@ COMPUTEGRADPHICELL_BEFORE = SciHook::register_base_event("RemapADI.ComputeGradPh
 COMPUTEGRADPHICELL_AFTER = SciHook::register_base_event("RemapADI.ComputeGradPhiCell.After");\
 COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_BEFORE = SciHook::register_base_event("RemapADI.ComputeUpwindFaceQuantitiesForProjection.Before");\
 COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_AFTER = SciHook::register_base_event("RemapADI.ComputeUpwindFaceQuantitiesForProjection.After");\
-COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_BEFORE = SciHook::register_base_event("RemapADI.ComputeUpwindFaceQuantitiesForProjection_PBorn0_O2.Before");\
-COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_AFTER = SciHook::register_base_event("RemapADI.ComputeUpwindFaceQuantitiesForProjection_PBorn0_O2.After");\
+COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_BEFORE = SciHook::register_base_event("RemapADI.ComputeUpwindFaceQuantitiesForProjectionPBorn0O2.Before");\
+COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_AFTER = SciHook::register_base_event("RemapADI.ComputeUpwindFaceQuantitiesForProjectionPBorn0O2.After");\
 COMPUTEUREMAP_BEFORE = SciHook::register_base_event("RemapADI.ComputeUremap.Before");\
 COMPUTEUREMAP_AFTER = SciHook::register_base_event("RemapADI.ComputeUremap.After");\
-COMPUTEUREMAP_PBORN0_BEFORE = SciHook::register_base_event("RemapADI.ComputeUremap_PBorn0.Before");\
-COMPUTEUREMAP_PBORN0_AFTER = SciHook::register_base_event("RemapADI.ComputeUremap_PBorn0.After");\
+COMPUTEUREMAPPBORN0_BEFORE = SciHook::register_base_event("RemapADI.ComputeUremapPBorn0.Before");\
+COMPUTEUREMAPPBORN0_AFTER = SciHook::register_base_event("RemapADI.ComputeUremapPBorn0.After");\
 COMPUTEDUALUREMAP_BEFORE = SciHook::register_base_event("RemapADI.ComputeDualUremap.Before");\
 COMPUTEDUALUREMAP_AFTER = SciHook::register_base_event("RemapADI.ComputeDualUremap.After");\
 COMPUTEREMAPFLUX_BEFORE = SciHook::register_base_event("RemapADI.ComputeRemapFlux.Before");\
@@ -214,7 +214,7 @@ SciHook::trigger(COMPUTEYGYD_BEFORE, ctx);
 
 #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_INTY_DISABLED)
 #define SCIHOOK_TRIGGER_INTY_BEFORE \
-std::shared_ptr<RemapADIINTYExecutionContext> ctx(new RemapADIINTYExecutionContext("INTYExecutionContext", X, x0, y0, x1, y1));\
+std::shared_ptr<RemapADIIntYExecutionContext> ctx(new RemapADIIntYExecutionContext("IntYExecutionContext", X, x0, y0, x1, y1));\
 SciHook::trigger(INTY_BEFORE, ctx);
 #define SCIHOOK_TRIGGER_INTY_AFTER SciHook::trigger(INTY_AFTER, ctx);
 #else
@@ -262,14 +262,14 @@ SciHook::trigger(COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_BEFORE, ctx);
 #define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_AFTER
 #endif
 
-#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_DISABLED)
-#define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_BEFORE \
-std::shared_ptr<RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext> ctx(new RemapADIComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext("ComputeUpwindFaceQuantitiesForProjection_PBorn0_O2ExecutionContext", &vars, idir, nb_vars_to_project));\
-SciHook::trigger(COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_BEFORE, ctx);
-#define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_AFTER SciHook::trigger(COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_AFTER, ctx);
+#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_DISABLED)
+#define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_BEFORE \
+std::shared_ptr<RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2ExecutionContext> ctx(new RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2ExecutionContext("ComputeUpwindFaceQuantitiesForProjectionPBorn0O2ExecutionContext", &vars, idir, nb_vars_to_project));\
+SciHook::trigger(COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_BEFORE, ctx);
+#define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_AFTER SciHook::trigger(COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_AFTER, ctx);
 #else
-#define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_BEFORE
-#define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_PBORN0_O2_AFTER
+#define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_BEFORE
+#define SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_AFTER
 #endif
 
 #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUREMAP_DISABLED)
@@ -282,14 +282,14 @@ SciHook::trigger(COMPUTEUREMAP_BEFORE, ctx);
 #define SCIHOOK_TRIGGER_COMPUTEUREMAP_AFTER
 #endif
 
-#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUREMAP_PBORN0_DISABLED)
-#define SCIHOOK_TRIGGER_COMPUTEUREMAP_PBORN0_BEFORE \
-std::shared_ptr<RemapADIComputeUremap_PBorn0ExecutionContext> ctx(new RemapADIComputeUremap_PBorn0ExecutionContext("ComputeUremap_PBorn0ExecutionContext", &vars, idir, nb_vars_to_project, nb_env));\
-SciHook::trigger(COMPUTEUREMAP_PBORN0_BEFORE, ctx);
-#define SCIHOOK_TRIGGER_COMPUTEUREMAP_PBORN0_AFTER SciHook::trigger(COMPUTEUREMAP_PBORN0_AFTER, ctx);
+#if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEUREMAPPBORN0_DISABLED)
+#define SCIHOOK_TRIGGER_COMPUTEUREMAPPBORN0_BEFORE \
+std::shared_ptr<RemapADIComputeUremapPBorn0ExecutionContext> ctx(new RemapADIComputeUremapPBorn0ExecutionContext("ComputeUremapPBorn0ExecutionContext", &vars, idir, nb_vars_to_project, nb_env));\
+SciHook::trigger(COMPUTEUREMAPPBORN0_BEFORE, ctx);
+#define SCIHOOK_TRIGGER_COMPUTEUREMAPPBORN0_AFTER SciHook::trigger(COMPUTEUREMAPPBORN0_AFTER, ctx);
 #else
-#define SCIHOOK_TRIGGER_COMPUTEUREMAP_PBORN0_BEFORE
-#define SCIHOOK_TRIGGER_COMPUTEUREMAP_PBORN0_AFTER
+#define SCIHOOK_TRIGGER_COMPUTEUREMAPPBORN0_BEFORE
+#define SCIHOOK_TRIGGER_COMPUTEUREMAPPBORN0_AFTER
 #endif
 
 #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_DISABLED) && not defined(SCIHOOK_REMAP_ADI_REMAPADI_COMPUTEDUALUREMAP_DISABLED)

@@ -11,7 +11,7 @@ struct Environment {
     /*! Nom du materiau */
     String[*] material;
     /*! Service d'equation d'état */
-    eos.EquationOfState EosModel;
+    eos.EquationOfState eos_model;
 }
 
 struct BoundaryCondition {
@@ -35,14 +35,14 @@ enum BoundaryConditionType {
 }
 
 enum Limiteur {
-    minmod;
-    superBee;
-    vanLeer;
-    minmodG;
-    superBeeG;
-    vanLeerG;
-    arithmeticG;
-    ultrabeeG;
+    Minmod;
+    SuperBee;
+    VanLeer;
+    MinmodG;
+    SuperBeeG;
+    VanLeerG;
+    ArithmeticG;
+    UltrabeeG;
 }
 
 legacy IGeometryMng file "arcane/geometry/IGeometryMng.h" namespace "Arcane::Numerics";

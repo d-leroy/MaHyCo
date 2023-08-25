@@ -55,7 +55,7 @@ class Environment
   Environment()
   : m_name(String())
   , m_material(UniqueArray< String >())
-  , m_EosModel(0)
+  , m_eos_model(0)
   {}
   virtual ~Environment() {}
 
@@ -66,13 +66,13 @@ class Environment
   ConstArrayView< String > getMaterial() override { return m_material; }
   void setMaterial(Array< String >& value) { m_material = value ; }
 
-  ::Eos::IEquationOfState* getEosModel() override { return m_EosModel; }
-  void setEosModel(::Eos::IEquationOfState* value) { m_EosModel = value ; }
+  ::Eos::IEquationOfState* getEosModel() override { return m_eos_model; }
+  void setEosModel(::Eos::IEquationOfState* value) { m_eos_model = value ; }
 
  protected:  // ***** ATTRIBUTS
   String m_name;
   UniqueArray< String > m_material;
-  ::Eos::IEquationOfState* m_EosModel;
+  ::Eos::IEquationOfState* m_eos_model;
 };
 
 /*---------------------------------------------------------------------------*/

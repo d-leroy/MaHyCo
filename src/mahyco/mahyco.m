@@ -191,63 +191,63 @@ module Mahyco
     types_mahyco.Environment[*] environment;
 
     /*! Service d'initialisation du cas test */
-    cas_test.Initialisations CasModel;
+    cas_test.Initialisations cas_model;
 
     /*! Service de projection */
-    remap.Remap remapService = "RemapADI";
+    remap.Remap remap_service = "RemapADI";
 
     /*! Impose le tri cartésien des faces (valable que si le maillage est lui-même cartésien) */
-    Bool CartesianSortFaces = "true";
+    Bool cartesian_sort_faces = "true";
 
     /*! Schema CSTS */
-    Bool SchemaCsts;
+    Bool schema_csts;
 
     /*! Option pseudo-centrée */
-    Bool PseudoCentree;
+    Bool pseudo_centree;
 
     /*! Type de longueur caracteristique */
-    String LongueurCaracteristique;
+    String longueur_caracteristique;
 
     /*!
 * Valeur minimale que peut prendre le <em>deltat</em>
 * entre deux itérations.
 */
-    Real DeltatMin;
+    Real deltat_min;
 
     /*!
 * Valeur maximale que peut prendre le <em>deltat</em>
 * entre deux itérations. Si le deltat calculé est supérieur
 * à cette valeur, il est ramené à cette valeur.
 */
-    Real DeltatMax;
+    Real deltat_max;
 
     /*! Valeur du <em>deltat</em> au moment du démarrage. */
-    Real DeltatInit;
+    Real deltat_init;
 
     /*!
 * Temps auquel on stoppe la simulation. Le code s'arrête dès que
 * le temps courant est <strong>strictement</strong> supérieur à ce temps.
 */
-    Real FinalTime
+    Real final_time
         namefr "temps-final";
 
     /*! Définition de la CFL */
-    Real Cfl = "0.3";
+    Real cfl = "0.3";
 
     /*! Définition de la valeur limite des petites fractions et autres */
-    Real Threshold = "1.e-10";
+    Real threshold = "1.e-10";
 
     /*! Calcule sans le schema Lagrange */
-    Bool SansLagrange = "false";
+    Bool sans_lagrange = "false";
 
     /*! Calcul de l'energie avec newton */
-    Bool WithNewton = "false";
+    Bool with_newton = "false";
 
     /*! Calcul avec projection ADI */
-    Bool WithProjection = "true";
+    Bool with_projection = "true";
 
     /*! Condition aux limites */
-    opt types_mahyco.BoundaryCondition[*] BoundaryCondition;
+    opt types_mahyco.BoundaryCondition[*] boundary_condition;
 
     types_mahyco.IGeometryMng geometry = "Euclidian3Geometry";
 
@@ -354,7 +354,7 @@ module Mahyco
         out phi_lagrange,
         out phi_dual_lagrange;
     
-    def void computeVariablesForRemap_PBorn0()
+    def void computeVariablesForRemapPBorn0()
         in pseudo_viscosity,
         in density,
         in cell_volume,
@@ -449,22 +449,30 @@ module Mahyco
         in density,
         in cell_volume,
         in mass_fraction,
-        inout cell_mass
-        { 
-            for (c in arc.allCells()) {
-                cell_mass{c} = density{c} * cell_volume{c};
-            }
-            for (e in arc.allEnvs()) {
-                for (c in arc.envCellsOfEnv(e)) {
-                    cell_mass{c} = mass_fraction{c} * cell_mass{arc.cellOfEnvCell(c)};
-                }
-            }
-        }
+        inout cell_mass;
+        // { 
+        //     for (c in arc.allCells()) {
+        //         cell_mass{c} = density{c} * cell_volume{c};
+        //     }
+        //     for (e in arc.allEnvs()) {
+        //         for (c in arc.envCellsOfEnv(e)) {
+        //             cell_mass{c} = mass_fraction{c} * cell_mass{arc.cellOfEnvCell(c)};
+        //         }
+        //     }
+        // }
 
     @StartInit
     computeNodeMass
         in cell_mass,
-        out node_mass;
+        out node_mass
+    // {
+    //     Real one_over_nbnode = 0.25;
+    //     for (n in arc.ownNodes()) {
+    //         Real sum_mass = sum{c in arc.nodes(n)}(cell_mass{c});
+    //         node_mass{n} = sum_mass;
+    //     }
+    // }
+    ;
 
     // <entry-point method-name="continueForMultiMat" name="ContinueForMultiMat" where="continue-init" property="none" />
     @ContinueInit

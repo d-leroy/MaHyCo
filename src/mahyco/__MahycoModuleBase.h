@@ -1122,27 +1122,27 @@ class MahycoModuleBase
 
   /*!
    \dot
-     digraph computeVariablesForRemap_PBorn0Graph
+     digraph computeVariablesForRemapPBorn0Graph
      {
        compound="true";
        edge [arrowsize="0.5", fontsize="8"];
        node [shape="box", fontname="Arial", fontsize="10"];
        {
          rank=same;
-         computeVariablesForRemap_PBorn0 [style="rounded, filled", fillcolor="gray"];
+         computeVariablesForRemapPBorn0 [style="rounded, filled", fillcolor="gray"];
          inVars [shape="record", label="pseudo_viscosity | density | cell_volume | internal_energy | node_mass | velocity | u_lagrange"];
-         inVars -> computeVariablesForRemap_PBorn0;
+         inVars -> computeVariablesForRemapPBorn0;
          outVars [shape="record", label="u_lagrange | u_dual_lagrange | phi_lagrange | phi_dual_lagrange"];
-         computeVariablesForRemap_PBorn0 -> outVars;
+         computeVariablesForRemapPBorn0 -> outVars;
        }
 
      }
    \enddot
-   Cette méthode construit les variables et appelle MahycoModule::computeVariablesForRemap_PBorn0.
+   Cette méthode construit les variables et appelle MahycoModule::computeVariablesForRemapPBorn0.
   */
-  void computeVariablesForRemap_PBorn0()
+  void computeVariablesForRemapPBorn0()
   {
-    MahycoComputeVariablesForRemap_PBorn0Vars vars(m_pseudo_viscosity
+    MahycoComputeVariablesForRemapPBorn0Vars vars(m_pseudo_viscosity
         , m_density
         , m_cell_volume
         , m_internal_energy
@@ -1152,9 +1152,9 @@ class MahycoModuleBase
         , m_u_dual_lagrange
         , m_phi_lagrange
         , m_phi_dual_lagrange);
-    SCIHOOK_TRIGGER_COMPUTEVARIABLESFORREMAP_PBORN0_BEFORE
-    this->computeVariablesForRemap_PBorn0(vars);
-    SCIHOOK_TRIGGER_COMPUTEVARIABLESFORREMAP_PBORN0_AFTER
+    SCIHOOK_TRIGGER_COMPUTEVARIABLESFORREMAPPBORN0_BEFORE
+    this->computeVariablesForRemapPBorn0(vars);
+    SCIHOOK_TRIGGER_COMPUTEVARIABLESFORREMAPPBORN0_AFTER
   }
 
   /*!
@@ -1230,7 +1230,7 @@ class MahycoModuleBase
   virtual void updateEnergyAndPressureforGP(MahycoUpdateEnergyAndPressureforGPVars& vars) = 0;
   virtual void computeAveragePressure(MahycoComputeAveragePressureVars& vars) = 0;
   virtual void computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars) = 0;
-  virtual void computeVariablesForRemap_PBorn0(MahycoComputeVariablesForRemap_PBorn0Vars& vars) = 0;
+  virtual void computeVariablesForRemapPBorn0(MahycoComputeVariablesForRemapPBorn0Vars& vars) = 0;
   virtual void computeFaceQuantitesForRemap(MahycoComputeFaceQuantitesForRemapVars& vars) = 0;
 
  protected:  // ***** ATTRIBUTS

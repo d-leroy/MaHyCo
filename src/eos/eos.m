@@ -2,7 +2,7 @@ package eos;
 
 interface EquationOfState {
     /*! Définition de la constante adiabatique */
-    Real AdiabaticCst = "1.4";
+    Real adiabatic_cst = "1.4";
     /*! 
      *  Initialise l'équation d'état au groupe de mailles passé en argument
      *  et calcule la vitesse du son et l'énergie interne. 

@@ -88,12 +88,12 @@
     
     <boundary-condition>
       <surface>XMIN</surface>
-      <type>Vx</type>
+      <type>vx</type>
       <value>0.</value>
     </boundary-condition>
     <boundary-condition>
       <surface>YMIN</surface>
-      <type>Vy</type>
+      <type>vy</type>
       <value>0.</value>
     </boundary-condition>
   </mahyco>
