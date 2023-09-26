@@ -449,17 +449,18 @@ module Mahyco
         in density,
         in cell_volume,
         in mass_fraction,
-        inout cell_mass;
-        // { 
-        //     for (c in arc.allCells()) {
-        //         cell_mass{c} = density{c} * cell_volume{c};
-        //     }
-        //     for (e in arc.allEnvs()) {
-        //         for (c in arc.envCellsOfEnv(e)) {
-        //             cell_mass{c} = mass_fraction{c} * cell_mass{arc.cellOfEnvCell(c)};
-        //         }
-        //     }
-        // }
+        inout cell_mass
+    // {
+    //     for (c in arc.allCells()) {
+    //         cell_mass{c} = density{c} * cell_volume{c};
+    //     }
+    //     for (e in arc.allEnvs()) {
+    //         for (ec in arc.envCellsOfEnv(e)) {
+    //             cell_mass{ec} = mass_fraction{ec} * cell_mass{arc.cellOfEnvCell(ec)};
+    //         }
+    //     }
+    // }
+    ;
 
     @StartInit
     computeNodeMass
@@ -468,8 +469,8 @@ module Mahyco
     // {
     //     Real one_over_nbnode = 0.25;
     //     for (n in arc.ownNodes()) {
-    //         Real sum_mass = sum{c in arc.nodes(n)}(cell_mass{c});
-    //         node_mass{n} = sum_mass;
+    //         Real sum_mass = sum{c in arc.cellsOfNode(n)}(cell_mass{c});
+    //         node_mass{n} = one_over_nbnode * sum_mass;
     //     }
     // }
     ;

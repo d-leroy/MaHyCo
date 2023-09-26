@@ -87,9 +87,9 @@ class StiffenedGasServiceBase
         , m_density
         , m_internal_energy
         , m_sound_speed);
-    SCIHOOK_TRIGGER_INITEOS_BEFORE
+    SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_INITEOS_BEFORE
     this->initEOS(vars, env);
-    SCIHOOK_TRIGGER_INITEOS_AFTER
+    SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_INITEOS_AFTER
   }
 
   /*!
@@ -119,9 +119,9 @@ class StiffenedGasServiceBase
         , m_pressure
         , m_sound_speed
         , m_dpde);
-    SCIHOOK_TRIGGER_APPLYEOS_BEFORE
+    SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYEOS_BEFORE
     this->applyEOS(vars, env);
-    SCIHOOK_TRIGGER_APPLYEOS_AFTER
+    SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYEOS_AFTER
   }
 
   /*!
@@ -151,9 +151,9 @@ class StiffenedGasServiceBase
         , m_pressure
         , m_sound_speed
         , m_dpde);
-    SCIHOOK_TRIGGER_APPLYONECELLEOS_BEFORE
+    SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYONECELLEOS_BEFORE
     this->applyOneCellEOS(vars, env, ev);
-    SCIHOOK_TRIGGER_APPLYONECELLEOS_AFTER
+    SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYONECELLEOS_AFTER
   }
 
 

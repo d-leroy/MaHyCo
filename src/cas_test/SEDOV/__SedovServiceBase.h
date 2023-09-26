@@ -83,9 +83,9 @@ class SedovServiceBase
   void initMatMono(const Integer dim) override
   {
     SedovInitMatMonoVars vars(m_materiau);
-    SCIHOOK_TRIGGER_INITMATMONO_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_SEDOV_SEDOV_INITMATMONO_BEFORE
     this->initMatMono(vars, dim);
-    SCIHOOK_TRIGGER_INITMATMONO_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_SEDOV_SEDOV_INITMATMONO_AFTER
   }
 
   /*!
@@ -118,9 +118,9 @@ class SedovServiceBase
         , m_mass_fraction
         , m_velocity
         , m_internal_energy);
-    SCIHOOK_TRIGGER_INITVARMONO_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_SEDOV_SEDOV_INITVARMONO_BEFORE
     this->initVarMono(vars, dim);
-    SCIHOOK_TRIGGER_INITVARMONO_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_SEDOV_SEDOV_INITVARMONO_AFTER
   }
 
   /*!
@@ -147,9 +147,9 @@ class SedovServiceBase
   {
     SedovInitMatVars vars(m_node_coord
         , m_materiau);
-    SCIHOOK_TRIGGER_INITMAT_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_SEDOV_SEDOV_INITMAT_BEFORE
     this->initMat(vars, dim);
-    SCIHOOK_TRIGGER_INITMAT_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_SEDOV_SEDOV_INITMAT_AFTER
   }
 
   /*!
@@ -182,9 +182,9 @@ class SedovServiceBase
         , m_mass_fraction
         , m_velocity
         , m_internal_energy);
-    SCIHOOK_TRIGGER_INITVAR_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_SEDOV_SEDOV_INITVAR_BEFORE
     this->initVar(vars, dim);
-    SCIHOOK_TRIGGER_INITVAR_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_SEDOV_SEDOV_INITVAR_AFTER
   }
 
 

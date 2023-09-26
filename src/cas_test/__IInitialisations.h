@@ -47,32 +47,32 @@ class IInitialisations
   Cette méthode est implémentée dans :
   \li OtherServiceBase::initMatMono
   \li RiderServiceBase::initMatMono
-  \li SodServiceBase::initMatMono
   \li SedovServiceBase::initMatMono
+  \li SodServiceBase::initMatMono
   */
   virtual void initMatMono(const Integer dim) = 0;
   /*!
   Cette méthode est implémentée dans :
   \li OtherServiceBase::initVarMono
   \li RiderServiceBase::initVarMono
-  \li SodServiceBase::initVarMono
   \li SedovServiceBase::initVarMono
+  \li SodServiceBase::initVarMono
   */
   virtual void initVarMono(const Integer dim) = 0;
   /*!
   Cette méthode est implémentée dans :
   \li OtherServiceBase::initMat
   \li RiderServiceBase::initMat
-  \li SodServiceBase::initMat
   \li SedovServiceBase::initMat
+  \li SodServiceBase::initMat
   */
   virtual void initMat(const Integer dim) = 0;
   /*!
   Cette méthode est implémentée dans :
   \li OtherServiceBase::initVar
   \li RiderServiceBase::initVar
-  \li SodServiceBase::initVar
   \li SedovServiceBase::initVar
+  \li SodServiceBase::initVar
   */
   virtual void initVar(const Integer dim) = 0;
 };

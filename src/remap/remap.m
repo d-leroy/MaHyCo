@@ -22,6 +22,7 @@ var Real[*] front_flux_contrib_env { Cell } @axlname("FrontFluxContribEnv") @dum
 var Int cell_status { Cell } @axlname("CellStatus");
 
 interface Remap {
+
     /*! Définition de la valeur limite des petites fractions et autres */
     Int ordre_projection="2";
     /*! Définition de la valeur limite des petites fractions et autres */
@@ -41,7 +42,7 @@ interface Remap {
     Bool projection_pente_borne="false";
     /*! projection avec l'algorithme pente-borne en evitant l'artefact de debar avec la valeur moyenne (1) ou valeur aux mailles (2) */
     Int projection_pente_borne_debar_fix="0";
-    
+
     /*!
      * main du remap
      */
@@ -58,5 +59,6 @@ interface Remap {
      * fonction final de la projection
      */
     def void remapVariables(in Int dimension, in Int withDualProjection, in Int nb_vars_to_project, in Int nb_env);
+
 
 }

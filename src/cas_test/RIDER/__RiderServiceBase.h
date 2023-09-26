@@ -83,9 +83,9 @@ class RiderServiceBase
   void initMatMono(const Integer dim) override
   {
     RiderInitMatMonoVars vars(m_materiau);
-    SCIHOOK_TRIGGER_INITMATMONO_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_RIDER_RIDER_INITMATMONO_BEFORE
     this->initMatMono(vars, dim);
-    SCIHOOK_TRIGGER_INITMATMONO_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_RIDER_RIDER_INITMATMONO_AFTER
   }
 
   /*!
@@ -118,9 +118,9 @@ class RiderServiceBase
         , m_mass_fraction
         , m_velocity_n
         , m_velocity);
-    SCIHOOK_TRIGGER_INITVARMONO_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_RIDER_RIDER_INITVARMONO_BEFORE
     this->initVarMono(vars, dim);
-    SCIHOOK_TRIGGER_INITVARMONO_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_RIDER_RIDER_INITVARMONO_AFTER
   }
 
   /*!
@@ -147,9 +147,9 @@ class RiderServiceBase
   {
     RiderInitMatVars vars(m_node_coord
         , m_materiau);
-    SCIHOOK_TRIGGER_INITMAT_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_RIDER_RIDER_INITMAT_BEFORE
     this->initMat(vars, dim);
-    SCIHOOK_TRIGGER_INITMAT_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_RIDER_RIDER_INITMAT_AFTER
   }
 
   /*!
@@ -182,9 +182,9 @@ class RiderServiceBase
         , m_mass_fraction
         , m_velocity_n
         , m_velocity);
-    SCIHOOK_TRIGGER_INITVAR_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_RIDER_RIDER_INITVAR_BEFORE
     this->initVar(vars, dim);
-    SCIHOOK_TRIGGER_INITVAR_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_RIDER_RIDER_INITVAR_AFTER
   }
 
 

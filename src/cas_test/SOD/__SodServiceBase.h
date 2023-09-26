@@ -83,9 +83,9 @@ class SodServiceBase
   void initMatMono(const Integer dim) override
   {
     SodInitMatMonoVars vars(m_materiau);
-    SCIHOOK_TRIGGER_INITMATMONO_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_SOD_SOD_INITMATMONO_BEFORE
     this->initMatMono(vars, dim);
-    SCIHOOK_TRIGGER_INITMATMONO_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_SOD_SOD_INITMATMONO_AFTER
   }
 
   /*!
@@ -116,9 +116,9 @@ class SodServiceBase
         , m_fracvol
         , m_mass_fraction
         , m_velocity);
-    SCIHOOK_TRIGGER_INITVARMONO_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_SOD_SOD_INITVARMONO_BEFORE
     this->initVarMono(vars, dim);
-    SCIHOOK_TRIGGER_INITVARMONO_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_SOD_SOD_INITVARMONO_AFTER
   }
 
   /*!
@@ -145,9 +145,9 @@ class SodServiceBase
   {
     SodInitMatVars vars(m_cell_coord
         , m_materiau);
-    SCIHOOK_TRIGGER_INITMAT_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_SOD_SOD_INITMAT_BEFORE
     this->initMat(vars, dim);
-    SCIHOOK_TRIGGER_INITMAT_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_SOD_SOD_INITMAT_AFTER
   }
 
   /*!
@@ -178,9 +178,9 @@ class SodServiceBase
         , m_fracvol
         , m_mass_fraction
         , m_velocity);
-    SCIHOOK_TRIGGER_INITVAR_BEFORE
+    SCIHOOK_TRIGGER_CAS_TEST_SOD_SOD_INITVAR_BEFORE
     this->initVar(vars, dim);
-    SCIHOOK_TRIGGER_INITVAR_AFTER
+    SCIHOOK_TRIGGER_CAS_TEST_SOD_SOD_INITVAR_AFTER
   }
 
 

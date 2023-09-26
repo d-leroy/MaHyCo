@@ -93,9 +93,9 @@ class RemapADIServiceBase
   {
     RemapADISynchronizeDualUremapVars vars(m_phi_dual_lagrange
         , m_u_dual_lagrange);
-    SCIHOOK_TRIGGER_SYNCHRONIZEDUALUREMAP_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_SYNCHRONIZEDUALUREMAP_BEFORE
     this->synchronizeDualUremap(vars);
-    SCIHOOK_TRIGGER_SYNCHRONIZEDUALUREMAP_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_SYNCHRONIZEDUALUREMAP_AFTER
   }
 
   /*!
@@ -132,9 +132,9 @@ class RemapADIServiceBase
         , m_grad_phi_face
         , m_phi_lagrange
         , m_h_cell_lagrange);
-    SCIHOOK_TRIGGER_COMPUTEANDLIMITGRADPHI_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEANDLIMITGRADPHI_BEFORE
     this->computeAndLimitGradPhi(vars, projectionLimiterId, frontFace, backFace, cell, frontcell, backcell, nb_vars);
-    SCIHOOK_TRIGGER_COMPUTEANDLIMITGRADPHI_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEANDLIMITGRADPHI_AFTER
   }
 
   /*!
@@ -167,9 +167,9 @@ class RemapADIServiceBase
   {
     RemapADIComputeDualGradPhiVars vars(m_phi_dual_lagrange
         , m_node_coord);
-    SCIHOOK_TRIGGER_COMPUTEDUALGRADPHI_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEDUALGRADPHI_BEFORE
     this->computeDualGradPhi(vars, inode, frontfrontnode, frontnode, backnode, backbacknode, idir);
-    SCIHOOK_TRIGGER_COMPUTEDUALGRADPHI_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEDUALGRADPHI_AFTER
   }
 
   /*!
@@ -204,9 +204,9 @@ class RemapADIServiceBase
   {
     RemapADIComputeAndLimitGradPhiDualVars vars(m_phi_dual_lagrange
         , m_dual_grad_phi);
-    SCIHOOK_TRIGGER_COMPUTEANDLIMITGRADPHIDUAL_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEANDLIMITGRADPHIDUAL_BEFORE
     this->computeAndLimitGradPhiDual(vars, projectionLimiterId, inode, frontnode, backnode, grad_front, grad_back, h0, hplus, hmoins);
-    SCIHOOK_TRIGGER_COMPUTEANDLIMITGRADPHIDUAL_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEANDLIMITGRADPHIDUAL_AFTER
   }
 
   /*!
@@ -215,9 +215,9 @@ class RemapADIServiceBase
   Real fluxLimiter(const ::Types_mahyco::Limiteur projectionLimiterId, const Real r)
   {
     RemapADIFluxLimiterVars vars;
-    SCIHOOK_TRIGGER_FLUXLIMITER_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_FLUXLIMITER_BEFORE
     auto result = this->fluxLimiter(vars, projectionLimiterId, r);
-    SCIHOOK_TRIGGER_FLUXLIMITER_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_FLUXLIMITER_AFTER
     return result;
   }
 
@@ -227,9 +227,9 @@ class RemapADIServiceBase
   Real fluxLimiterG(const ::Types_mahyco::Limiteur projectionLimiterId, const Real gradplus, const Real gradmoins, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real hplus, const Real hmoins)
   {
     RemapADIFluxLimiterGVars vars;
-    SCIHOOK_TRIGGER_FLUXLIMITERG_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_FLUXLIMITERG_BEFORE
     auto result = this->fluxLimiterG(vars, projectionLimiterId, gradplus, gradmoins, y0, yplus, ymoins, h0, hplus, hmoins);
-    SCIHOOK_TRIGGER_FLUXLIMITERG_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_FLUXLIMITERG_AFTER
     return result;
   }
 
@@ -266,9 +266,9 @@ class RemapADIServiceBase
     RemapADIComputeFluxPPVars vars(m_h_cell_lagrange
         , m_phi_lagrange
         , m_grad_phi);
-    SCIHOOK_TRIGGER_COMPUTEFLUXPP_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEFLUXPP_BEFORE
     this->computeFluxPP(vars, cell, frontcell, backcell, face_normal_velocity, deltat_n, type, flux_threshold, projectionPenteBorneDebarFix, dual_normal_velocity, calcul_flux_dual, flux, flux_dual, nbmat, nb_vars);
-    SCIHOOK_TRIGGER_COMPUTEFLUXPP_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEFLUXPP_AFTER
   }
 
   /*!
@@ -277,9 +277,9 @@ class RemapADIServiceBase
   Real computeY0(const ::Types_mahyco::Limiteur projectionLimiterId, const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real hplus, const Real hmoins, const Integer type)
   {
     RemapADIComputeY0Vars vars;
-    SCIHOOK_TRIGGER_COMPUTEY0_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEY0_BEFORE
     auto result = this->computeY0(vars, projectionLimiterId, y0, yplus, ymoins, h0, hplus, hmoins, type);
-    SCIHOOK_TRIGGER_COMPUTEY0_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEY0_AFTER
     return result;
   }
 
@@ -289,9 +289,9 @@ class RemapADIServiceBase
   Real computexgxd(const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real y0plus, const Real y0moins, const Integer type)
   {
     RemapADIComputexgxdVars vars;
-    SCIHOOK_TRIGGER_COMPUTEXGXD_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEXGXD_BEFORE
     auto result = this->computexgxd(vars, y0, yplus, ymoins, h0, y0plus, y0moins, type);
-    SCIHOOK_TRIGGER_COMPUTEXGXD_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEXGXD_AFTER
     return result;
   }
 
@@ -301,9 +301,9 @@ class RemapADIServiceBase
   Real computeygyd(const Real y0, const Real yplus, const Real ymoins, const Real h0, const Real y0plus, const Real y0moins, const Real grady, const Integer type)
   {
     RemapADIComputeygydVars vars;
-    SCIHOOK_TRIGGER_COMPUTEYGYD_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEYGYD_BEFORE
     auto result = this->computeygyd(vars, y0, yplus, ymoins, h0, y0plus, y0moins, grady, type);
-    SCIHOOK_TRIGGER_COMPUTEYGYD_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEYGYD_AFTER
     return result;
   }
 
@@ -313,9 +313,9 @@ class RemapADIServiceBase
   Real intY(const Real X, const Real x0, const Real y0, const Real x1, const Real y1)
   {
     RemapADIIntYVars vars;
-    SCIHOOK_TRIGGER_INTY_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_INTY_BEFORE
     auto result = this->intY(vars, X, x0, y0, x1, y1);
-    SCIHOOK_TRIGGER_INTY_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_INTY_AFTER
     return result;
   }
 
@@ -352,9 +352,9 @@ class RemapADIServiceBase
     RemapADIComputeFluxPPPureVars vars(m_h_cell_lagrange
         , m_phi_lagrange
         , m_grad_phi);
-    SCIHOOK_TRIGGER_COMPUTEFLUXPPPURE_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEFLUXPPPURE_BEFORE
     this->computeFluxPPPure(vars, cell, frontcell, backcell, face_normal_velocity, deltat_n, type, flux_threshold, projectionPenteBorneDebarFix, dual_normal_velocity, calcul_flux_dual, Flux, Flux_dual, nbmat, nb_vars);
-    SCIHOOK_TRIGGER_COMPUTEFLUXPPPURE_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEFLUXPPPURE_AFTER
   }
 
   /*!
@@ -387,9 +387,9 @@ class RemapADIServiceBase
         , m_grad_phi_face
         , m_deltax_lagrange
         , m_h_cell_lagrange);
-    SCIHOOK_TRIGGER_COMPUTEGRADPHIFACE_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEGRADPHIFACE_BEFORE
     this->computeGradPhiFace(vars, idir, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_COMPUTEGRADPHIFACE_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEGRADPHIFACE_AFTER
   }
 
   /*!
@@ -424,9 +424,9 @@ class RemapADIServiceBase
         , m_delta_phi_face_ar
         , m_est_mixte
         , m_est_pure);
-    SCIHOOK_TRIGGER_COMPUTEGRADPHICELL_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEGRADPHICELL_BEFORE
     this->computeGradPhiCell(vars, idir, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_COMPUTEGRADPHICELL_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEGRADPHICELL_AFTER
   }
 
   /*!
@@ -471,9 +471,9 @@ class RemapADIServiceBase
         , m_est_mixte
         , m_est_pure
         , m_phi_face);
-    SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_BEFORE
     this->computeUpwindFaceQuantitiesForProjection(vars, idir, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTION_AFTER
   }
 
   /*!
@@ -506,9 +506,9 @@ class RemapADIServiceBase
         , m_cell_coord
         , m_grad_phi
         , m_phi_face);
-    SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_BEFORE
     this->computeUpwindFaceQuantitiesForProjectionPBorn0O2(vars, idir, nb_vars_to_project);
-    SCIHOOK_TRIGGER_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEUPWINDFACEQUANTITIESFORPROJECTIONPBORN0O2_AFTER
   }
 
   /*!
@@ -550,9 +550,9 @@ class RemapADIServiceBase
         , m_est_pure
         , m_u_lagrange
         , m_phi_lagrange);
-    SCIHOOK_TRIGGER_COMPUTEUREMAP_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEUREMAP_BEFORE
     this->computeUremap(vars, idir, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_COMPUTEUREMAP_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEUREMAP_AFTER
   }
 
   /*!
@@ -587,9 +587,9 @@ class RemapADIServiceBase
         , m_est_pure
         , m_u_lagrange
         , m_phi_lagrange);
-    SCIHOOK_TRIGGER_COMPUTEUREMAPPBORN0_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEUREMAPPBORN0_BEFORE
     this->computeUremapPBorn0(vars, idir, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_COMPUTEUREMAPPBORN0_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEUREMAPPBORN0_AFTER
   }
 
   /*!
@@ -625,9 +625,9 @@ class RemapADIServiceBase
         , m_front_flux_mass_env
         , m_u_dual_lagrange
         , m_phi_dual_lagrange);
-    SCIHOOK_TRIGGER_COMPUTEDUALUREMAP_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEDUALUREMAP_BEFORE
     this->computeDualUremap(vars, idir, nb_env);
-    SCIHOOK_TRIGGER_COMPUTEDUALUREMAP_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEDUALUREMAP_AFTER
   }
 
   /*!
@@ -636,9 +636,9 @@ class RemapADIServiceBase
   Real computeRemapFlux(const Integer projectionOrder, const Integer projectionAvecPlateauPente, const Real face_normal_velocity, const Real3 face_normal, const Real face_length, const Real phi_face, const Real3 outer_face_normal, const Real3 exy, const Real deltat_n)
   {
     RemapADIComputeRemapFluxVars vars;
-    SCIHOOK_TRIGGER_COMPUTEREMAPFLUX_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEREMAPFLUX_BEFORE
     auto result = this->computeRemapFlux(vars, projectionOrder, projectionAvecPlateauPente, face_normal_velocity, face_normal, face_length, phi_face, outer_face_normal, exy, deltat_n);
-    SCIHOOK_TRIGGER_COMPUTEREMAPFLUX_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_COMPUTEREMAPFLUX_AFTER
     return result;
   }
 
@@ -677,9 +677,9 @@ class RemapADIServiceBase
   void appliRemap(const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env) override
   {
     RemapADIAppliRemapVars vars(m_sens_projection);
-    SCIHOOK_TRIGGER_APPLIREMAP_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_APPLIREMAP_BEFORE
     this->appliRemap(vars, dimension, withDualProjection, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_APPLIREMAP_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_APPLIREMAP_AFTER
   }
 
   /*!
@@ -717,9 +717,9 @@ class RemapADIServiceBase
         , m_back_flux_mass_env
         , m_back_flux_contrib_env
         , m_front_flux_contrib_env);
-    SCIHOOK_TRIGGER_RESIZEREMAPVARIABLES_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_RESIZEREMAPVARIABLES_BEFORE
     this->resizeRemapVariables(vars, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_RESIZEREMAPVARIABLES_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_RESIZEREMAPVARIABLES_AFTER
   }
 
   /*!
@@ -747,9 +747,9 @@ class RemapADIServiceBase
         , m_dual_phi_flux
         , m_est_mixte
         , m_est_pure);
-    SCIHOOK_TRIGGER_SYNCHRONIZEUREMAP_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_SYNCHRONIZEUREMAP_BEFORE
     this->synchronizeUremap(vars);
-    SCIHOOK_TRIGGER_SYNCHRONIZEUREMAP_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_SYNCHRONIZEUREMAP_AFTER
   }
 
   /*!
@@ -789,9 +789,9 @@ class RemapADIServiceBase
         , m_pseudo_viscosity
         , m_density
         , m_internal_energy);
-    SCIHOOK_TRIGGER_REMAPVARIABLES_BEFORE
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_REMAPVARIABLES_BEFORE
     this->remapVariables(vars, dimension, withDualProjection, nb_vars_to_project, nb_env);
-    SCIHOOK_TRIGGER_REMAPVARIABLES_AFTER
+    SCIHOOK_TRIGGER_REMAP_ADI_REMAPADI_REMAPVARIABLES_AFTER
   }
 
 

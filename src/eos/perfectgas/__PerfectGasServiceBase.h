@@ -87,9 +87,9 @@ class PerfectGasServiceBase
         , m_density
         , m_internal_energy
         , m_sound_speed);
-    SCIHOOK_TRIGGER_INITEOS_BEFORE
+    SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_INITEOS_BEFORE
     this->initEOS(vars, env);
-    SCIHOOK_TRIGGER_INITEOS_AFTER
+    SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_INITEOS_AFTER
   }
 
   /*!
@@ -119,9 +119,9 @@ class PerfectGasServiceBase
         , m_pressure
         , m_sound_speed
         , m_dpde);
-    SCIHOOK_TRIGGER_APPLYEOS_BEFORE
+    SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_BEFORE
     this->applyEOS(vars, env);
-    SCIHOOK_TRIGGER_APPLYEOS_AFTER
+    SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_AFTER
   }
 
   /*!
@@ -151,9 +151,9 @@ class PerfectGasServiceBase
         , m_pressure
         , m_sound_speed
         , m_dpde);
-    SCIHOOK_TRIGGER_APPLYONECELLEOS_BEFORE
+    SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_APPLYONECELLEOS_BEFORE
     this->applyOneCellEOS(vars, env, ev);
-    SCIHOOK_TRIGGER_APPLYONECELLEOS_AFTER
+    SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_APPLYONECELLEOS_AFTER
   }
 
 
