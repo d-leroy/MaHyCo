@@ -1,5 +1,5 @@
-#ifndef EOS_PERFECTGAS___PERFECTGASSERVICEVARS_H
-#define EOS_PERFECTGAS___PERFECTGASSERVICEVARS_H
+#ifndef EOS_STIFFENEDGAS___STIFFENEDGASACCSERVICEVARS_H
+#define EOS_STIFFENEDGAS___STIFFENEDGASACCSERVICEVARS_H
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -22,15 +22,15 @@
 
 using namespace Arcane;
 using namespace Arcane::Materials;
-namespace EosPerfectgas {
+namespace EosStiffenedgas {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 //! Classe de variable pour initEOS
-struct PerfectGasInitEOSVars final
+struct StiffenedGasAccInitEOSVars final
 {
-  PerfectGasInitEOSVars(const MaterialVariableCellReal& pressure,
+  StiffenedGasAccInitEOSVars(const MaterialVariableCellReal& pressure,
       const MaterialVariableCellReal& density,
       MaterialVariableCellReal& internal_energy,
       MaterialVariableCellReal& sound_speed)
@@ -63,72 +63,37 @@ struct PerfectGasInitEOSVars final
 };
 
 //! Classe de variable pour applyEOS
-struct PerfectGasApplyEOSVars final
+struct StiffenedGasAccApplyEOSVars final
 {
-  PerfectGasApplyEOSVars(const MaterialVariableCellReal& density,
-      const MaterialVariableCellReal& internal_energy,
-      MaterialVariableCellReal& pressure,
-      MaterialVariableCellReal& sound_speed,
-      MaterialVariableCellReal& dpde)
-  : m_density(density)
-  , m_internal_energy(internal_energy)
-  , m_pressure(pressure)
-  , m_sound_speed(sound_speed)
-  , m_dpde(dpde)
+  StiffenedGasAccApplyEOSVars()
   {}
-
-  /*!
-  [in] density
-   DENSITY 
-  */
-  const MaterialVariableCellReal& m_density;
-  /*!
-  [in] internal_energy
-   INTERNAL ENERGY 
-  */
-  const MaterialVariableCellReal& m_internal_energy;
-  /*!
-  [inout] pressure
-   PRESSURE 
-  */
-  MaterialVariableCellReal& m_pressure;
-  /*!
-  [out] sound_speed
-   SOUND SPEED 
-  */
-  MaterialVariableCellReal& m_sound_speed;
-  /*!
-  [out] dpde
-   DPDE 
-  */
-  MaterialVariableCellReal& m_dpde;
 };
 
 //! Classe de variable pour applyOneCellEOS
-struct PerfectGasApplyOneCellEOSVars final
+struct StiffenedGasAccApplyOneCellEOSVars final
 {
-  PerfectGasApplyOneCellEOSVars(const MaterialVariableCellReal& density,
-      const MaterialVariableCellReal& internal_energy,
+  StiffenedGasAccApplyOneCellEOSVars(const MaterialVariableCellReal& internal_energy,
+      const MaterialVariableCellReal& density,
       MaterialVariableCellReal& pressure,
       MaterialVariableCellReal& sound_speed,
       MaterialVariableCellReal& dpde)
-  : m_density(density)
-  , m_internal_energy(internal_energy)
+  : m_internal_energy(internal_energy)
+  , m_density(density)
   , m_pressure(pressure)
   , m_sound_speed(sound_speed)
   , m_dpde(dpde)
   {}
 
   /*!
-  [in] density
-   DENSITY 
-  */
-  const MaterialVariableCellReal& m_density;
-  /*!
   [in] internal_energy
    INTERNAL ENERGY 
   */
   const MaterialVariableCellReal& m_internal_energy;
+  /*!
+  [in] density
+   DENSITY 
+  */
+  const MaterialVariableCellReal& m_density;
   /*!
   [out] pressure
    PRESSURE 
@@ -150,9 +115,9 @@ struct PerfectGasApplyOneCellEOSVars final
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-}  // namespace EosPerfectgas
+}  // namespace EosStiffenedgas
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#endif  // EOS_PERFECTGAS___PERFECTGASSERVICEVARS_H
+#endif  // EOS_STIFFENEDGAS___STIFFENEDGASACCSERVICEVARS_H

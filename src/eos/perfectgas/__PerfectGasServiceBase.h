@@ -16,13 +16,8 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
-#include "arcane/materials/MatConcurrency.h"
-#include "arcane/accelerator/RunCommandMaterialEnumerate.h"
-#include "accenv/IAccEnv.h"
-#include "accenv/SingletonIAccEnv.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/perfectgas/__PerfectGasServiceVars.h"
-#include "eos/perfectgas/__PerfectGasServiceViews.h"
 #include "eos/perfectgas/PerfectGas_axl.h"
 #include "eos/perfectgas/__PerfectGasServiceSciHookMacros.h"
 
@@ -50,7 +45,6 @@ class PerfectGasServiceBase
   explicit PerfectGasServiceBase(const ServiceBuildInfo& bi)
   : ArcanePerfectGasObject(bi)
   , m_mesh_material_mng(IMeshMaterialMng::getReference(bi.mesh()))
-  , m_acc_env(SingletonIAccEnv::accEnv(subDomain()))
   {
     SCIHOOK_INITIALIZE_EOS_PERFECTGAS_PERFECTGAS_EVENTS
   }
@@ -65,7 +59,6 @@ class PerfectGasServiceBase
   bool hasLimitTension() const { return options()->hasLimitTension(); }
   const String getImplName() const { return "PerfectGasService"; }
   IMeshMaterialMng* getMeshMaterialMng() const { return m_mesh_material_mng; }
-  IAccEnv* getAccEnv() const { return m_acc_env; }
 
  public:  // ***** METHODES CONCRETES
   /*!
@@ -109,7 +102,7 @@ class PerfectGasServiceBase
        {
          rank=same;
          applyEOS [style="rounded, filled", fillcolor="gray"];
-         inVars [shape="record", label="density | internal_energy | adiabatic_cst | pressure"];
+         inVars [shape="record", label="density | internal_energy | pressure"];
          inVars -> applyEOS;
          outVars [shape="record", label="pressure | sound_speed | dpde"];
          applyEOS -> outVars;
@@ -119,25 +112,15 @@ class PerfectGasServiceBase
    \enddot
    Cette méthode construit les variables et appelle PerfectGasService::applyEOS.
   */
-  void applyEOS(const EnvCellVectorView items, ::Arcane::Materials::IMeshEnvironment* env) override
+  void applyEOS(::Arcane::Materials::IMeshEnvironment* env) override
   {
-    auto queue = getAccEnv()->newQueue();
-    auto command = makeCommand(queue);
-    PerfectGasApplyEOSViews acc_context(ax::viewIn(command, m_density),
-        ax::viewIn(command, m_density.globalVariable()),
-        ax::viewIn(command, m_internal_energy),
-        ax::viewIn(command, m_internal_energy.globalVariable()),
-        getAdiabaticCst(),
-        ax::viewInOut(command, m_pressure),
-        ax::viewInOut(command, m_pressure.globalVariable()),
-        ax::viewOut(command, m_sound_speed),
-        ax::viewOut(command, m_sound_speed.globalVariable()),
-        ax::viewOut(command, m_dpde),
-        ax::viewOut(command, m_dpde.globalVariable()));
+    PerfectGasApplyEOSVars vars(m_density
+        , m_internal_energy
+        , m_pressure
+        , m_sound_speed
+        , m_dpde);
     SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_BEFORE
-    command << RUNCOMMAND_MAT_ENUMERATE(EnvCell, iid, items) {
-      acc_context.apply(iid);
-    };
+    this->applyEOS(vars, env);
     SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_AFTER
   }
 
@@ -176,11 +159,11 @@ class PerfectGasServiceBase
 
  public:  // ***** METHODES ABSTRAITES
   virtual void initEOS(PerfectGasInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) = 0;
+  virtual void applyEOS(PerfectGasApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) = 0;
   virtual void applyOneCellEOS(PerfectGasApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) = 0;
 
  protected:  // ***** ATTRIBUTS
   IMeshMaterialMng* m_mesh_material_mng;
-  IAccEnv* m_acc_env;
 };
 
 /*---------------------------------------------------------------------------*/

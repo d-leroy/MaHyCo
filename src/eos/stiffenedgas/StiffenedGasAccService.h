@@ -1,10 +1,10 @@
-#ifndef EOS_STIFFENEDGAS_STIFFENEDGASSERVICE_H
-#define EOS_STIFFENEDGAS_STIFFENEDGASSERVICE_H
+#ifndef EOS_STIFFENEDGAS_STIFFENEDGASACCSERVICE_H
+#define EOS_STIFFENEDGAS_STIFFENEDGASACCSERVICE_H
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include "eos/stiffenedgas/__StiffenedGasServiceBase.h"
+#include "eos/stiffenedgas/__StiffenedGasAccServiceBase.h"
 #include "arcane/materials/CellToAllEnvCellConverter.h"
 #include "arcane/materials/ComponentSimd.h"
 #include "arcane/materials/EnvCellVector.h"
@@ -33,20 +33,20 @@ namespace EosStiffenedgas {
 /*---------------------------------------------------------------------------*/
 
 /*!
- * \brief Service StiffenedGas : implémentation
+ * \brief Service StiffenedGasAcc : implémentation
  * 
  */
-class StiffenedGasService
-: public StiffenedGasServiceBase<StiffenedGasService>
+class StiffenedGasAccService
+: public StiffenedGasAccServiceBase<StiffenedGasAccService>
 {
  public:
-  explicit StiffenedGasService(const ServiceBuildInfo& bi);
-  ~StiffenedGasService();
+  explicit StiffenedGasAccService(const ServiceBuildInfo& bi);
+  ~StiffenedGasAccService();
 
  public:
-  void initEOS(StiffenedGasInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
-  void applyEOS(StiffenedGasApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
-  void applyOneCellEOS(StiffenedGasApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) override;
+  void initEOS(StiffenedGasAccInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
+  void applyEOS(StiffenedGasAccApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
+  void applyOneCellEOS(StiffenedGasAccApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) override;
 };
 
 /*---------------------------------------------------------------------------*/
@@ -57,4 +57,4 @@ class StiffenedGasService
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#endif  // EOS_STIFFENEDGAS_STIFFENEDGASSERVICE_H
+#endif  // EOS_STIFFENEDGAS_STIFFENEDGASACCSERVICE_H

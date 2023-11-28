@@ -1,5 +1,5 @@
-#ifndef EOS_PERFECTGAS___PERFECTGASSERVICEVARS_H
-#define EOS_PERFECTGAS___PERFECTGASSERVICEVARS_H
+#ifndef EOS_PERFECTGAS___PERFECTGASACCSERVICEVARS_H
+#define EOS_PERFECTGAS___PERFECTGASACCSERVICEVARS_H
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -28,9 +28,9 @@ namespace EosPerfectgas {
 /*---------------------------------------------------------------------------*/
 
 //! Classe de variable pour initEOS
-struct PerfectGasInitEOSVars final
+struct PerfectGasAccInitEOSVars final
 {
-  PerfectGasInitEOSVars(const MaterialVariableCellReal& pressure,
+  PerfectGasAccInitEOSVars(const MaterialVariableCellReal& pressure,
       const MaterialVariableCellReal& density,
       MaterialVariableCellReal& internal_energy,
       MaterialVariableCellReal& sound_speed)
@@ -63,51 +63,16 @@ struct PerfectGasInitEOSVars final
 };
 
 //! Classe de variable pour applyEOS
-struct PerfectGasApplyEOSVars final
+struct PerfectGasAccApplyEOSVars final
 {
-  PerfectGasApplyEOSVars(const MaterialVariableCellReal& density,
-      const MaterialVariableCellReal& internal_energy,
-      MaterialVariableCellReal& pressure,
-      MaterialVariableCellReal& sound_speed,
-      MaterialVariableCellReal& dpde)
-  : m_density(density)
-  , m_internal_energy(internal_energy)
-  , m_pressure(pressure)
-  , m_sound_speed(sound_speed)
-  , m_dpde(dpde)
+  PerfectGasAccApplyEOSVars()
   {}
-
-  /*!
-  [in] density
-   DENSITY 
-  */
-  const MaterialVariableCellReal& m_density;
-  /*!
-  [in] internal_energy
-   INTERNAL ENERGY 
-  */
-  const MaterialVariableCellReal& m_internal_energy;
-  /*!
-  [inout] pressure
-   PRESSURE 
-  */
-  MaterialVariableCellReal& m_pressure;
-  /*!
-  [out] sound_speed
-   SOUND SPEED 
-  */
-  MaterialVariableCellReal& m_sound_speed;
-  /*!
-  [out] dpde
-   DPDE 
-  */
-  MaterialVariableCellReal& m_dpde;
 };
 
 //! Classe de variable pour applyOneCellEOS
-struct PerfectGasApplyOneCellEOSVars final
+struct PerfectGasAccApplyOneCellEOSVars final
 {
-  PerfectGasApplyOneCellEOSVars(const MaterialVariableCellReal& density,
+  PerfectGasAccApplyOneCellEOSVars(const MaterialVariableCellReal& density,
       const MaterialVariableCellReal& internal_energy,
       MaterialVariableCellReal& pressure,
       MaterialVariableCellReal& sound_speed,
@@ -155,4 +120,4 @@ struct PerfectGasApplyOneCellEOSVars final
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#endif  // EOS_PERFECTGAS___PERFECTGASSERVICEVARS_H
+#endif  // EOS_PERFECTGAS___PERFECTGASACCSERVICEVARS_H

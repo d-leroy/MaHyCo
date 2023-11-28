@@ -40,7 +40,7 @@ SciHook::trigger(INITEOS_BEFORE, ctx);
 
 #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_STIFFENEDGAS_DISABLED) && not defined(SCIHOOK_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYEOS_DISABLED)
 #define SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYEOS_BEFORE \
-std::shared_ptr<StiffenedGasApplyEOSExecutionContext> ctx(new StiffenedGasApplyEOSExecutionContext("ApplyEOSExecutionContext", &acc_context, env));\
+std::shared_ptr<StiffenedGasApplyEOSExecutionContext> ctx(new StiffenedGasApplyEOSExecutionContext("ApplyEOSExecutionContext", &vars, env));\
 SciHook::trigger(APPLYEOS_BEFORE, ctx);
 #define SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYEOS_AFTER SciHook::trigger(APPLYEOS_AFTER, ctx);
 #else

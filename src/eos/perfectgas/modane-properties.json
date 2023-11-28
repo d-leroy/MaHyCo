@@ -1,3 +1,5 @@
 {
-  "generateForAccelerator": ["eos::perfectgas::PerfectGas::applyEOS"]
+  "generateForAccelerator": [
+    "eos::perfectgas::PerfectGasAcc::applyEOSWithSupport"
+  ]
 }

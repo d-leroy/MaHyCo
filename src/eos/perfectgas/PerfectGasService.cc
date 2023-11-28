@@ -41,15 +41,6 @@ ARCCORE_HOST_DEVICE inline void compute_pressure_sndspd_PG(Real adiabatic_cst,
   dpde = (adiabatic_cst - 1.) * density;
 }
 
-ARCCORE_HOST_DEVICE inline
-void PerfectGasApplyEOSViews::
-apply(ComponentItemLocalId iid) const
-{
-    this->inout_pressure[iid]    = (this->in_adiabatic_cst - 1.) * this->in_density[iid] * this->in_internal_energy[iid];
-    this->out_sound_speed[iid] = sqrt(this->in_adiabatic_cst * this->inout_pressure[iid] / this->in_density[iid]);
-    this->out_dpde[iid]        = (this->in_adiabatic_cst - 1.) * this->in_density[iid];
-}
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -71,7 +62,6 @@ initEOS(PerfectGasInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#if 0
 void PerfectGasService::
 applyEOS(PerfectGasApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 {
@@ -162,7 +152,6 @@ applyEOS(PerfectGasApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* en
     queue_mix.barrier();
 #endif
 }
-#endif
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

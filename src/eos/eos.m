@@ -14,7 +14,7 @@ interface EquationOfState {
      *  et calcule la vitesse du son et la pression. 
      */
     // TODO: passer en in quand les méthodes de IMeshEnvironment deviendront const
-    def void applyEOS(inout types_mahyco::IMeshEnvironment env) {EnvCell};
+    def void applyEOS(inout types_mahyco::IMeshEnvironment env);
     /*! 
      *  Applique l'équation d'état au groupe de mailles passé en argument
      *  et calcule la vitesse du son et la pression pour une cellule

@@ -1,10 +1,10 @@
-#ifndef EOS_STIFFENEDGAS_STIFFENEDGASSERVICE_H
-#define EOS_STIFFENEDGAS_STIFFENEDGASSERVICE_H
+#ifndef EOS_PERFECTGAS_PERFECTGASACCSERVICE_H
+#define EOS_PERFECTGAS_PERFECTGASACCSERVICE_H
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#include "eos/stiffenedgas/__StiffenedGasServiceBase.h"
+#include "eos/perfectgas/__PerfectGasAccServiceBase.h"
 #include "arcane/materials/CellToAllEnvCellConverter.h"
 #include "arcane/materials/ComponentSimd.h"
 #include "arcane/materials/EnvCellVector.h"
@@ -26,35 +26,43 @@
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+using namespace Arcane;
+using namespace Arcane::Materials;
 
-namespace EosStiffenedgas {
+class IAccEnv;
+
+namespace EosPerfectgas {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 /*!
- * \brief Service StiffenedGas : implémentation
+ * \brief Service PerfectGasAcc : implémentation
  * 
  */
-class StiffenedGasService
-: public StiffenedGasServiceBase<StiffenedGasService>
+class PerfectGasAccService
+: public PerfectGasAccServiceBase<PerfectGasAccService>
 {
  public:
-  explicit StiffenedGasService(const ServiceBuildInfo& bi);
-  ~StiffenedGasService();
+  explicit PerfectGasAccService(const ServiceBuildInfo& bi);
+  ~PerfectGasAccService();
 
  public:
-  void initEOS(StiffenedGasInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
-  void applyEOS(StiffenedGasApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
-  void applyOneCellEOS(StiffenedGasApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) override;
+  void initEOS(PerfectGasAccInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
+  void applyEOS(PerfectGasAccApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
+  void applyOneCellEOS(PerfectGasAccApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) override;
+
+ private:
+  // Pour l'utilisation des accélérateurs
+  IAccEnv* m_acc_env=nullptr;
 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-}  // namespace EosStiffenedgas
+}  // namespace EosPerfectgas
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-#endif  // EOS_STIFFENEDGAS_STIFFENEDGASSERVICE_H
+#endif  // EOS_PERFECTGAS_PERFECTGASACCSERVICE_H

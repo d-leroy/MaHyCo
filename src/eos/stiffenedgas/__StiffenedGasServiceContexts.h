@@ -72,46 +72,38 @@ struct StiffenedGasInitEOSExecutionContext final : SciHook::SciHookExecutionCont
 struct StiffenedGasApplyEOSExecutionContext final : SciHook::SciHookExecutionContext
 {
   StiffenedGasApplyEOSExecutionContext(std::string execution_context_name,
-      StiffenedGasApplyEOSViews *views,
+      StiffenedGasApplyEOSVars *vars,
       ::Arcane::Materials::IMeshEnvironment* env)
   : SciHookExecutionContext(execution_context_name)
   , env(env)
-  , views(views)
+  , vars(vars)
   {}
 
   ::Arcane::Materials::IMeshEnvironment* env;
-  const StiffenedGasApplyEOSViews *views;
+  const StiffenedGasApplyEOSVars *vars;
 
   const pybind11::object get_env() const {
     return pybind11::cast(env);
   }
 
   const pybind11::object get_internal_energy() const {
-    return pybind11::cast(views->in_internal_energy_g);
+    return pybind11::cast(vars->m_internal_energy);
   }
 
   const pybind11::object get_density() const {
-    return pybind11::cast(views->in_density_g);
-  }
-
-  const pybind11::object get_tension_limit_cst() const {
-    return pybind11::cast(views->in_tension_limit_cst);
-  }
-
-  const pybind11::object get_adiabatic_cst() const {
-    return pybind11::cast(views->in_adiabatic_cst);
+    return pybind11::cast(vars->m_density);
   }
 
   const pybind11::object get_pressure() const {
-    return pybind11::cast(views->out_pressure_g);
+    return pybind11::cast(vars->m_pressure);
   }
 
   const pybind11::object get_sound_speed() const {
-    return pybind11::cast(views->out_sound_speed_g);
+    return pybind11::cast(vars->m_sound_speed);
   }
 
   const pybind11::object get_dpde() const {
-    return pybind11::cast(views->out_dpde_g);
+    return pybind11::cast(vars->m_dpde);
   }
 };
 
