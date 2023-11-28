@@ -50,7 +50,7 @@ struct SedovInitMatMonoExecutionContext final : SciHook::SciHookExecutionContext
     return pybind11::cast(dim);
   }
 
-  const pybind11::object get_m_materiau() const {
+  const pybind11::object get_materiau() const {
     return pybind11::cast(vars->m_materiau);
   }
 };
@@ -73,35 +73,35 @@ struct SedovInitVarMonoExecutionContext final : SciHook::SciHookExecutionContext
     return pybind11::cast(dim);
   }
 
-  const pybind11::object get_m_node_coord() const {
+  const pybind11::object get_node_coord() const {
     return pybind11::cast(vars->m_node_coord);
   }
 
-  const pybind11::object get_m_cell_volume() const {
+  const pybind11::object get_cell_volume() const {
     return pybind11::cast(vars->m_cell_volume);
   }
 
-  const pybind11::object get_m_density() const {
+  const pybind11::object get_density() const {
     return pybind11::cast(vars->m_density);
   }
 
-  const pybind11::object get_m_pressure() const {
+  const pybind11::object get_pressure() const {
     return pybind11::cast(vars->m_pressure);
   }
 
-  const pybind11::object get_m_fracvol() const {
+  const pybind11::object get_fracvol() const {
     return pybind11::cast(vars->m_fracvol);
   }
 
-  const pybind11::object get_m_mass_fraction() const {
+  const pybind11::object get_mass_fraction() const {
     return pybind11::cast(vars->m_mass_fraction);
   }
 
-  const pybind11::object get_m_velocity() const {
+  const pybind11::object get_velocity() const {
     return pybind11::cast(vars->m_velocity);
   }
 
-  const pybind11::object get_m_internal_energy() const {
+  const pybind11::object get_internal_energy() const {
     return pybind11::cast(vars->m_internal_energy);
   }
 };
@@ -124,11 +124,11 @@ struct SedovInitMatExecutionContext final : SciHook::SciHookExecutionContext
     return pybind11::cast(dim);
   }
 
-  const pybind11::object get_m_node_coord() const {
+  const pybind11::object get_node_coord() const {
     return pybind11::cast(vars->m_node_coord);
   }
 
-  const pybind11::object get_m_materiau() const {
+  const pybind11::object get_materiau() const {
     return pybind11::cast(vars->m_materiau);
   }
 };
@@ -151,35 +151,35 @@ struct SedovInitVarExecutionContext final : SciHook::SciHookExecutionContext
     return pybind11::cast(dim);
   }
 
-  const pybind11::object get_m_node_coord() const {
+  const pybind11::object get_node_coord() const {
     return pybind11::cast(vars->m_node_coord);
   }
 
-  const pybind11::object get_m_cell_volume() const {
+  const pybind11::object get_cell_volume() const {
     return pybind11::cast(vars->m_cell_volume);
   }
 
-  const pybind11::object get_m_density() const {
+  const pybind11::object get_density() const {
     return pybind11::cast(vars->m_density);
   }
 
-  const pybind11::object get_m_pressure() const {
+  const pybind11::object get_pressure() const {
     return pybind11::cast(vars->m_pressure);
   }
 
-  const pybind11::object get_m_fracvol() const {
+  const pybind11::object get_fracvol() const {
     return pybind11::cast(vars->m_fracvol);
   }
 
-  const pybind11::object get_m_mass_fraction() const {
+  const pybind11::object get_mass_fraction() const {
     return pybind11::cast(vars->m_mass_fraction);
   }
 
-  const pybind11::object get_m_velocity() const {
+  const pybind11::object get_velocity() const {
     return pybind11::cast(vars->m_velocity);
   }
 
-  const pybind11::object get_m_internal_energy() const {
+  const pybind11::object get_internal_energy() const {
     return pybind11::cast(vars->m_internal_energy);
   }
 };

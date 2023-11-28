@@ -49,7 +49,6 @@ class PerfectGasService
 
  public:
   void initEOS(PerfectGasInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
-  void applyEOS(PerfectGasApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
   void applyOneCellEOS(PerfectGasApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) override;
 
  private:

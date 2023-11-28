@@ -21,6 +21,34 @@ namespace RemapAle {
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+//! Classe de variable pour appliRemap
+struct RemapALEAppliRemapVars final
+{
+  RemapALEAppliRemapVars()
+  {}
+};
+
+//! Classe de variable pour resizeRemapVariables
+struct RemapALEResizeRemapVariablesVars final
+{
+  RemapALEResizeRemapVariablesVars()
+  {}
+};
+
+//! Classe de variable pour synchronizeUremap
+struct RemapALESynchronizeUremapVars final
+{
+  RemapALESynchronizeUremapVars()
+  {}
+};
+
+//! Classe de variable pour remapVariables
+struct RemapALERemapVariablesVars final
+{
+  RemapALERemapVariablesVars()
+  {}
+};
+
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

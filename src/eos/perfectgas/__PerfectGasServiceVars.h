@@ -62,48 +62,6 @@ struct PerfectGasInitEOSVars final
   MaterialVariableCellReal& m_sound_speed;
 };
 
-//! Classe de variable pour applyEOS
-struct PerfectGasApplyEOSVars final
-{
-  PerfectGasApplyEOSVars(const MaterialVariableCellReal& density,
-      const MaterialVariableCellReal& internal_energy,
-      MaterialVariableCellReal& pressure,
-      MaterialVariableCellReal& sound_speed,
-      MaterialVariableCellReal& dpde)
-  : m_density(density)
-  , m_internal_energy(internal_energy)
-  , m_pressure(pressure)
-  , m_sound_speed(sound_speed)
-  , m_dpde(dpde)
-  {}
-
-  /*!
-  [in] density
-   DENSITY 
-  */
-  const MaterialVariableCellReal& m_density;
-  /*!
-  [in] internal_energy
-   INTERNAL ENERGY 
-  */
-  const MaterialVariableCellReal& m_internal_energy;
-  /*!
-  [out] pressure
-   PRESSURE 
-  */
-  MaterialVariableCellReal& m_pressure;
-  /*!
-  [out] sound_speed
-   SOUND SPEED 
-  */
-  MaterialVariableCellReal& m_sound_speed;
-  /*!
-  [out] dpde
-   DPDE 
-  */
-  MaterialVariableCellReal& m_dpde;
-};
-
 //! Classe de variable pour applyOneCellEOS
 struct PerfectGasApplyOneCellEOSVars final
 {

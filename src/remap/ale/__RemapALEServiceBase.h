@@ -14,6 +14,7 @@
 #include "remap/__IRemap.h"
 #include "remap/ale/__RemapALEServiceVars.h"
 #include "remap/ale/RemapALE_axl.h"
+#include "remap/ale/__RemapALEServiceSciHookMacros.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -32,10 +33,13 @@ template<class T>
 class RemapALEServiceBase
 : public ArcaneRemapALEObject
 {
+ SCIHOOK_DECLARE_REMAP_ALE_REMAPALE_EVENTS
+
  public:  // ***** CONSTRUCTEUR & DESTRUCTEUR
   explicit RemapALEServiceBase(const ServiceBuildInfo& bi)
   : ArcaneRemapALEObject(bi)
   {
+    SCIHOOK_INITIALIZE_REMAP_ALE_REMAPALE_EVENTS
   }
 
   virtual ~RemapALEServiceBase()
@@ -60,8 +64,56 @@ class RemapALEServiceBase
   const String getImplName() const { return "RemapALEService"; }
 
  public:  // ***** METHODES CONCRETES
+  /*!
+   Cette méthode construit les variables et appelle RemapALEService::appliRemap.
+  */
+  void appliRemap(const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env) override
+  {
+    RemapALEAppliRemapVars vars;
+    SCIHOOK_TRIGGER_REMAP_ALE_REMAPALE_APPLIREMAP_BEFORE
+    this->appliRemap(vars, dimension, withDualProjection, nb_vars_to_project, nb_env);
+    SCIHOOK_TRIGGER_REMAP_ALE_REMAPALE_APPLIREMAP_AFTER
+  }
+
+  /*!
+   Cette méthode construit les variables et appelle RemapALEService::resizeRemapVariables.
+  */
+  void resizeRemapVariables(const Integer nb_vars_to_project, const Integer nb_env) override
+  {
+    RemapALEResizeRemapVariablesVars vars;
+    SCIHOOK_TRIGGER_REMAP_ALE_REMAPALE_RESIZEREMAPVARIABLES_BEFORE
+    this->resizeRemapVariables(vars, nb_vars_to_project, nb_env);
+    SCIHOOK_TRIGGER_REMAP_ALE_REMAPALE_RESIZEREMAPVARIABLES_AFTER
+  }
+
+  /*!
+   Cette méthode construit les variables et appelle RemapALEService::synchronizeUremap.
+  */
+  void synchronizeUremap() override
+  {
+    RemapALESynchronizeUremapVars vars;
+    SCIHOOK_TRIGGER_REMAP_ALE_REMAPALE_SYNCHRONIZEUREMAP_BEFORE
+    this->synchronizeUremap(vars);
+    SCIHOOK_TRIGGER_REMAP_ALE_REMAPALE_SYNCHRONIZEUREMAP_AFTER
+  }
+
+  /*!
+   Cette méthode construit les variables et appelle RemapALEService::remapVariables.
+  */
+  void remapVariables(const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env) override
+  {
+    RemapALERemapVariablesVars vars;
+    SCIHOOK_TRIGGER_REMAP_ALE_REMAPALE_REMAPVARIABLES_BEFORE
+    this->remapVariables(vars, dimension, withDualProjection, nb_vars_to_project, nb_env);
+    SCIHOOK_TRIGGER_REMAP_ALE_REMAPALE_REMAPVARIABLES_AFTER
+  }
+
 
  public:  // ***** METHODES ABSTRAITES
+  virtual void appliRemap(RemapALEAppliRemapVars& vars, const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env) = 0;
+  virtual void resizeRemapVariables(RemapALEResizeRemapVariablesVars& vars, const Integer nb_vars_to_project, const Integer nb_env) = 0;
+  virtual void synchronizeUremap(RemapALESynchronizeUremapVars& vars) = 0;
+  virtual void remapVariables(RemapALERemapVariablesVars& vars, const Integer dimension, const Integer withDualProjection, const Integer nb_vars_to_project, const Integer nb_env) = 0;
 
  protected:  // ***** ATTRIBUTS
 };

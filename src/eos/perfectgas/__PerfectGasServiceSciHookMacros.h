@@ -40,7 +40,7 @@ SciHook::trigger(INITEOS_BEFORE, ctx);
 
 #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_DISABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_DISABLED)
 #define SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_BEFORE \
-std::shared_ptr<PerfectGasApplyEOSExecutionContext> ctx(new PerfectGasApplyEOSExecutionContext("ApplyEOSExecutionContext", &vars, env));\
+std::shared_ptr<PerfectGasApplyEOSExecutionContext> ctx(new PerfectGasApplyEOSExecutionContext("ApplyEOSExecutionContext", &acc_context, env));\
 SciHook::trigger(APPLYEOS_BEFORE, ctx);
 #define SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGAS_APPLYEOS_AFTER SciHook::trigger(APPLYEOS_AFTER, ctx);
 #else

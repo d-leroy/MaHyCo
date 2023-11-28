@@ -35,9 +35,9 @@ interface Remap {
     /*! projection pente borne en volume dans les mailles mixtes et en masse dans les mailles pures */
     Bool projection_pente_borne_mixte="false";
     /*! identifiant du limiteur pour les mailles mixtes */
-    types_mahyco.Limiteur projection_limiteur_id="minmod";
+    types_mahyco::Limiteur projection_limiteur_id="minmod";
     /*! identifiant du limiteur pour les mailles pures */
-    types_mahyco.Limiteur projection_limiteur_pure_id="minmod";
+    types_mahyco::Limiteur projection_limiteur_pure_id="minmod";
     /*! projection avec l'algorithme pente-borne */
     Bool projection_pente_borne="false";
     /*! projection avec l'algorithme pente-borne en evitant l'artefact de debar avec la valeur moyenne (1) ou valeur aux mailles (2) */

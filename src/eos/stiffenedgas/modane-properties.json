@@ -1,0 +1,3 @@
+{
+  "generateForAccelerator": ["eos::stiffenedgas::StiffenedGas::applyEOS"]
+}

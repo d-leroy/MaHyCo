@@ -1,4 +1,4 @@
-#set(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra -pedantic -Wnon-virtual-dtor -g " CACHE STRING "" FORCE)
+# set(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra -pedantic -Wnon-virtual-dtor -g " CACHE STRING "" FORCE)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 

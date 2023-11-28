@@ -50,7 +50,7 @@ struct SodInitMatMonoExecutionContext final : SciHook::SciHookExecutionContext
     return pybind11::cast(dim);
   }
 
-  const pybind11::object get_m_materiau() const {
+  const pybind11::object get_materiau() const {
     return pybind11::cast(vars->m_materiau);
   }
 };
@@ -73,27 +73,27 @@ struct SodInitVarMonoExecutionContext final : SciHook::SciHookExecutionContext
     return pybind11::cast(dim);
   }
 
-  const pybind11::object get_m_cell_coord() const {
+  const pybind11::object get_cell_coord() const {
     return pybind11::cast(vars->m_cell_coord);
   }
 
-  const pybind11::object get_m_density() const {
+  const pybind11::object get_density() const {
     return pybind11::cast(vars->m_density);
   }
 
-  const pybind11::object get_m_pressure() const {
+  const pybind11::object get_pressure() const {
     return pybind11::cast(vars->m_pressure);
   }
 
-  const pybind11::object get_m_fracvol() const {
+  const pybind11::object get_fracvol() const {
     return pybind11::cast(vars->m_fracvol);
   }
 
-  const pybind11::object get_m_mass_fraction() const {
+  const pybind11::object get_mass_fraction() const {
     return pybind11::cast(vars->m_mass_fraction);
   }
 
-  const pybind11::object get_m_velocity() const {
+  const pybind11::object get_velocity() const {
     return pybind11::cast(vars->m_velocity);
   }
 };
@@ -116,11 +116,11 @@ struct SodInitMatExecutionContext final : SciHook::SciHookExecutionContext
     return pybind11::cast(dim);
   }
 
-  const pybind11::object get_m_cell_coord() const {
+  const pybind11::object get_cell_coord() const {
     return pybind11::cast(vars->m_cell_coord);
   }
 
-  const pybind11::object get_m_materiau() const {
+  const pybind11::object get_materiau() const {
     return pybind11::cast(vars->m_materiau);
   }
 };
@@ -143,27 +143,27 @@ struct SodInitVarExecutionContext final : SciHook::SciHookExecutionContext
     return pybind11::cast(dim);
   }
 
-  const pybind11::object get_m_cell_coord() const {
+  const pybind11::object get_cell_coord() const {
     return pybind11::cast(vars->m_cell_coord);
   }
 
-  const pybind11::object get_m_density() const {
+  const pybind11::object get_density() const {
     return pybind11::cast(vars->m_density);
   }
 
-  const pybind11::object get_m_pressure() const {
+  const pybind11::object get_pressure() const {
     return pybind11::cast(vars->m_pressure);
   }
 
-  const pybind11::object get_m_fracvol() const {
+  const pybind11::object get_fracvol() const {
     return pybind11::cast(vars->m_fracvol);
   }
 
-  const pybind11::object get_m_mass_fraction() const {
+  const pybind11::object get_mass_fraction() const {
     return pybind11::cast(vars->m_mass_fraction);
   }
 
-  const pybind11::object get_m_velocity() const {
+  const pybind11::object get_velocity() const {
     return pybind11::cast(vars->m_velocity);
   }
 };

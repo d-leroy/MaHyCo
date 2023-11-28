@@ -16,8 +16,13 @@
 #include "arcane/materials/MeshEnvironmentVariableRef.h"
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
+#include "arcane/materials/MatConcurrency.h"
+#include "arcane/accelerator/RunCommandMaterialEnumerate.h"
+#include "accenv/IAccEnv.h"
+#include "accenv/SingletonIAccEnv.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/stiffenedgas/__StiffenedGasServiceVars.h"
+#include "eos/stiffenedgas/__StiffenedGasServiceViews.h"
 #include "eos/stiffenedgas/StiffenedGas_axl.h"
 #include "eos/stiffenedgas/__StiffenedGasServiceSciHookMacros.h"
 
@@ -45,6 +50,7 @@ class StiffenedGasServiceBase
   explicit StiffenedGasServiceBase(const ServiceBuildInfo& bi)
   : ArcaneStiffenedGasObject(bi)
   , m_mesh_material_mng(IMeshMaterialMng::getReference(bi.mesh()))
+  , m_acc_env(SingletonIAccEnv::accEnv(subDomain()))
   {
     SCIHOOK_INITIALIZE_EOS_STIFFENEDGAS_STIFFENEDGAS_EVENTS
   }
@@ -59,6 +65,7 @@ class StiffenedGasServiceBase
   bool hasTensionLimitCst() const { return options()->hasTensionLimitCst(); }
   const String getImplName() const { return "StiffenedGasService"; }
   IMeshMaterialMng* getMeshMaterialMng() const { return m_mesh_material_mng; }
+  IAccEnv* getAccEnv() const { return m_acc_env; }
 
  public:  // ***** METHODES CONCRETES
   /*!
@@ -102,7 +109,7 @@ class StiffenedGasServiceBase
        {
          rank=same;
          applyEOS [style="rounded, filled", fillcolor="gray"];
-         inVars [shape="record", label="internal_energy | density"];
+         inVars [shape="record", label="internal_energy | density | tension_limit_cst | adiabatic_cst"];
          inVars -> applyEOS;
          outVars [shape="record", label="pressure | sound_speed | dpde"];
          applyEOS -> outVars;
@@ -112,15 +119,26 @@ class StiffenedGasServiceBase
    \enddot
    Cette méthode construit les variables et appelle StiffenedGasService::applyEOS.
   */
-  void applyEOS(::Arcane::Materials::IMeshEnvironment* env) override
+  void applyEOS(const EnvCellVectorView items, ::Arcane::Materials::IMeshEnvironment* env) override
   {
-    StiffenedGasApplyEOSVars vars(m_internal_energy
-        , m_density
-        , m_pressure
-        , m_sound_speed
-        , m_dpde);
+    auto queue = getAccEnv()->newQueue();
+    auto command = makeCommand(queue);
+    StiffenedGasApplyEOSViews acc_context(ax::viewIn(command, m_internal_energy),
+        ax::viewIn(command, m_internal_energy.globalVariable()),
+        ax::viewIn(command, m_density),
+        ax::viewIn(command, m_density.globalVariable()),
+        getTensionLimitCst(),
+        getAdiabaticCst(),
+        ax::viewOut(command, m_pressure),
+        ax::viewOut(command, m_pressure.globalVariable()),
+        ax::viewOut(command, m_sound_speed),
+        ax::viewOut(command, m_sound_speed.globalVariable()),
+        ax::viewOut(command, m_dpde),
+        ax::viewOut(command, m_dpde.globalVariable()));
     SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYEOS_BEFORE
-    this->applyEOS(vars, env);
+    command << RUNCOMMAND_MAT_ENUMERATE(EnvCell, iid, items) {
+      acc_context.apply(iid);
+    };
     SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGAS_APPLYEOS_AFTER
   }
 
@@ -159,11 +177,11 @@ class StiffenedGasServiceBase
 
  public:  // ***** METHODES ABSTRAITES
   virtual void initEOS(StiffenedGasInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) = 0;
-  virtual void applyEOS(StiffenedGasApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) = 0;
   virtual void applyOneCellEOS(StiffenedGasApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) = 0;
 
  protected:  // ***** ATTRIBUTS
   IMeshMaterialMng* m_mesh_material_mng;
+  IAccEnv* m_acc_env;
 };
 
 /*---------------------------------------------------------------------------*/

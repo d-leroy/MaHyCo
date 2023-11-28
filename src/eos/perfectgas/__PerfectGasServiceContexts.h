@@ -51,19 +51,19 @@ struct PerfectGasInitEOSExecutionContext final : SciHook::SciHookExecutionContex
     return pybind11::cast(env);
   }
 
-  const pybind11::object get_m_pressure() const {
+  const pybind11::object get_pressure() const {
     return pybind11::cast(vars->m_pressure);
   }
 
-  const pybind11::object get_m_density() const {
+  const pybind11::object get_density() const {
     return pybind11::cast(vars->m_density);
   }
 
-  const pybind11::object get_m_internal_energy() const {
+  const pybind11::object get_internal_energy() const {
     return pybind11::cast(vars->m_internal_energy);
   }
 
-  const pybind11::object get_m_sound_speed() const {
+  const pybind11::object get_sound_speed() const {
     return pybind11::cast(vars->m_sound_speed);
   }
 };
@@ -72,38 +72,42 @@ struct PerfectGasInitEOSExecutionContext final : SciHook::SciHookExecutionContex
 struct PerfectGasApplyEOSExecutionContext final : SciHook::SciHookExecutionContext
 {
   PerfectGasApplyEOSExecutionContext(std::string execution_context_name,
-      PerfectGasApplyEOSVars *vars,
+      PerfectGasApplyEOSViews *views,
       ::Arcane::Materials::IMeshEnvironment* env)
   : SciHookExecutionContext(execution_context_name)
   , env(env)
-  , vars(vars)
+  , views(views)
   {}
 
   ::Arcane::Materials::IMeshEnvironment* env;
-  const PerfectGasApplyEOSVars *vars;
+  const PerfectGasApplyEOSViews *views;
 
   const pybind11::object get_env() const {
     return pybind11::cast(env);
   }
 
-  const pybind11::object get_m_density() const {
-    return pybind11::cast(vars->m_density);
+  const pybind11::object get_density() const {
+    return pybind11::cast(views->in_density_g);
   }
 
-  const pybind11::object get_m_internal_energy() const {
-    return pybind11::cast(vars->m_internal_energy);
+  const pybind11::object get_internal_energy() const {
+    return pybind11::cast(views->in_internal_energy_g);
   }
 
-  const pybind11::object get_m_pressure() const {
-    return pybind11::cast(vars->m_pressure);
+  const pybind11::object get_adiabatic_cst() const {
+    return pybind11::cast(views->in_adiabatic_cst);
   }
 
-  const pybind11::object get_m_sound_speed() const {
-    return pybind11::cast(vars->m_sound_speed);
+  const pybind11::object get_pressure() const {
+    return pybind11::cast(views->inout_pressure_g);
   }
 
-  const pybind11::object get_m_dpde() const {
-    return pybind11::cast(vars->m_dpde);
+  const pybind11::object get_sound_speed() const {
+    return pybind11::cast(views->out_sound_speed_g);
+  }
+
+  const pybind11::object get_dpde() const {
+    return pybind11::cast(views->out_dpde_g);
   }
 };
 
@@ -132,23 +136,23 @@ struct PerfectGasApplyOneCellEOSExecutionContext final : SciHook::SciHookExecuti
     return pybind11::cast(ev);
   }
 
-  const pybind11::object get_m_density() const {
+  const pybind11::object get_density() const {
     return pybind11::cast(vars->m_density);
   }
 
-  const pybind11::object get_m_internal_energy() const {
+  const pybind11::object get_internal_energy() const {
     return pybind11::cast(vars->m_internal_energy);
   }
 
-  const pybind11::object get_m_pressure() const {
+  const pybind11::object get_pressure() const {
     return pybind11::cast(vars->m_pressure);
   }
 
-  const pybind11::object get_m_sound_speed() const {
+  const pybind11::object get_sound_speed() const {
     return pybind11::cast(vars->m_sound_speed);
   }
 
-  const pybind11::object get_m_dpde() const {
+  const pybind11::object get_dpde() const {
     return pybind11::cast(vars->m_dpde);
   }
 };

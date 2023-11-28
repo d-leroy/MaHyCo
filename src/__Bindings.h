@@ -6,6 +6,7 @@
 #include "eos/stiffenedgas/__StiffenedGasServiceBindings.h"
 #include "mahyco/__MahycoModuleBindings.h"
 #include "remap/adi/__RemapADIServiceBindings.h"
+#include "remap/ale/__RemapALEServiceBindings.h"
 
 void bind_submodules(py::module __attribute__((unused)) &m) {
   py::module_ arcpy = py::module_::import("arcpy");
@@ -17,4 +18,5 @@ void bind_submodules(py::module __attribute__((unused)) &m) {
   EosStiffenedgas::bind_eos_stiffenedgas_stiffenedgas(m);
   Mahyco::bind_mahyco_mahyco(m);
   RemapAdi::bind_remap_adi_remapadi(m);
+  RemapAle::bind_remap_ale_remapale(m);
 }

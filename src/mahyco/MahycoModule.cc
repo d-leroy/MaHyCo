@@ -1375,7 +1375,7 @@ updateEnergyAndPressure(MahycoUpdateEnergyAndPressureVars& vars)
     for( Integer i=0,n=getEnvironment().size(); i<n; ++i ) {
         IMeshEnvironment* ienv = mm->environments()[i];
         // Calcul de la pression et de la vitesse du son
-        getEnvironment()[i]->getEosModel()->applyEOS(ienv);
+        getEnvironment()[i]->getEosModel()->applyEOS(ienv->envView(), ienv);
     }
     MahycoModuleBase<Mahyco::MahycoModule>::computeAveragePressure();
   }
@@ -2570,7 +2570,7 @@ remap(MahycoRemapVars& vars)
       for (Integer index_env=0; index_env < m_nb_env ; index_env++) {
         IMeshEnvironment* ienv = mm->environments()[index_env];
         // Calcul de la pression et de la vitesse du son
-        options()->environment[index_env].eosModel()->applyEOS(ienv);
+        options()->environment[index_env].eosModel()->applyEOS(ienv->envView(), ienv);
       }
       Mahyco::MahycoModuleBase<MahycoModule>::computeAveragePressure();
    }

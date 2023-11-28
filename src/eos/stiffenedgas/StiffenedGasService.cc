@@ -45,6 +45,20 @@ void StiffenedGasService::
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+
+ARCCORE_HOST_DEVICE inline
+void StiffenedGasApplyEOSViews::
+apply(ComponentItemLocalId iid) const
+{
+    Real internal_energy = this->in_internal_energy[iid];
+    Real density = this->in_density[iid];
+    Real pressure = ((this->in_adiabatic_cst - 1.) * this->in_density[iid] * this->in_internal_energy[iid]) - (this->in_adiabatic_cst * this->in_tension_limit_cst);
+    this->out_pressure[iid] = pressure;
+    this->out_sound_speed[iid] = sqrt((this->in_adiabatic_cst/density)*(pressure+this->in_tension_limit_cst));
+    this->out_dpde[iid] = (this->in_adiabatic_cst - 1.) * density;
+}
+
+#if 0
 void StiffenedGasService::
     applyEOS(StiffenedGasApplyEOSVars &vars, ::Arcane::Materials::IMeshEnvironment *env)
 {
@@ -62,6 +76,7 @@ void StiffenedGasService::
         vars.m_dpde[envcell] = (adiabatic_cst - 1.) * density;
     }
 }
+#endif
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

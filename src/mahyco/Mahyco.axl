@@ -208,16 +208,9 @@
       </description>
 
     </simple>
-    <simple name="deltat-init" type="real">
-      <description> Valeur du &lt;em&gt;deltat&lt;/em&gt; au moment du démarrage. </description>
-    </simple>
+    <simple name="deltat-init" type="real"/>
     <simple name="final-time" type="real">
       <name lang="fr">temps--final</name>
-      <description>
-          Temps auquel on stoppe la simulation. Le code s'arrête dès que
-          le temps courant est &lt;strong&gt;strictement&lt;/strong&gt; supérieur à ce temps.
-      </description>
-
     </simple>
     <simple name="cfl" type="real" default="0.3">
       <description> Définition de la CFL </description>

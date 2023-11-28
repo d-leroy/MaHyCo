@@ -45,11 +45,11 @@ struct RemapADISynchronizeDualUremapExecutionContext final : SciHook::SciHookExe
 
   const RemapADISynchronizeDualUremapVars *vars;
 
-  const pybind11::object get_m_phi_dual_lagrange() const {
+  const pybind11::object get_phi_dual_lagrange() const {
     return pybind11::cast(vars->m_phi_dual_lagrange);
   }
 
-  const pybind11::object get_m_u_dual_lagrange() const {
+  const pybind11::object get_u_dual_lagrange() const {
     return pybind11::cast(vars->m_u_dual_lagrange);
   }
 };
@@ -114,19 +114,19 @@ struct RemapADIComputeAndLimitGradPhiExecutionContext final : SciHook::SciHookEx
     return pybind11::cast(nb_vars);
   }
 
-  const pybind11::object get_m_grad_phi() const {
+  const pybind11::object get_grad_phi() const {
     return pybind11::cast(vars->m_grad_phi);
   }
 
-  const pybind11::object get_m_grad_phi_face() const {
+  const pybind11::object get_grad_phi_face() const {
     return pybind11::cast(vars->m_grad_phi_face);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 
-  const pybind11::object get_m_h_cell_lagrange() const {
+  const pybind11::object get_h_cell_lagrange() const {
     return pybind11::cast(vars->m_h_cell_lagrange);
   }
 };
@@ -184,11 +184,11 @@ struct RemapADIComputeDualGradPhiExecutionContext final : SciHook::SciHookExecut
     return pybind11::cast(idir);
   }
 
-  const pybind11::object get_m_phi_dual_lagrange() const {
+  const pybind11::object get_phi_dual_lagrange() const {
     return pybind11::cast(vars->m_phi_dual_lagrange);
   }
 
-  const pybind11::object get_m_node_coord() const {
+  const pybind11::object get_node_coord() const {
     return pybind11::cast(vars->m_node_coord);
   }
 };
@@ -267,11 +267,11 @@ struct RemapADIComputeAndLimitGradPhiDualExecutionContext final : SciHook::SciHo
     return pybind11::cast(hmoins);
   }
 
-  const pybind11::object get_m_phi_dual_lagrange() const {
+  const pybind11::object get_phi_dual_lagrange() const {
     return pybind11::cast(vars->m_phi_dual_lagrange);
   }
 
-  const pybind11::object get_m_dual_grad_phi() const {
+  const pybind11::object get_dual_grad_phi() const {
     return pybind11::cast(vars->m_dual_grad_phi);
   }
 };
@@ -480,15 +480,15 @@ struct RemapADIComputeFluxPPExecutionContext final : SciHook::SciHookExecutionCo
     return pybind11::cast(nb_vars);
   }
 
-  const pybind11::object get_m_h_cell_lagrange() const {
+  const pybind11::object get_h_cell_lagrange() const {
     return pybind11::cast(vars->m_h_cell_lagrange);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 
-  const pybind11::object get_m_grad_phi() const {
+  const pybind11::object get_grad_phi() const {
     return pybind11::cast(vars->m_grad_phi);
   }
 };
@@ -834,15 +834,15 @@ struct RemapADIComputeFluxPPPureExecutionContext final : SciHook::SciHookExecuti
     return pybind11::cast(nb_vars);
   }
 
-  const pybind11::object get_m_h_cell_lagrange() const {
+  const pybind11::object get_h_cell_lagrange() const {
     return pybind11::cast(vars->m_h_cell_lagrange);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 
-  const pybind11::object get_m_grad_phi() const {
+  const pybind11::object get_grad_phi() const {
     return pybind11::cast(vars->m_grad_phi);
   }
 };
@@ -879,35 +879,35 @@ struct RemapADIComputeGradPhiFaceExecutionContext final : SciHook::SciHookExecut
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_face_normal() const {
+  const pybind11::object get_face_normal() const {
     return pybind11::cast(vars->m_face_normal);
   }
 
-  const pybind11::object get_m_cell_coord() const {
+  const pybind11::object get_cell_coord() const {
     return pybind11::cast(vars->m_cell_coord);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 
-  const pybind11::object get_m_face_coord() const {
+  const pybind11::object get_face_coord() const {
     return pybind11::cast(vars->m_face_coord);
   }
 
-  const pybind11::object get_m_is_dir_face() const {
+  const pybind11::object get_is_dir_face() const {
     return pybind11::cast(vars->m_is_dir_face);
   }
 
-  const pybind11::object get_m_grad_phi_face() const {
+  const pybind11::object get_grad_phi_face() const {
     return pybind11::cast(vars->m_grad_phi_face);
   }
 
-  const pybind11::object get_m_deltax_lagrange() const {
+  const pybind11::object get_deltax_lagrange() const {
     return pybind11::cast(vars->m_deltax_lagrange);
   }
 
-  const pybind11::object get_m_h_cell_lagrange() const {
+  const pybind11::object get_h_cell_lagrange() const {
     return pybind11::cast(vars->m_h_cell_lagrange);
   }
 };
@@ -944,43 +944,43 @@ struct RemapADIComputeGradPhiCellExecutionContext final : SciHook::SciHookExecut
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_outer_face_normal() const {
+  const pybind11::object get_outer_face_normal() const {
     return pybind11::cast(vars->m_outer_face_normal);
   }
 
-  const pybind11::object get_m_face_normal_velocity() const {
+  const pybind11::object get_face_normal_velocity() const {
     return pybind11::cast(vars->m_face_normal_velocity);
   }
 
-  const pybind11::object get_m_face_length_lagrange() const {
+  const pybind11::object get_face_length_lagrange() const {
     return pybind11::cast(vars->m_face_length_lagrange);
   }
 
-  const pybind11::object get_m_is_dir_face() const {
+  const pybind11::object get_is_dir_face() const {
     return pybind11::cast(vars->m_is_dir_face);
   }
 
-  const pybind11::object get_m_grad_phi() const {
+  const pybind11::object get_grad_phi() const {
     return pybind11::cast(vars->m_grad_phi);
   }
 
-  const pybind11::object get_m_dual_phi_flux() const {
+  const pybind11::object get_dual_phi_flux() const {
     return pybind11::cast(vars->m_dual_phi_flux);
   }
 
-  const pybind11::object get_m_delta_phi_face_av() const {
+  const pybind11::object get_delta_phi_face_av() const {
     return pybind11::cast(vars->m_delta_phi_face_av);
   }
 
-  const pybind11::object get_m_delta_phi_face_ar() const {
+  const pybind11::object get_delta_phi_face_ar() const {
     return pybind11::cast(vars->m_delta_phi_face_ar);
   }
 
-  const pybind11::object get_m_est_mixte() const {
+  const pybind11::object get_est_mixte() const {
     return pybind11::cast(vars->m_est_mixte);
   }
 
-  const pybind11::object get_m_est_pure() const {
+  const pybind11::object get_est_pure() const {
     return pybind11::cast(vars->m_est_pure);
   }
 };
@@ -1017,55 +1017,55 @@ struct RemapADIComputeUpwindFaceQuantitiesForProjectionExecutionContext final : 
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_face_normal_velocity() const {
+  const pybind11::object get_face_normal_velocity() const {
     return pybind11::cast(vars->m_face_normal_velocity);
   }
 
-  const pybind11::object get_m_deltax_lagrange() const {
+  const pybind11::object get_deltax_lagrange() const {
     return pybind11::cast(vars->m_deltax_lagrange);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 
-  const pybind11::object get_m_face_coord() const {
+  const pybind11::object get_face_coord() const {
     return pybind11::cast(vars->m_face_coord);
   }
 
-  const pybind11::object get_m_cell_coord() const {
+  const pybind11::object get_cell_coord() const {
     return pybind11::cast(vars->m_cell_coord);
   }
 
-  const pybind11::object get_m_face_normal() const {
+  const pybind11::object get_face_normal() const {
     return pybind11::cast(vars->m_face_normal);
   }
 
-  const pybind11::object get_m_grad_phi() const {
+  const pybind11::object get_grad_phi() const {
     return pybind11::cast(vars->m_grad_phi);
   }
 
-  const pybind11::object get_m_delta_phi_face_av() const {
+  const pybind11::object get_delta_phi_face_av() const {
     return pybind11::cast(vars->m_delta_phi_face_av);
   }
 
-  const pybind11::object get_m_delta_phi_face_ar() const {
+  const pybind11::object get_delta_phi_face_ar() const {
     return pybind11::cast(vars->m_delta_phi_face_ar);
   }
 
-  const pybind11::object get_m_h_cell_lagrange() const {
+  const pybind11::object get_h_cell_lagrange() const {
     return pybind11::cast(vars->m_h_cell_lagrange);
   }
 
-  const pybind11::object get_m_est_mixte() const {
+  const pybind11::object get_est_mixte() const {
     return pybind11::cast(vars->m_est_mixte);
   }
 
-  const pybind11::object get_m_est_pure() const {
+  const pybind11::object get_est_pure() const {
     return pybind11::cast(vars->m_est_pure);
   }
 
-  const pybind11::object get_m_phi_face() const {
+  const pybind11::object get_phi_face() const {
     return pybind11::cast(vars->m_phi_face);
   }
 };
@@ -1095,35 +1095,35 @@ struct RemapADIComputeUpwindFaceQuantitiesForProjectionPBorn0O2ExecutionContext 
     return pybind11::cast(nb_vars_to_project);
   }
 
-  const pybind11::object get_m_deltax_lagrange() const {
+  const pybind11::object get_deltax_lagrange() const {
     return pybind11::cast(vars->m_deltax_lagrange);
   }
 
-  const pybind11::object get_m_face_normal_velocity() const {
+  const pybind11::object get_face_normal_velocity() const {
     return pybind11::cast(vars->m_face_normal_velocity);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 
-  const pybind11::object get_m_face_coord() const {
+  const pybind11::object get_face_coord() const {
     return pybind11::cast(vars->m_face_coord);
   }
 
-  const pybind11::object get_m_face_normal() const {
+  const pybind11::object get_face_normal() const {
     return pybind11::cast(vars->m_face_normal);
   }
 
-  const pybind11::object get_m_cell_coord() const {
+  const pybind11::object get_cell_coord() const {
     return pybind11::cast(vars->m_cell_coord);
   }
 
-  const pybind11::object get_m_grad_phi() const {
+  const pybind11::object get_grad_phi() const {
     return pybind11::cast(vars->m_grad_phi);
   }
 
-  const pybind11::object get_m_phi_face() const {
+  const pybind11::object get_phi_face() const {
     return pybind11::cast(vars->m_phi_face);
   }
 };
@@ -1160,43 +1160,43 @@ struct RemapADIComputeUremapExecutionContext final : SciHook::SciHookExecutionCo
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_face_normal() const {
+  const pybind11::object get_face_normal() const {
     return pybind11::cast(vars->m_face_normal);
   }
 
-  const pybind11::object get_m_face_length_lagrange() const {
+  const pybind11::object get_face_length_lagrange() const {
     return pybind11::cast(vars->m_face_length_lagrange);
   }
 
-  const pybind11::object get_m_outer_face_normal() const {
+  const pybind11::object get_outer_face_normal() const {
     return pybind11::cast(vars->m_outer_face_normal);
   }
 
-  const pybind11::object get_m_face_normal_velocity() const {
+  const pybind11::object get_face_normal_velocity() const {
     return pybind11::cast(vars->m_face_normal_velocity);
   }
 
-  const pybind11::object get_m_phi_face() const {
+  const pybind11::object get_phi_face() const {
     return pybind11::cast(vars->m_phi_face);
   }
 
-  const pybind11::object get_m_dual_phi_flux() const {
+  const pybind11::object get_dual_phi_flux() const {
     return pybind11::cast(vars->m_dual_phi_flux);
   }
 
-  const pybind11::object get_m_est_mixte() const {
+  const pybind11::object get_est_mixte() const {
     return pybind11::cast(vars->m_est_mixte);
   }
 
-  const pybind11::object get_m_est_pure() const {
+  const pybind11::object get_est_pure() const {
     return pybind11::cast(vars->m_est_pure);
   }
 
-  const pybind11::object get_m_u_lagrange() const {
+  const pybind11::object get_u_lagrange() const {
     return pybind11::cast(vars->m_u_lagrange);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 };
@@ -1233,43 +1233,43 @@ struct RemapADIComputeUremapPBorn0ExecutionContext final : SciHook::SciHookExecu
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_face_normal() const {
+  const pybind11::object get_face_normal() const {
     return pybind11::cast(vars->m_face_normal);
   }
 
-  const pybind11::object get_m_face_normal_velocity() const {
+  const pybind11::object get_face_normal_velocity() const {
     return pybind11::cast(vars->m_face_normal_velocity);
   }
 
-  const pybind11::object get_m_face_length_lagrange() const {
+  const pybind11::object get_face_length_lagrange() const {
     return pybind11::cast(vars->m_face_length_lagrange);
   }
 
-  const pybind11::object get_m_outer_face_normal() const {
+  const pybind11::object get_outer_face_normal() const {
     return pybind11::cast(vars->m_outer_face_normal);
   }
 
-  const pybind11::object get_m_phi_face() const {
+  const pybind11::object get_phi_face() const {
     return pybind11::cast(vars->m_phi_face);
   }
 
-  const pybind11::object get_m_dual_phi_flux() const {
+  const pybind11::object get_dual_phi_flux() const {
     return pybind11::cast(vars->m_dual_phi_flux);
   }
 
-  const pybind11::object get_m_est_mixte() const {
+  const pybind11::object get_est_mixte() const {
     return pybind11::cast(vars->m_est_mixte);
   }
 
-  const pybind11::object get_m_est_pure() const {
+  const pybind11::object get_est_pure() const {
     return pybind11::cast(vars->m_est_pure);
   }
 
-  const pybind11::object get_m_u_lagrange() const {
+  const pybind11::object get_u_lagrange() const {
     return pybind11::cast(vars->m_u_lagrange);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 };
@@ -1299,47 +1299,47 @@ struct RemapADIComputeDualUremapExecutionContext final : SciHook::SciHookExecuti
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_dual_phi_flux() const {
+  const pybind11::object get_dual_phi_flux() const {
     return pybind11::cast(vars->m_dual_phi_flux);
   }
 
-  const pybind11::object get_m_node_coord() const {
+  const pybind11::object get_node_coord() const {
     return pybind11::cast(vars->m_node_coord);
   }
 
-  const pybind11::object get_m_dual_grad_phi() const {
+  const pybind11::object get_dual_grad_phi() const {
     return pybind11::cast(vars->m_dual_grad_phi);
   }
 
-  const pybind11::object get_m_back_flux_contrib_env() const {
+  const pybind11::object get_back_flux_contrib_env() const {
     return pybind11::cast(vars->m_back_flux_contrib_env);
   }
 
-  const pybind11::object get_m_front_flux_contrib_env() const {
+  const pybind11::object get_front_flux_contrib_env() const {
     return pybind11::cast(vars->m_front_flux_contrib_env);
   }
 
-  const pybind11::object get_m_back_flux_mass() const {
+  const pybind11::object get_back_flux_mass() const {
     return pybind11::cast(vars->m_back_flux_mass);
   }
 
-  const pybind11::object get_m_front_flux_mass() const {
+  const pybind11::object get_front_flux_mass() const {
     return pybind11::cast(vars->m_front_flux_mass);
   }
 
-  const pybind11::object get_m_back_flux_mass_env() const {
+  const pybind11::object get_back_flux_mass_env() const {
     return pybind11::cast(vars->m_back_flux_mass_env);
   }
 
-  const pybind11::object get_m_front_flux_mass_env() const {
+  const pybind11::object get_front_flux_mass_env() const {
     return pybind11::cast(vars->m_front_flux_mass_env);
   }
 
-  const pybind11::object get_m_u_dual_lagrange() const {
+  const pybind11::object get_u_dual_lagrange() const {
     return pybind11::cast(vars->m_u_dual_lagrange);
   }
 
-  const pybind11::object get_m_phi_dual_lagrange() const {
+  const pybind11::object get_phi_dual_lagrange() const {
     return pybind11::cast(vars->m_phi_dual_lagrange);
   }
 };
@@ -1455,7 +1455,7 @@ struct RemapADIAppliRemapExecutionContext final : SciHook::SciHookExecutionConte
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_sens_projection() const {
+  const pybind11::object get_sens_projection() const {
     return pybind11::cast(vars->m_sens_projection);
   }
 };
@@ -1485,63 +1485,63 @@ struct RemapADIResizeRemapVariablesExecutionContext final : SciHook::SciHookExec
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_u_lagrange() const {
+  const pybind11::object get_u_lagrange() const {
     return pybind11::cast(vars->m_u_lagrange);
   }
 
-  const pybind11::object get_m_u_dual_lagrange() const {
+  const pybind11::object get_u_dual_lagrange() const {
     return pybind11::cast(vars->m_u_dual_lagrange);
   }
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 
-  const pybind11::object get_m_phi_dual_lagrange() const {
+  const pybind11::object get_phi_dual_lagrange() const {
     return pybind11::cast(vars->m_phi_dual_lagrange);
   }
 
-  const pybind11::object get_m_dual_grad_phi() const {
+  const pybind11::object get_dual_grad_phi() const {
     return pybind11::cast(vars->m_dual_grad_phi);
   }
 
-  const pybind11::object get_m_grad_phi() const {
+  const pybind11::object get_grad_phi() const {
     return pybind11::cast(vars->m_grad_phi);
   }
 
-  const pybind11::object get_m_phi_face() const {
+  const pybind11::object get_phi_face() const {
     return pybind11::cast(vars->m_phi_face);
   }
 
-  const pybind11::object get_m_grad_phi_face() const {
+  const pybind11::object get_grad_phi_face() const {
     return pybind11::cast(vars->m_grad_phi_face);
   }
 
-  const pybind11::object get_m_delta_phi_face_ar() const {
+  const pybind11::object get_delta_phi_face_ar() const {
     return pybind11::cast(vars->m_delta_phi_face_ar);
   }
 
-  const pybind11::object get_m_delta_phi_face_av() const {
+  const pybind11::object get_delta_phi_face_av() const {
     return pybind11::cast(vars->m_delta_phi_face_av);
   }
 
-  const pybind11::object get_m_dual_phi_flux() const {
+  const pybind11::object get_dual_phi_flux() const {
     return pybind11::cast(vars->m_dual_phi_flux);
   }
 
-  const pybind11::object get_m_front_flux_mass_env() const {
+  const pybind11::object get_front_flux_mass_env() const {
     return pybind11::cast(vars->m_front_flux_mass_env);
   }
 
-  const pybind11::object get_m_back_flux_mass_env() const {
+  const pybind11::object get_back_flux_mass_env() const {
     return pybind11::cast(vars->m_back_flux_mass_env);
   }
 
-  const pybind11::object get_m_back_flux_contrib_env() const {
+  const pybind11::object get_back_flux_contrib_env() const {
     return pybind11::cast(vars->m_back_flux_contrib_env);
   }
 
-  const pybind11::object get_m_front_flux_contrib_env() const {
+  const pybind11::object get_front_flux_contrib_env() const {
     return pybind11::cast(vars->m_front_flux_contrib_env);
   }
 };
@@ -1557,23 +1557,23 @@ struct RemapADISynchronizeUremapExecutionContext final : SciHook::SciHookExecuti
 
   const RemapADISynchronizeUremapVars *vars;
 
-  const pybind11::object get_m_phi_lagrange() const {
+  const pybind11::object get_phi_lagrange() const {
     return pybind11::cast(vars->m_phi_lagrange);
   }
 
-  const pybind11::object get_m_u_lagrange() const {
+  const pybind11::object get_u_lagrange() const {
     return pybind11::cast(vars->m_u_lagrange);
   }
 
-  const pybind11::object get_m_dual_phi_flux() const {
+  const pybind11::object get_dual_phi_flux() const {
     return pybind11::cast(vars->m_dual_phi_flux);
   }
 
-  const pybind11::object get_m_est_mixte() const {
+  const pybind11::object get_est_mixte() const {
     return pybind11::cast(vars->m_est_mixte);
   }
 
-  const pybind11::object get_m_est_pure() const {
+  const pybind11::object get_est_pure() const {
     return pybind11::cast(vars->m_est_pure);
   }
 };
@@ -1617,63 +1617,63 @@ struct RemapADIRemapVariablesExecutionContext final : SciHook::SciHookExecutionC
     return pybind11::cast(nb_env);
   }
 
-  const pybind11::object get_m_euler_volume() const {
+  const pybind11::object get_euler_volume() const {
     return pybind11::cast(vars->m_euler_volume);
   }
 
-  const pybind11::object get_m_u_lagrange() const {
+  const pybind11::object get_u_lagrange() const {
     return pybind11::cast(vars->m_u_lagrange);
   }
 
-  const pybind11::object get_m_u_dual_lagrange() const {
+  const pybind11::object get_u_dual_lagrange() const {
     return pybind11::cast(vars->m_u_dual_lagrange);
   }
 
-  const pybind11::object get_m_est_pure() const {
+  const pybind11::object get_est_pure() const {
     return pybind11::cast(vars->m_est_pure);
   }
 
-  const pybind11::object get_m_velocity() const {
+  const pybind11::object get_velocity() const {
     return pybind11::cast(vars->m_velocity);
   }
 
-  const pybind11::object get_m_node_mass() const {
+  const pybind11::object get_node_mass() const {
     return pybind11::cast(vars->m_node_mass);
   }
 
-  const pybind11::object get_m_cell_volume() const {
+  const pybind11::object get_cell_volume() const {
     return pybind11::cast(vars->m_cell_volume);
   }
 
-  const pybind11::object get_m_cell_status() const {
+  const pybind11::object get_cell_status() const {
     return pybind11::cast(vars->m_cell_status);
   }
 
-  const pybind11::object get_m_est_mixte() const {
+  const pybind11::object get_est_mixte() const {
     return pybind11::cast(vars->m_est_mixte);
   }
 
-  const pybind11::object get_m_cell_mass() const {
+  const pybind11::object get_cell_mass() const {
     return pybind11::cast(vars->m_cell_mass);
   }
 
-  const pybind11::object get_m_fracvol() const {
+  const pybind11::object get_fracvol() const {
     return pybind11::cast(vars->m_fracvol);
   }
 
-  const pybind11::object get_m_mass_fraction() const {
+  const pybind11::object get_mass_fraction() const {
     return pybind11::cast(vars->m_mass_fraction);
   }
 
-  const pybind11::object get_m_pseudo_viscosity() const {
+  const pybind11::object get_pseudo_viscosity() const {
     return pybind11::cast(vars->m_pseudo_viscosity);
   }
 
-  const pybind11::object get_m_density() const {
+  const pybind11::object get_density() const {
     return pybind11::cast(vars->m_density);
   }
 
-  const pybind11::object get_m_internal_energy() const {
+  const pybind11::object get_internal_energy() const {
     return pybind11::cast(vars->m_internal_energy);
   }
 };

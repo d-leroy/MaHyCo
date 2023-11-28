@@ -59,7 +59,7 @@ class IEquationOfState
    Applique l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et la pression. 
   */
-  virtual void applyEOS(::Arcane::Materials::IMeshEnvironment* env) = 0;
+  virtual void applyEOS(const EnvCellVectorView items, ::Arcane::Materials::IMeshEnvironment* env) = 0;
   /*!
   Cette méthode est implémentée dans :
   \li PerfectGasServiceBase::applyOneCellEOS

@@ -11,7 +11,7 @@ struct Environment {
     /*! Nom du materiau */
     String[*] material;
     /*! Service d'equation d'état */
-    eos.EquationOfState eos_model;
+    eos::EquationOfState eos_model;
 }
 
 struct BoundaryCondition {
