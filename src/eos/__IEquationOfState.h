@@ -46,39 +46,39 @@ class IEquationOfState
  public:  // ***** METHODES ABSTRAITES
   /*!
   Cette méthode est implémentée dans :
-  \li PerfectGasServiceBase::initEOS
-  \li PerfectGasPAccServiceBase::initEOS
-  \li PerfectGasNAccServiceBase::initEOS
   \li PerfectGasAccWithSupportServiceBase::initEOS
+  \li PerfectGasNAccServiceBase::initEOS
+  \li PerfectGasPAccServiceBase::initEOS
+  \li PerfectGasServiceBase::initEOS
   \li PerfectGasWithSupportServiceBase::initEOS
-  \li StiffenedGasServiceBase::initEOS
   \li StiffenedGasAccServiceBase::initEOS
+  \li StiffenedGasServiceBase::initEOS
    Initialise l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et l'énergie interne. 
   */
   virtual void initEOS(::Arcane::Materials::IMeshEnvironment* env) = 0;
   /*!
   Cette méthode est implémentée dans :
-  \li PerfectGasServiceBase::applyEOS
-  \li PerfectGasPAccServiceBase::applyEOS
-  \li PerfectGasNAccServiceBase::applyEOS
   \li PerfectGasAccWithSupportServiceBase::applyEOS
+  \li PerfectGasNAccServiceBase::applyEOS
+  \li PerfectGasPAccServiceBase::applyEOS
+  \li PerfectGasServiceBase::applyEOS
   \li PerfectGasWithSupportServiceBase::applyEOS
-  \li StiffenedGasServiceBase::applyEOS
   \li StiffenedGasAccServiceBase::applyEOS
+  \li StiffenedGasServiceBase::applyEOS
    Applique l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et la pression. 
   */
   virtual void applyEOS(::Arcane::Materials::IMeshEnvironment* env) = 0;
   /*!
   Cette méthode est implémentée dans :
-  \li PerfectGasServiceBase::applyOneCellEOS
-  \li PerfectGasPAccServiceBase::applyOneCellEOS
-  \li PerfectGasNAccServiceBase::applyOneCellEOS
   \li PerfectGasAccWithSupportServiceBase::applyOneCellEOS
+  \li PerfectGasNAccServiceBase::applyOneCellEOS
+  \li PerfectGasPAccServiceBase::applyOneCellEOS
+  \li PerfectGasServiceBase::applyOneCellEOS
   \li PerfectGasWithSupportServiceBase::applyOneCellEOS
-  \li StiffenedGasServiceBase::applyOneCellEOS
   \li StiffenedGasAccServiceBase::applyOneCellEOS
+  \li StiffenedGasServiceBase::applyOneCellEOS
    Applique l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et la pression pour une cellule
   */
