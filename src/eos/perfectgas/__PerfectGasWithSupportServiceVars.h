@@ -32,11 +32,13 @@ struct PerfectGasWithSupportApplyEOSWithSupportVars final
 {
   PerfectGasWithSupportApplyEOSWithSupportVars(const MaterialVariableCellReal& density,
       const MaterialVariableCellReal& internal_energy,
+      const Real adiabatic_cst,
       MaterialVariableCellReal& pressure,
       MaterialVariableCellReal& sound_speed,
       MaterialVariableCellReal& dpde)
   : m_density(density)
   , m_internal_energy(internal_energy)
+  , m_adiabatic_cst(adiabatic_cst)
   , m_pressure(pressure)
   , m_sound_speed(sound_speed)
   , m_dpde(dpde)
@@ -52,6 +54,11 @@ struct PerfectGasWithSupportApplyEOSWithSupportVars final
    INTERNAL ENERGY 
   */
   const MaterialVariableCellReal& m_internal_energy;
+  /*!
+  [in] adiabatic_cst
+   Définition de la constante adiabatique 
+  */
+  const Real m_adiabatic_cst;
   /*!
   [inout] pressure
    PRESSURE 

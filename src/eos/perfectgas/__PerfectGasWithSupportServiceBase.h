@@ -73,7 +73,7 @@ class PerfectGasWithSupportServiceBase
        {
          rank=same;
          applyEOSWithSupport [style="rounded, filled", fillcolor="gray"];
-         inVars [shape="record", label="density | internal_energy | pressure"];
+         inVars [shape="record", label="density | internal_energy | adiabatic_cst | pressure"];
          inVars -> applyEOSWithSupport;
          outVars [shape="record", label="pressure | sound_speed | dpde"];
          applyEOSWithSupport -> outVars;
@@ -87,6 +87,7 @@ class PerfectGasWithSupportServiceBase
   {
     PerfectGasWithSupportApplyEOSWithSupportVars vars(m_density
         , m_internal_energy
+        , getAdiabaticCst()
         , m_pressure
         , m_sound_speed
         , m_dpde);

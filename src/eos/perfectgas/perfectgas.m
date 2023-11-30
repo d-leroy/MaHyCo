@@ -97,6 +97,6 @@ service caseoption PerfectGasWithSupport implements eos::EquationOfState {
         out mahyco::pressure, out mahyco::sound_speed, out mahyco::dpde;
 
     def void applyEOSWithSupport(inout types_mahyco::IMeshEnvironment env) { EnvCell }
-        in mahyco::density, in mahyco::internal_energy, //in adiabatic_cst,
+        in mahyco::density, in mahyco::internal_energy, in adiabatic_cst,
         inout mahyco::pressure, out mahyco::sound_speed, out mahyco::dpde;
 }

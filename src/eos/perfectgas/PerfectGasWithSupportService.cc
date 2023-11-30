@@ -67,9 +67,7 @@ void PerfectGasWithSupportService::
 applyEOSWithSupport(const EnvCell envcell, PerfectGasWithSupportApplyEOSWithSupportVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 {
     if (vars.m_density[envcell] == 0.) info() << envcell.globalCell().localId() << " densité nulle";
-    // TODO: include in vars
-    // Real adiabatic_cst = getAdiabaticCst();
-    compute_pressure_sndspd_PG(1.4, vars.m_density[envcell], vars.m_internal_energy[envcell], vars.m_pressure[envcell], vars.m_sound_speed[envcell], vars.m_dpde[envcell]);
+    compute_pressure_sndspd_PG(vars.m_adiabatic_cst, vars.m_density[envcell], vars.m_internal_energy[envcell], vars.m_pressure[envcell], vars.m_sound_speed[envcell], vars.m_dpde[envcell]);
 }
 
 /*---------------------------------------------------------------------------*/
