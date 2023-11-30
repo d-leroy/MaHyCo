@@ -159,6 +159,7 @@ class MahycoModule
    */
   CartesianInterface::ICartesianMesh* _initCartMesh();
 
+ public:
   /**
    * Calcul d'un pas de temps à partir des grandeurs hydrodynamiques
    * et affectation d'informations sur la maille qui fait le pas de temps
@@ -168,6 +169,7 @@ class MahycoModule
   template<typename DtCellInfoType>
   Real computeHydroDeltaT(DtCellInfoType &dt_cell_info);
 
+ private:
   /* variables membre */
   // CartesianInterface:: = Arcane:: ou Cartesian::
   CartesianInterface::ICartesianMesh* m_cartesian_mesh;

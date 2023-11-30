@@ -77,9 +77,8 @@ add_subdirectory(msgpass)
 # Pour la gestion des accélérateurs et des sources à compiler avec le
 # compilateur pour accélérateur
 arcane_accelerator_enable()
-arcane_accelerator_add_source_files(MahycoModule.cc)
-arcane_accelerator_add_source_files(MahycoAnnexe.cc)
-arcane_accelerator_add_source_files(PrepareRemap.cc)
+arcane_accelerator_add_source_files(mahyco/MahycoModule.cc)
+arcane_accelerator_add_source_files(mahyco/MahycoAnnexe.cc)
 arcane_accelerator_add_to_target(Mahyco)
 
 target_link_libraries(Mahyco PRIVATE mahyco_config cas_test Remap cartesian eos accenv msgpass)

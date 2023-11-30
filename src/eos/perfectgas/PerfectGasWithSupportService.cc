@@ -1,4 +1,4 @@
-#include "eos/perfectgas/PerfectGasService.h"
+#include "eos/perfectgas/PerfectGasWithSupportService.h"
 #include "arcane/VariableView.h"
 #include "arcane/ServiceBuilder.h"
 #include "arcane/ISubDomain.h"
@@ -16,9 +16,9 @@ namespace EosPerfectgas {
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-PerfectGasService::
-PerfectGasService(const ServiceBuildInfo& bi)
-: PerfectGasServiceBase<PerfectGasService>(bi)
+PerfectGasWithSupportService::
+PerfectGasWithSupportService(const ServiceBuildInfo& bi)
+: PerfectGasWithSupportServiceBase<PerfectGasWithSupportService>(bi)
 {
     m_acc_env = ServiceBuilder<IAccEnv>(subDomain()).getSingleton();
 }
@@ -26,13 +26,13 @@ PerfectGasService(const ServiceBuildInfo& bi)
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-PerfectGasService::
-~PerfectGasService()
+PerfectGasWithSupportService::
+~PerfectGasWithSupportService()
 {
 }
 
 /*---------------------------------------------------------------------------*/
-/* Formule PerfectGas pour calculer unitairement pression, vitesse du son et dp/de */
+/* Formule PerfectGasWithSupport pour calculer unitairement pression, vitesse du son et dp/de */
 /* Cette formule est appelée dans applyEOS(...) et applyOneCellEOS(...)      */
 /*---------------------------------------------------------------------------*/
 ARCCORE_HOST_DEVICE inline void compute_pressure_sndspd_PG(Real adiabatic_cst,
@@ -47,8 +47,8 @@ ARCCORE_HOST_DEVICE inline void compute_pressure_sndspd_PG(Real adiabatic_cst,
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-void PerfectGasService::
-initEOS(PerfectGasInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
+void PerfectGasWithSupportService::
+initEOS(PerfectGasWithSupportInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 {
     Real adiabatic_cst = getAdiabaticCst();
     // Initialise l'énergie et la vitesse du son
@@ -62,43 +62,47 @@ initEOS(PerfectGasInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
     }
 }
 
-/*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*/
 
-void PerfectGasService::
-applyEOS(PerfectGasApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
+void PerfectGasWithSupportService::
+applyEOSWithSupport(const EnvCell envcell, PerfectGasWithSupportApplyEOSWithSupportVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 {
-    Arcane::Timer::Action p4gpu_function_timer(subDomain(), "PerfectGas::applyEOS");
-    Real adiabatic_cst = getAdiabaticCst();
-    // Calcul de la pression et de la vitesse du son
-    ENUMERATE_ENVCELL(ienvcell,env)
-    {
-        EnvCell ev = *ienvcell;
-        if (vars.m_density[ev] == 0.) info() << ev.globalCell().localId() << " densité nulle";
-        compute_pressure_sndspd_PG(adiabatic_cst,
-            vars.m_density[ev], vars.m_internal_energy[ev],
-            vars.m_pressure[ev], vars.m_sound_speed[ev], vars.m_dpde[ev]);
-    }
+    if (vars.m_density[envcell] == 0.) info() << envcell.globalCell().localId() << " densité nulle";
+    // TODO: include in vars
+    // Real adiabatic_cst = getAdiabaticCst();
+    compute_pressure_sndspd_PG(1.4, vars.m_density[envcell], vars.m_internal_energy[envcell], vars.m_pressure[envcell], vars.m_sound_speed[envcell], vars.m_dpde[envcell]);
 }
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-void PerfectGasService::
-applyOneCellEOS(PerfectGasApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev)
+void PerfectGasWithSupportService::
+applyEOS(PerfectGasWithSupportApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 {
-    Real adiabatic_cst = getAdiabaticCst();
-    // Calcul de la pression et de la vitesse du son
-    if (vars.m_density[ev] == 0.) info() << ev.globalCell().localId() << " densité nulle";
-    compute_pressure_sndspd_PG(adiabatic_cst,
-        vars.m_density[ev], vars.m_internal_energy[ev],
-        vars.m_pressure[ev], vars.m_sound_speed[ev], m_dpde[ev]);
+    Arcane::Timer::Action p4gpu_function_timer(subDomain(), "PerfectGasWithSupport::applyEOS");
+    PerfectGasWithSupportServiceBase<PerfectGasWithSupportService>::applyEOSWithSupport(env->envView(), env);
 }
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-ARCANE_REGISTER_SERVICE_PERFECTGAS(PerfectGas, PerfectGasService);
+void PerfectGasWithSupportService::
+applyOneCellEOS(PerfectGasWithSupportApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev)
+{
+    Real adiabatic_cst = getAdiabaticCst();
+    // Calcul de la pression et de la vitesse du son
+    Real internal_energy = vars.m_internal_energy[ev];
+    Real density = vars.m_density[ev];
+    if (density == 0.) info() << ev.globalCell().localId() << " densité " << density;
+    Real pressure = (adiabatic_cst - 1.) * density * internal_energy;
+    vars.m_pressure[ev] = pressure;
+    vars.m_sound_speed[ev] = sqrt(adiabatic_cst * pressure / density);
+    vars.m_dpde[ev] = (adiabatic_cst - 1.) * density;
+}
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+ARCANE_REGISTER_SERVICE_PERFECTGASWITHSUPPORT(PerfectGasWithSupport, PerfectGasWithSupportService);
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
