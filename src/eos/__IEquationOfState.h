@@ -53,8 +53,6 @@ class IEquationOfState
   \li PerfectGasWithSupportServiceBase::initEOS
   \li StiffenedGasServiceBase::initEOS
   \li StiffenedGasAccServiceBase::initEOS
-  \li PerfectGasServiceBase::initEOS
-  \li PerfectGasServiceBase::initEOS
    Initialise l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et l'énergie interne. 
   */
@@ -68,8 +66,6 @@ class IEquationOfState
   \li PerfectGasWithSupportServiceBase::applyEOS
   \li StiffenedGasServiceBase::applyEOS
   \li StiffenedGasAccServiceBase::applyEOS
-  \li PerfectGasServiceBase::applyEOS
-  \li PerfectGasServiceBase::applyEOS
    Applique l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et la pression. 
   */
@@ -83,8 +79,6 @@ class IEquationOfState
   \li PerfectGasWithSupportServiceBase::applyOneCellEOS
   \li StiffenedGasServiceBase::applyOneCellEOS
   \li StiffenedGasAccServiceBase::applyOneCellEOS
-  \li PerfectGasServiceBase::applyOneCellEOS
-  \li PerfectGasServiceBase::applyOneCellEOS
    Applique l'équation d'état au groupe de mailles passé en argument
    et calcule la vitesse du son et la pression pour une cellule
   */

@@ -7,8 +7,6 @@
 #include "eos/perfectgas/__PerfectGasNAccServiceBindings.h"
 #include "eos/perfectgas/__PerfectGasPAccServiceBindings.h"
 #include "eos/perfectgas/__PerfectGasWithSupportServiceBindings.h"
-#include "eos/perfectgas/__PerfectGasServiceBindings.h"
-#include "eos/perfectgas/__PerfectGasServiceBindings.h"
 #include "eos/stiffenedgas/__StiffenedGasServiceBindings.h"
 #include "eos/stiffenedgas/__StiffenedGasAccServiceBindings.h"
 #include "mahyco/__MahycoModuleBindings.h"
@@ -26,8 +24,6 @@ void bind_submodules(py::module __attribute__((unused)) &m) {
   EosPerfectgas::bind_eos_perfectgas_perfectgasnacc(m);
   EosPerfectgas::bind_eos_perfectgas_perfectgaspacc(m);
   EosPerfectgas::bind_eos_perfectgas_perfectgaswithsupport(m);
-  EosPerfectgas::bind_eos_perfectgas_perfectgas(m);
-  EosPerfectgas::bind_eos_perfectgas_perfectgas(m);
   EosStiffenedgas::bind_eos_stiffenedgas_stiffenedgas(m);
   EosStiffenedgas::bind_eos_stiffenedgas_stiffenedgasacc(m);
   Mahyco::bind_mahyco_mahyco(m);
