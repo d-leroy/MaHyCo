@@ -401,10 +401,6 @@ module Mahyco
         out internal_energy,
         inout pressure;
 
-    // <entry-point method-name="computePressionMoyenne" name="ComputePressionMoyenne" where="compute-loop" property="none" />
-    // @ComputeLoop
-    // ComputePressionMoyenne;
-
     def void computeAveragePressure()
         in fracvol,
         inout pressure,
