@@ -19,10 +19,16 @@
 #include "mahyco/__MahycoModuleVars.h"
 #include "types_mahyco/__IMaterial.h"
 #include "types_mahyco/__IEnvironment.h"
-#include "cas_test/__IInitialisations.h"
-#include "remap/__IRemap.h"
 #include "types_mahyco/__IBoundaryCondition.h"
 #include "arcane/geometry/IGeometryMng.h"
+namespace Cas_test {
+  class IInitialisations;
+}
+
+namespace Remap {
+  class IRemap;
+}
+
 #include "mahyco/Mahyco_axl.h"
 #include "mahyco/__MahycoModuleSciHookMacros.h"
 

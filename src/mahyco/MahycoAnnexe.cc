@@ -4,6 +4,10 @@
 #include "cartesian/CartesianItemSorter.h"
 #include "cartesian/FactCartDirectionMng.h"
 
+#include "remap/__IRemap.h"
+#include "cas_test/__IInitialisations.h"
+#include "eos/__IEquationOfState.h"
+
 
 /*---------------------------------------------------------------------------*/
 /*!

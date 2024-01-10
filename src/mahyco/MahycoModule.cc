@@ -1,4 +1,12 @@
 #include "mahyco/MahycoModule.h"
+#include "arcane/ISubDomain.h"
+#include "arcane/ITimeStats.h"
+#include "arcane/Timer.h"
+#include "arcane/geometry/IGeometryMng.h"
+
+#include "remap/__IRemap.h"
+#include "eos/__IEquationOfState.h"
+#include "cas_test/__IInitialisations.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -2190,13 +2198,14 @@ computeVariablesForRemap(MahycoComputeVariablesForRemapVars& vars)
 void MahycoModule::
 computeVariablesForRemapPBorn0(MahycoComputeVariablesForRemapPBorn0Vars& vars)
 {
+  Arcane::Timer::Action p4gpu_function_timer(subDomain(), "MahycoModule::computeVariablesForRemapPBorn0");
   PROF_ACC_BEGIN(__FUNCTION__);
   debug() << " Entree dans computeVariablesForRemapPBorn0()";
   
   auto mm = getMeshMaterialMng();
   Integer nb_total_env = mm->environments().size();
   Integer nb_vars_to_project = m_nb_vars_to_project;
-      
+ 
   
   auto queue = m_acc_env->newQueue();
   
@@ -2291,7 +2300,7 @@ computeVariablesForRemapPBorn0(MahycoComputeVariablesForRemapPBorn0Vars& vars)
     command << RUNCOMMAND_ENUMERATE(Cell,cid,allCells()) {
       for (Integer ivar = 0; ivar < nb_vars_to_project; ivar++) {
         out_phi_lagrange[cid][ivar] = in_u_lagrange[cid][ivar] / in_cell_volume[cid];
-      }      
+      }
     };
   }
 

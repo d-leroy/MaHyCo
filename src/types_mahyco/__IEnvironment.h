@@ -11,7 +11,10 @@
 #include "arcane/ItemVectorView.h"
 #include "arcane/VariableTypes.h"
 #include "arcane/utils/Array.h"
-#include "eos/__IEquationOfState.h"
+namespace Eos {
+  class IEquationOfState;
+}
+
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
