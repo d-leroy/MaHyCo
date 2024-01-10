@@ -17,6 +17,7 @@
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
 #include "eos/stiffenedgas/__StiffenedGasAccServiceVars.h"
+#include "eos/stiffenedgas/__StiffenedGasAccServiceViews.h"
 #include "arcane/materials/IMeshEnvironment.h"
 #include "scihook/scihookdefs.h"
 #include "SciHook.h"
@@ -37,19 +38,12 @@ namespace EosStiffenedgas {
 struct StiffenedGasAccApplyEOSWithSupportExecutionContext final : SciHook::SciHookExecutionContext
 {
   StiffenedGasAccApplyEOSWithSupportExecutionContext(std::string execution_context_name,
-      StiffenedGasAccApplyEOSWithSupportViews *views,
-      ::Arcane::Materials::IMeshEnvironment* env)
+      StiffenedGasAccApplyEOSWithSupportViews *views)
   : SciHookExecutionContext(execution_context_name)
-  , env(env)
   , views(views)
   {}
 
-  ::Arcane::Materials::IMeshEnvironment* env;
   const StiffenedGasAccApplyEOSWithSupportViews *views;
-
-  const pybind11::object get_env() const {
-    return pybind11::cast(env);
-  }
 
   const pybind11::object get_internal_energy() const {
     return pybind11::cast(views->in_internal_energy_g);

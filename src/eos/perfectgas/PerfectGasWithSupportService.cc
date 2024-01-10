@@ -64,7 +64,7 @@ initEOS(PerfectGasWithSupportInitEOSVars& vars, ::Arcane::Materials::IMeshEnviro
 
 
 void PerfectGasWithSupportService::
-applyEOSWithSupport(const EnvCell envcell, PerfectGasWithSupportApplyEOSWithSupportVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
+applyEOSWithSupport(const EnvCell envcell, PerfectGasWithSupportApplyEOSWithSupportVars& vars)
 {
     if (vars.m_density[envcell] == 0.) info() << envcell.globalCell().localId() << " densité nulle";
     compute_pressure_sndspd_PG(vars.m_adiabatic_cst, vars.m_density[envcell], vars.m_internal_energy[envcell], vars.m_pressure[envcell], vars.m_sound_speed[envcell], vars.m_dpde[envcell]);
@@ -77,7 +77,7 @@ void PerfectGasWithSupportService::
 applyEOS(PerfectGasWithSupportApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 {
     Arcane::Timer::Action p4gpu_function_timer(subDomain(), "PerfectGasWithSupport::applyEOS");
-    PerfectGasWithSupportServiceBase<PerfectGasWithSupportService>::applyEOSWithSupport(env->envView(), env);
+    PerfectGasWithSupportServiceBase<PerfectGasWithSupportService>::applyEOSWithSupport(env->envView());
 }
 
 /*---------------------------------------------------------------------------*/

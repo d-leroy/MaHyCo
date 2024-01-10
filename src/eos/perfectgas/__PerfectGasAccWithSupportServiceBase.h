@@ -23,7 +23,6 @@
 #include "eos/__IEquationOfState.h"
 #include "eos/perfectgas/__PerfectGasAccWithSupportServiceVars.h"
 #include "eos/perfectgas/__PerfectGasAccWithSupportServiceViews.h"
-#include "arcane/materials/IMeshEnvironment.h"
 #include "eos/perfectgas/PerfectGasAccWithSupport_axl.h"
 #include "eos/perfectgas/__PerfectGasAccWithSupportServiceSciHookMacros.h"
 
@@ -89,7 +88,7 @@ class PerfectGasAccWithSupportServiceBase
    \enddot
    Cette méthode construit les variables et appelle PerfectGasAccWithSupportService::applyEOSWithSupport.
   */
-  void applyEOSWithSupport(const EnvCellVectorView items, ::Arcane::Materials::IMeshEnvironment* env)
+  void applyEOSWithSupport(const EnvCellVectorView items)
   {
     auto queue = getAccEnv()->newQueue();
     auto command = makeCommand(queue);

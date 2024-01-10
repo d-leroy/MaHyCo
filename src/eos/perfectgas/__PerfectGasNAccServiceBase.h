@@ -102,7 +102,7 @@ class PerfectGasNAccServiceBase
        {
          rank=same;
          applyEOS [style="rounded, filled", fillcolor="gray"];
-         inVars [shape="record", label="density | internal_energy | pressure"];
+         inVars [shape="record", label="density | internal_energy | adiabatic_cst | pressure"];
          inVars -> applyEOS;
          outVars [shape="record", label="pressure | sound_speed | dpde"];
          applyEOS -> outVars;
@@ -116,6 +116,7 @@ class PerfectGasNAccServiceBase
   {
     PerfectGasNAccApplyEOSVars vars(m_density
         , m_internal_energy
+        , getAdiabaticCst()
         , m_pressure
         , m_sound_speed
         , m_dpde);

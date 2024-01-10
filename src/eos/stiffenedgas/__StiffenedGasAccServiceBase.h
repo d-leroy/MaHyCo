@@ -23,7 +23,6 @@
 #include "eos/__IEquationOfState.h"
 #include "eos/stiffenedgas/__StiffenedGasAccServiceVars.h"
 #include "eos/stiffenedgas/__StiffenedGasAccServiceViews.h"
-#include "arcane/materials/IMeshEnvironment.h"
 #include "eos/stiffenedgas/StiffenedGasAcc_axl.h"
 #include "eos/stiffenedgas/__StiffenedGasAccServiceSciHookMacros.h"
 
@@ -89,7 +88,7 @@ class StiffenedGasAccServiceBase
    \enddot
    Cette méthode construit les variables et appelle StiffenedGasAccService::applyEOSWithSupport.
   */
-  void applyEOSWithSupport(const EnvCellVectorView items, ::Arcane::Materials::IMeshEnvironment* env)
+  void applyEOSWithSupport(const EnvCellVectorView items)
   {
     auto queue = getAccEnv()->newQueue();
     auto command = makeCommand(queue);

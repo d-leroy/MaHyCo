@@ -48,7 +48,7 @@ ARCCORE_HOST_DEVICE inline
 void PerfectGasAccWithSupportApplyEOSWithSupportViews::
 apply(ComponentItemLocalId iid) const
 {
-    this->inout_pressure[iid]    = (this->in_adiabatic_cst - 1.) * this->in_density[iid] * this->in_internal_energy[iid];
+    this->inout_pressure[iid]  = (this->in_adiabatic_cst - 1.) * this->in_density[iid] * this->in_internal_energy[iid];
     this->out_sound_speed[iid] = sqrt(this->in_adiabatic_cst * this->inout_pressure[iid] / this->in_density[iid]);
     this->out_dpde[iid]        = (this->in_adiabatic_cst - 1.) * this->in_density[iid];
 }
@@ -78,7 +78,7 @@ void PerfectGasAccWithSupportService::
 applyEOS(PerfectGasAccWithSupportApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 {
     Arcane::Timer::Action p4gpu_function_timer(subDomain(), "PerfectGasAccWithSupport::applyEOS");
-    PerfectGasAccWithSupportServiceBase<PerfectGasAccWithSupportService>::applyEOSWithSupport(env->envView(), env);
+    PerfectGasAccWithSupportServiceBase<PerfectGasAccWithSupportService>::applyEOSWithSupport(env->envView());
 }
 
 /*---------------------------------------------------------------------------*/

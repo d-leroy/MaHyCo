@@ -37,19 +37,12 @@ namespace EosPerfectgas {
 struct PerfectGasWithSupportApplyEOSWithSupportExecutionContext final : SciHook::SciHookExecutionContext
 {
   PerfectGasWithSupportApplyEOSWithSupportExecutionContext(std::string execution_context_name,
-      PerfectGasWithSupportApplyEOSWithSupportVars *vars,
-      ::Arcane::Materials::IMeshEnvironment* env)
+      PerfectGasWithSupportApplyEOSWithSupportVars *vars)
   : SciHookExecutionContext(execution_context_name)
-  , env(env)
   , vars(vars)
   {}
 
-  ::Arcane::Materials::IMeshEnvironment* env;
   const PerfectGasWithSupportApplyEOSWithSupportVars *vars;
-
-  const pybind11::object get_env() const {
-    return pybind11::cast(env);
-  }
 
   const pybind11::object get_density() const {
     return pybind11::cast(vars->m_density);

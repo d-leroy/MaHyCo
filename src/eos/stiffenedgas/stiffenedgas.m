@@ -34,7 +34,7 @@ service caseoption StiffenedGasAcc implements eos::EquationOfState {
         in mahyco::internal_energy, in mahyco::density,
         out mahyco::pressure, out mahyco::sound_speed, out mahyco::dpde;
 
-    def void applyEOSWithSupport(inout types_mahyco::IMeshEnvironment env) {EnvCell}
+    def void applyEOSWithSupport() {EnvCell}
         in mahyco::internal_energy, in mahyco::density, in tension_limit_cst, in adiabatic_cst,
         out mahyco::pressure, out mahyco::sound_speed, out mahyco::dpde;
 }

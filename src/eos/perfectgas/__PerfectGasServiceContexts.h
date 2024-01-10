@@ -94,6 +94,10 @@ struct PerfectGasApplyEOSExecutionContext final : SciHook::SciHookExecutionConte
     return pybind11::cast(vars->m_internal_energy);
   }
 
+  const pybind11::object get_adiabatic_cst() const {
+    return pybind11::cast(vars->m_adiabatic_cst);
+  }
+
   const pybind11::object get_pressure() const {
     return pybind11::cast(vars->m_pressure);
   }

@@ -48,7 +48,7 @@ class PerfectGasWithSupportService
   ~PerfectGasWithSupportService();
 
  public:
-  void applyEOSWithSupport(const EnvCell envcell, PerfectGasWithSupportApplyEOSWithSupportVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
+  void applyEOSWithSupport(const EnvCell envcell, PerfectGasWithSupportApplyEOSWithSupportVars& vars) override;
   void initEOS(PerfectGasWithSupportInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
   void applyEOS(PerfectGasWithSupportApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) override;
   void applyOneCellEOS(PerfectGasWithSupportApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) override;

@@ -60,7 +60,7 @@ apply(ComponentItemLocalId iid) const
 void StiffenedGasAccService::
 applyEOS(StiffenedGasAccApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env)
 {
-    StiffenedGasAccServiceBase<StiffenedGasAccService>::applyEOSWithSupport(env->envView(), env);
+    StiffenedGasAccServiceBase<StiffenedGasAccService>::applyEOSWithSupport(env->envView());
 }
 
 /*---------------------------------------------------------------------------*/

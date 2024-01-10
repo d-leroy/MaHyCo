@@ -19,7 +19,6 @@
 #include "arcane/materials/MatConcurrency.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/perfectgas/__PerfectGasWithSupportServiceVars.h"
-#include "arcane/materials/IMeshEnvironment.h"
 #include "eos/perfectgas/PerfectGasWithSupport_axl.h"
 #include "eos/perfectgas/__PerfectGasWithSupportServiceSciHookMacros.h"
 
@@ -83,7 +82,7 @@ class PerfectGasWithSupportServiceBase
    \enddot
    Cette méthode construit les variables et appelle PerfectGasWithSupportService::applyEOSWithSupport.
   */
-  void applyEOSWithSupport(const EnvCellVectorView items, ::Arcane::Materials::IMeshEnvironment* env)
+  void applyEOSWithSupport(const EnvCellVectorView items)
   {
     PerfectGasWithSupportApplyEOSWithSupportVars vars(m_density
         , m_internal_energy
@@ -97,7 +96,7 @@ class PerfectGasWithSupportServiceBase
     {
       ENUMERATE_ENVCELL (iitem, sub_items) {
         const EnvCell item = *iitem;
-        t->applyEOSWithSupport(item, vars, env);
+        t->applyEOSWithSupport(item, vars);
       }
     });
     SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGASWITHSUPPORT_APPLYEOSWITHSUPPORT_AFTER
@@ -199,7 +198,7 @@ class PerfectGasWithSupportServiceBase
 
 
  public:  // ***** METHODES ABSTRAITES
-  virtual void applyEOSWithSupport(const EnvCell envcell, PerfectGasWithSupportApplyEOSWithSupportVars& vars, ::Arcane::Materials::IMeshEnvironment* env) = 0;
+  virtual void applyEOSWithSupport(const EnvCell envcell, PerfectGasWithSupportApplyEOSWithSupportVars& vars) = 0;
   virtual void initEOS(PerfectGasWithSupportInitEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) = 0;
   virtual void applyEOS(PerfectGasWithSupportApplyEOSVars& vars, ::Arcane::Materials::IMeshEnvironment* env) = 0;
   virtual void applyOneCellEOS(PerfectGasWithSupportApplyOneCellEOSVars& vars, const ::Arcane::Materials::IMeshEnvironment* env, const EnvCell ev) = 0;

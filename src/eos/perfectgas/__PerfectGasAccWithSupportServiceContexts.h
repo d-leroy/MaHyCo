@@ -17,6 +17,7 @@
 #include "arcane/materials/MeshMaterialVariableRef.h"
 #include "arcane/materials/IMeshMaterialMng.h"
 #include "eos/perfectgas/__PerfectGasAccWithSupportServiceVars.h"
+#include "eos/perfectgas/__PerfectGasAccWithSupportServiceViews.h"
 #include "arcane/materials/IMeshEnvironment.h"
 #include "scihook/scihookdefs.h"
 #include "SciHook.h"
@@ -37,19 +38,12 @@ namespace EosPerfectgas {
 struct PerfectGasAccWithSupportApplyEOSWithSupportExecutionContext final : SciHook::SciHookExecutionContext
 {
   PerfectGasAccWithSupportApplyEOSWithSupportExecutionContext(std::string execution_context_name,
-      PerfectGasAccWithSupportApplyEOSWithSupportViews *views,
-      ::Arcane::Materials::IMeshEnvironment* env)
+      PerfectGasAccWithSupportApplyEOSWithSupportViews *views)
   : SciHookExecutionContext(execution_context_name)
-  , env(env)
   , views(views)
   {}
 
-  ::Arcane::Materials::IMeshEnvironment* env;
   const PerfectGasAccWithSupportApplyEOSWithSupportViews *views;
-
-  const pybind11::object get_env() const {
-    return pybind11::cast(env);
-  }
 
   const pybind11::object get_density() const {
     return pybind11::cast(views->in_density_g);

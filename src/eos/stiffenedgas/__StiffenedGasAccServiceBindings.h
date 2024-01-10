@@ -36,7 +36,6 @@ void bind_eos_stiffenedgas_stiffenedgasacc(py::module __attribute__((unused)) &m
   auto sub_eos_stiffenedgas_stiffenedgasacc = m.def_submodule("eos_stiffenedgas_stiffenedgasacc", "Bindings for StiffenedGasAcc");
   #if not defined(SCIHOOK_EOS_STIFFENEDGAS_STIFFENEDGASACC_APPLYEOSWITHSUPPORT_DISABLED)
   pybind11::class_<EosStiffenedgas::StiffenedGasAccApplyEOSWithSupportExecutionContext, std::shared_ptr<EosStiffenedgas::StiffenedGasAccApplyEOSWithSupportExecutionContext>, SciHook::SciHookExecutionContext>(sub_eos_stiffenedgas_stiffenedgasacc, "StiffenedGasAccApplyEOSWithSupportExecutionContext")
-    .def_property_readonly("env", &EosStiffenedgas::StiffenedGasAccApplyEOSWithSupportExecutionContext::get_env)
     .def_property_readonly("internal_energy", &EosStiffenedgas::StiffenedGasAccApplyEOSWithSupportExecutionContext::get_internal_energy)
     .def_property_readonly("density", &EosStiffenedgas::StiffenedGasAccApplyEOSWithSupportExecutionContext::get_density)
     .def_property_readonly("tension_limit_cst", &EosStiffenedgas::StiffenedGasAccApplyEOSWithSupportExecutionContext::get_tension_limit_cst)

@@ -36,7 +36,6 @@ void bind_eos_perfectgas_perfectgaswithsupport(py::module __attribute__((unused)
   auto sub_eos_perfectgas_perfectgaswithsupport = m.def_submodule("eos_perfectgas_perfectgaswithsupport", "Bindings for PerfectGasWithSupport");
   #if not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGASWITHSUPPORT_APPLYEOSWITHSUPPORT_DISABLED)
   pybind11::class_<EosPerfectgas::PerfectGasWithSupportApplyEOSWithSupportExecutionContext, std::shared_ptr<EosPerfectgas::PerfectGasWithSupportApplyEOSWithSupportExecutionContext>, SciHook::SciHookExecutionContext>(sub_eos_perfectgas_perfectgaswithsupport, "PerfectGasWithSupportApplyEOSWithSupportExecutionContext")
-    .def_property_readonly("env", &EosPerfectgas::PerfectGasWithSupportApplyEOSWithSupportExecutionContext::get_env)
     .def_property_readonly("density", &EosPerfectgas::PerfectGasWithSupportApplyEOSWithSupportExecutionContext::get_density)
     .def_property_readonly("internal_energy", &EosPerfectgas::PerfectGasWithSupportApplyEOSWithSupportExecutionContext::get_internal_energy)
     .def_property_readonly("adiabatic_cst", &EosPerfectgas::PerfectGasWithSupportApplyEOSWithSupportExecutionContext::get_adiabatic_cst)

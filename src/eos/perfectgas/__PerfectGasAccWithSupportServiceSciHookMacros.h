@@ -34,7 +34,7 @@ APPLYONECELLEOS_AFTER = SciHook::register_base_event("PerfectGasAccWithSupport.A
 
 #if defined(SCIHOOK_ENABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGASACCWITHSUPPORT_DISABLED) && not defined(SCIHOOK_EOS_PERFECTGAS_PERFECTGASACCWITHSUPPORT_APPLYEOSWITHSUPPORT_DISABLED)
 #define SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGASACCWITHSUPPORT_APPLYEOSWITHSUPPORT_BEFORE \
-std::shared_ptr<PerfectGasAccWithSupportApplyEOSWithSupportExecutionContext> ctx(new PerfectGasAccWithSupportApplyEOSWithSupportExecutionContext("ApplyEOSWithSupportExecutionContext", &acc_context, env));\
+std::shared_ptr<PerfectGasAccWithSupportApplyEOSWithSupportExecutionContext> ctx(new PerfectGasAccWithSupportApplyEOSWithSupportExecutionContext("ApplyEOSWithSupportExecutionContext", &acc_context));\
 SciHook::trigger(APPLYEOSWITHSUPPORT_BEFORE, ctx);
 #define SCIHOOK_TRIGGER_EOS_PERFECTGAS_PERFECTGASACCWITHSUPPORT_APPLYEOSWITHSUPPORT_AFTER SciHook::trigger(APPLYEOSWITHSUPPORT_AFTER, ctx);
 #else
