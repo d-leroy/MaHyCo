@@ -1,4 +1,6 @@
 #include "remap/adi/RemapADIService.h"
+#include "accenv/AcceleratorUtils.h"
+#include <arcane/ServiceBuilder.h>
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -12,6 +14,7 @@ RemapADIService::
 RemapADIService(const ServiceBuildInfo& bi)
 : RemapADIServiceBase<RemapADIService>(bi)
 {
+  m_acc_env = ServiceBuilder<IAccEnv>(subDomain()).getSingleton();
 }
 
 /*---------------------------------------------------------------------------*/
