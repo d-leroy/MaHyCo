@@ -47,14 +47,14 @@ void StiffenedGasAccService::
 
 ARCCORE_HOST_DEVICE inline
 void StiffenedGasAccApplyEOSWithSupportViews::
-apply(ComponentItemLocalId iid) const
+apply(ComponentItemLocalId mvi, CellLocalId cid) const
 {
-    Real internal_energy = this->in_internal_energy[iid];
-    Real density = this->in_density[iid];
-    Real pressure = ((this->in_adiabatic_cst - 1.) * this->in_density[iid] * this->in_internal_energy[iid]) - (this->in_adiabatic_cst * this->in_tension_limit_cst);
-    this->out_pressure[iid] = pressure;
-    this->out_sound_speed[iid] = sqrt((this->in_adiabatic_cst/density)*(pressure+this->in_tension_limit_cst));
-    this->out_dpde[iid] = (this->in_adiabatic_cst - 1.) * density;
+    Real internal_energy = this->in_internal_energy[mvi];
+    Real density = this->in_density[mvi];
+    Real pressure = ((this->in_adiabatic_cst - 1.) * this->in_density[mvi] * this->in_internal_energy[mvi]) - (this->in_adiabatic_cst * this->in_tension_limit_cst);
+    this->out_pressure[mvi] = pressure;
+    this->out_sound_speed[mvi] = sqrt((this->in_adiabatic_cst/density)*(pressure+this->in_tension_limit_cst));
+    this->out_dpde[mvi] = (this->in_adiabatic_cst - 1.) * density;
 }
 
 void StiffenedGasAccService::

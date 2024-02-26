@@ -46,11 +46,11 @@ ARCCORE_HOST_DEVICE inline void compute_pressure_sndspd_PG(Real adiabatic_cst,
 
 ARCCORE_HOST_DEVICE inline
 void PerfectGasAccWithSupportApplyEOSWithSupportViews::
-apply(ComponentItemLocalId iid) const
+apply(ComponentItemLocalId mvi, CellLocalId cid) const
 {
-    this->inout_pressure[iid]  = (this->in_adiabatic_cst - 1.) * this->in_density[iid] * this->in_internal_energy[iid];
-    this->out_sound_speed[iid] = sqrt(this->in_adiabatic_cst * this->inout_pressure[iid] / this->in_density[iid]);
-    this->out_dpde[iid]        = (this->in_adiabatic_cst - 1.) * this->in_density[iid];
+    this->inout_pressure[mvi]  = (this->in_adiabatic_cst - 1.) * this->in_density[mvi] * this->in_internal_energy[mvi];
+    this->out_sound_speed[mvi] = sqrt(this->in_adiabatic_cst * this->inout_pressure[mvi] / this->in_density[mvi]);
+    this->out_dpde[mvi]        = (this->in_adiabatic_cst - 1.) * this->in_density[mvi];
 }
 
 /*---------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ applyOneCellEOS(PerfectGasAccWithSupportApplyOneCellEOSVars& vars, const ::Arcan
     compute_pressure_sndspd_PG(adiabatic_cst,
         vars.m_density[ev], vars.m_internal_energy[ev],
         vars.m_pressure[ev], vars.m_sound_speed[ev], m_dpde[ev]);
-}
+}  
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

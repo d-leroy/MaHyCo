@@ -93,20 +93,16 @@ class StiffenedGasAccServiceBase
     auto queue = getAccEnv()->newQueue();
     auto command = makeCommand(queue);
     StiffenedGasAccApplyEOSWithSupportViews acc_context(ax::viewIn(command, m_internal_energy),
-        ax::viewIn(command, m_internal_energy.globalVariable()),
         ax::viewIn(command, m_density),
-        ax::viewIn(command, m_density.globalVariable()),
         getTensionLimitCst(),
         getAdiabaticCst(),
         ax::viewOut(command, m_pressure),
-        ax::viewOut(command, m_pressure.globalVariable()),
         ax::viewOut(command, m_sound_speed),
-        ax::viewOut(command, m_sound_speed.globalVariable()),
-        ax::viewOut(command, m_dpde),
-        ax::viewOut(command, m_dpde.globalVariable()));
+        ax::viewOut(command, m_dpde));
     SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGASACC_APPLYEOSWITHSUPPORT_BEFORE
-    command << RUNCOMMAND_MAT_ENUMERATE(EnvCell, iid, items) {
-      acc_context.apply(iid);
+    command << RUNCOMMAND_MAT_ENUMERATE(EnvAndGlobalCell, evgi, items) {
+      auto [mvi, cid] = evgi();
+      acc_context.apply(mvi, cid);
     };
     SCIHOOK_TRIGGER_EOS_STIFFENEDGAS_STIFFENEDGASACC_APPLYEOSWITHSUPPORT_AFTER
   }

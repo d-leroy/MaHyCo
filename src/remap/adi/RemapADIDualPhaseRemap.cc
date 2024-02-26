@@ -431,7 +431,7 @@ computeDualUremap(RemapADIComputeDualUremapVars& vars, const Integer idir, const
         + order2 * ( 0.5 * in_dual_grad_phi[nid][4] * 
         (signfront * (in_node_coord[frontNid][idir] - in_node_coord[nid][idir]) - deltat * ufront));
       }
-       
+      
       // Backvitesse = vitesse(voisin amont)) si backFluxMasse(pNode) > 0 et vitesse(pNode) sinon
       Integer signback;
       Real  uback= 0.5 * (inout_phi_dual_lagrange[backNid][idir] + inout_phi_dual_lagrange[nid][idir]);
@@ -440,7 +440,7 @@ computeDualUremap(RemapADIComputeDualUremapVars& vars, const Integer idir, const
       else signback= -1;
       
       if (in_back_flux_mass[nid] > 0.) {
-        // vittese back upwind
+        // vitesse back upwind
         BackupwindVelocity[0] = inout_phi_dual_lagrange[backNid][0]
         + order2 * ( 0.5 * in_dual_grad_phi[backNid][0]  * 
         (signback * (in_node_coord[nid][idir] - in_node_coord[backNid][idir]) - deltat * uback));

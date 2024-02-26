@@ -46,11 +46,11 @@ struct PerfectGasAccWithSupportApplyEOSWithSupportExecutionContext final : SciHo
   const PerfectGasAccWithSupportApplyEOSWithSupportViews *views;
 
   const pybind11::object get_density() const {
-    return pybind11::cast(views->in_density_g);
+    return pybind11::cast(views->in_density);
   }
 
   const pybind11::object get_internal_energy() const {
-    return pybind11::cast(views->in_internal_energy_g);
+    return pybind11::cast(views->in_internal_energy);
   }
 
   const pybind11::object get_adiabatic_cst() const {
@@ -58,15 +58,15 @@ struct PerfectGasAccWithSupportApplyEOSWithSupportExecutionContext final : SciHo
   }
 
   const pybind11::object get_pressure() const {
-    return pybind11::cast(views->inout_pressure_g);
+    return pybind11::cast(views->inout_pressure);
   }
 
   const pybind11::object get_sound_speed() const {
-    return pybind11::cast(views->out_sound_speed_g);
+    return pybind11::cast(views->out_sound_speed);
   }
 
   const pybind11::object get_dpde() const {
-    return pybind11::cast(views->out_dpde_g);
+    return pybind11::cast(views->out_dpde);
   }
 };
 

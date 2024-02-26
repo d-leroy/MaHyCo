@@ -46,11 +46,11 @@ struct StiffenedGasAccApplyEOSWithSupportExecutionContext final : SciHook::SciHo
   const StiffenedGasAccApplyEOSWithSupportViews *views;
 
   const pybind11::object get_internal_energy() const {
-    return pybind11::cast(views->in_internal_energy_g);
+    return pybind11::cast(views->in_internal_energy);
   }
 
   const pybind11::object get_density() const {
-    return pybind11::cast(views->in_density_g);
+    return pybind11::cast(views->in_density);
   }
 
   const pybind11::object get_tension_limit_cst() const {
@@ -62,15 +62,15 @@ struct StiffenedGasAccApplyEOSWithSupportExecutionContext final : SciHook::SciHo
   }
 
   const pybind11::object get_pressure() const {
-    return pybind11::cast(views->out_pressure_g);
+    return pybind11::cast(views->out_pressure);
   }
 
   const pybind11::object get_sound_speed() const {
-    return pybind11::cast(views->out_sound_speed_g);
+    return pybind11::cast(views->out_sound_speed);
   }
 
   const pybind11::object get_dpde() const {
-    return pybind11::cast(views->out_dpde_g);
+    return pybind11::cast(views->out_dpde);
   }
 };
 

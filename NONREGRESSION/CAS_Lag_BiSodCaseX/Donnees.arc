@@ -52,14 +52,14 @@
   <environment>
     <name>ZG</name>
     <material>ZG_mat</material>
-    <eos-model name="PerfectGasAcc">
+    <eos-model name="PerfectGasAccWithSupport">
       <adiabatic-cst>1.4</adiabatic-cst>
     </eos-model> 
   </environment>
   <environment>
     <name>ZD</name>
     <material>ZD_mat</material>
-    <eos-model name="PerfectGasAcc">
+    <eos-model name="PerfectGasAccWithSupport">
       <adiabatic-cst>1.4</adiabatic-cst>
     <!-- <eos-model name="StiffenedGas">
       <adiabatic-cst>1.4</adiabatic-cst>
