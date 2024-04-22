@@ -23,6 +23,7 @@
 #include "eos/__IEquationOfState.h"
 #include "eos/perfectgas/__PerfectGasAccWithSupportServiceVars.h"
 #include "eos/perfectgas/__PerfectGasAccWithSupportServiceViews.h"
+#include "eos/perfectgas/PerfectgasTypeDeclarations.h"
 #include "eos/perfectgas/PerfectGasAccWithSupport_axl.h"
 #include "eos/perfectgas/__PerfectGasAccWithSupportServiceSciHookMacros.h"
 

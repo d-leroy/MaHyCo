@@ -23,6 +23,7 @@
 #include "eos/__IEquationOfState.h"
 #include "eos/stiffenedgas/__StiffenedGasAccServiceVars.h"
 #include "eos/stiffenedgas/__StiffenedGasAccServiceViews.h"
+#include "eos/stiffenedgas/StiffenedgasTypeDeclarations.h"
 #include "eos/stiffenedgas/StiffenedGasAcc_axl.h"
 #include "eos/stiffenedgas/__StiffenedGasAccServiceSciHookMacros.h"
 

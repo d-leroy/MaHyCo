@@ -20,15 +20,7 @@
 #include "types_mahyco/__IMaterial.h"
 #include "types_mahyco/__IEnvironment.h"
 #include "types_mahyco/__IBoundaryCondition.h"
-#include "arcane/geometry/IGeometryMng.h"
-namespace Cas_test {
-  class IInitialisations;
-}
-
-namespace Remap {
-  class IRemap;
-}
-
+#include "mahyco/MahycoTypeDeclarations.h"
 #include "mahyco/Mahyco_axl.h"
 #include "mahyco/__MahycoModuleSciHookMacros.h"
 

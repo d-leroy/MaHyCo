@@ -11,10 +11,7 @@
 #include "arcane/ItemVectorView.h"
 #include "arcane/VariableTypes.h"
 #include "arcane/utils/Array.h"
-namespace Eos {
-  class IEquationOfState;
-}
-
+#include "types_mahyco/TypesMahycoTypeDeclarations.h"
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/

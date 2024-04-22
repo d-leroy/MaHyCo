@@ -19,6 +19,7 @@
 #include "arcane/materials/MatConcurrency.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/perfectgas/__PerfectGasWithSupportServiceVars.h"
+#include "eos/perfectgas/PerfectgasTypeDeclarations.h"
 #include "eos/perfectgas/PerfectGasWithSupport_axl.h"
 #include "eos/perfectgas/__PerfectGasWithSupportServiceSciHookMacros.h"
 

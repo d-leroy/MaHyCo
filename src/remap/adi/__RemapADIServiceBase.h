@@ -19,7 +19,7 @@
 #include "remap/__IRemap.h"
 #include "remap/adi/__RemapADIServiceVars.h"
 #include "types_mahyco/__Limiteur.h"
-#include "arcane/utils/UtilsTypes.h"
+#include "remap/adi/AdiTypeDeclarations.h"
 #include "remap/adi/RemapADI_axl.h"
 #include "remap/adi/__RemapADIServiceSciHookMacros.h"
 

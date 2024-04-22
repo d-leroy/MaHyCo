@@ -18,6 +18,7 @@
 #include "arcane/materials/IMeshMaterialMng.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/stiffenedgas/__StiffenedGasServiceVars.h"
+#include "eos/stiffenedgas/StiffenedgasTypeDeclarations.h"
 #include "eos/stiffenedgas/StiffenedGas_axl.h"
 #include "eos/stiffenedgas/__StiffenedGasServiceSciHookMacros.h"
 

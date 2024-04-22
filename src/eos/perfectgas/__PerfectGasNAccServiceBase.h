@@ -18,6 +18,7 @@
 #include "arcane/materials/IMeshMaterialMng.h"
 #include "eos/__IEquationOfState.h"
 #include "eos/perfectgas/__PerfectGasNAccServiceVars.h"
+#include "eos/perfectgas/PerfectgasTypeDeclarations.h"
 #include "eos/perfectgas/PerfectGasNAcc_axl.h"
 #include "eos/perfectgas/__PerfectGasNAccServiceSciHookMacros.h"
 
